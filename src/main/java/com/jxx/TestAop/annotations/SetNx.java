@@ -3,7 +3,7 @@ package com.jxx.TestAop.annotations;
 import java.lang.annotation.*;
 
 /**
-*aop注解
+* aop注解
 * @Author:strange
 * @Date:17:24 2019-12-29
 */

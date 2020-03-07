@@ -1,35 +1,32 @@
 package com.jxx.Controller;
 
-import com.jxx.Service.DataService;
-import com.jxx.Service.IndexService;
+import com.jxx.crawler.mapper.ChnRecordMapper;
+import com.jxx.crawler.model.ChnRecord;
+import com.jxx.crawler.service.CrawlerService;
+import com.jxx.queue.QueueGenerationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RestController;
 
-//@RestController
+@RestController
 public class IndexController {
-    @Autowired
-    private IndexService indexService;
-    @Autowired
-    private DataService dataService;
 
-    @RequestMapping("/msg")
-    public String msg() {
-        return indexService.getMsg();
-    }
-    @RequestMapping("/data")
-    public String data() {
-        return dataService.getData();
-    }
-    @RequestMapping("/order")
-    public String order(){
-        return  indexService.getorder();
-    }
-    @RequestMapping("/index")
-    public ModelAndView index(){
-        ModelAndView mv = new ModelAndView("index");
-        String data = dataService.getData();
-        mv.addObject("data",data);
-        return mv;
+//    @Autowired
+    private QueueGenerationService queueGenerationService;
+
+    @Autowired
+    private CrawlerService crawlerService;
+
+    @Autowired
+    private ChnRecordMapper chnRecordMapper;
+    @RequestMapping("/init")
+    public void init(){
+        ChnRecord chnRecord = new ChnRecord();
+        chnRecord.setChnRecordNumber("abc");
+        ChnRecord chnRecordByNumber = chnRecordMapper.getChnRecordByNumber(chnRecord);
+        System.out.println(chnRecordByNumber);
+//        queueGenerationService.addData(chnRecord);
+//        Integer integer = crawlerService.saveChnRecord(chnRecord);
+
     }
 }
