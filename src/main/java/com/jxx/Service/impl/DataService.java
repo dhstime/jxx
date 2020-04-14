@@ -5,7 +5,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 @Service
-@PropertySource("classpath:/properties/data.properties")
+//@PropertySource("classpath:/properties/data.properties")
 public class DataService implements com.jxx.Service.DataService {
 //    @Value("${dog.id}")
     private Integer id;
@@ -14,6 +14,6 @@ public class DataService implements com.jxx.Service.DataService {
     @Override
     public String getData() {
 
-        return "id是"+id+"名字是"+name;
+        return "id是"+1+"名字是"+2;
     }
 }

@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Configuration;
 @SpringBootApplication()
 @MapperScan(basePackages = {"com.jxx.crawler.mapper","com.jxx.mapper"})
 @ComponentScan(basePackages = {"com.jxx"})
-@EnableApolloConfig
 public class JxxApplication {
     public static void main(String[] args) {
         SpringApplication.run(JxxApplication.class, args);

@@ -36,7 +36,7 @@ public class LocalTest {
         //执行获取页面
         return connect;
     }
-    @Test
+//    @Test
     public void test() throws Exception{
         Connection connection = creatConnect(targetUrl);
         Connection.Response response = connection.method(Connection.Method.GET).execute();

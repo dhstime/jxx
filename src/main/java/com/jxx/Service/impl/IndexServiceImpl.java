@@ -1,12 +1,11 @@
 package com.jxx.Service.impl;
 
 import com.jxx.Service.IndexService;
-import com.jxx.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class IndexServiceImpl implements IndexService {
+public abstract class IndexServiceImpl implements IndexService {
 //    @Value("${node.host}")
     private String host;
 //    @Value("${node.port}")
@@ -21,10 +20,4 @@ public class IndexServiceImpl implements IndexService {
         return msg;
     }
 
-    @Override
-    public String getorder() {
-        User user = new User();
-        user.setId(2);
-        return user.toString();
-    }
 }

@@ -39,7 +39,7 @@ public class JsoupTest {
     * @Author:strange
     * @Date:17:21 2020-02-29
     */
-    @Test
+//    @Test
     public void testJsoup1() throws Exception {
 
         Connection.Response response = creatConnect(targetUrl);

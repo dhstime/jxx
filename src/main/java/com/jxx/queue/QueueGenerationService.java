@@ -23,7 +23,7 @@ public class QueueGenerationService {
     private final LinkedBlockingQueue<QueueTaskHandler> tasks = new LinkedBlockingQueue<QueueTaskHandler>(5000);
 
     // 类似于一个线程总管 保证所有的任务都在队列之中
-    private ExecutorService service = new ThreadPoolExecutor(1, 1,
+    private ExecutorService service = new ThreadPoolExecutor(2, 2,
             0L, TimeUnit.MILLISECONDS,  new LinkedBlockingQueue<Runnable>(1024),
             new ThreadFactoryBuilder().setNameFormat("demo-pool-%d").build(), new ThreadPoolExecutor.AbortPolicy());
 

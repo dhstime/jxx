@@ -1,11 +1,14 @@
 package com.jxx.crawler.model;
 
+import java.io.Serializable;
+import java.util.Date;
+
 /**
 *国产注册信息
 * @Author:strange
 * @Date:13:01 2020-03-06
 */
-public class ChnRegister {
+public class ChnRegister implements Serializable {
     /** 国产注册表id  CHN_REGISTER_ID **/
     private Integer chnRegisterId;
 
@@ -59,6 +62,72 @@ public class ChnRegister {
 
     /** 变更情况  UPDATE_CONTENT **/
     private String updateContent;
+
+    /**国产注册类型 **/
+    private Integer optType = 1;
+
+    /** 添加时间  ADD_TIME **/
+    private Date addTime;
+
+    /** 添加人  CREATOR **/
+    private String creator="crawler";
+
+    /** 修改时间  MODE_TIME **/
+    private Date modeTime;
+
+    /** 修改人  UPDATER **/
+    private String updater="crawler";
+
+    /** 是否删除  0否  1是  IS_DELETE **/
+    private Integer isDelete=0;
+
+    public Integer getOptType() {
+        return optType;
+    }
+
+    public void setOptType(Integer optType) {
+        this.optType = optType;
+    }
+
+    public Date getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public Date getModeTime() {
+        return modeTime;
+    }
+
+    public void setModeTime(Date modeTime) {
+        this.modeTime = modeTime;
+    }
+
+    public String getUpdater() {
+        return updater;
+    }
+
+    public void setUpdater(String updater) {
+        this.updater = updater;
+    }
+
+    public Integer getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Integer isDelete) {
+        this.isDelete = isDelete;
+    }
 
     /**   国产注册表id  CHN_REGISTER_ID   **/
     public Integer getChnRegisterId() {
@@ -238,5 +307,29 @@ public class ChnRegister {
     /**   变更情况  UPDATE_CONTENT   **/
     public void setUpdateContent(String updateContent) {
         this.updateContent = updateContent == null ? null : updateContent.trim();
+    }
+
+    @Override
+    public String toString() {
+        return "ChnRegister{" +
+                "chnRegisterId=" + chnRegisterId +
+                ", chnRegisterNumber='" + chnRegisterNumber + '\'' +
+                ", registerName='" + registerName + '\'' +
+                ", goodsName='" + goodsName + '\'' +
+                ", manageType='" + manageType + '\'' +
+                ", expirationStorage='" + expirationStorage + '\'' +
+                ", attachment='" + attachment + '\'' +
+                ", otherContent='" + otherContent + '\'' +
+                ", note='" + note + '\'' +
+                ", approvalDepa='" + approvalDepa + '\'' +
+                ", approvalDate='" + approvalDate + '\'' +
+                ", expirationDate='" + expirationDate + '\'' +
+                ", registerAddress='" + registerAddress + '\'' +
+                ", productAddress='" + productAddress + '\'' +
+                ", model='" + model + '\'' +
+                ", composition='" + composition + '\'' +
+                ", scope='" + scope + '\'' +
+                ", updateContent='" + updateContent + '\'' +
+                '}';
     }
 }

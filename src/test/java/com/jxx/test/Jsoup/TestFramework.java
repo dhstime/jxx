@@ -17,7 +17,7 @@ import java.util.List;
 public class TestFramework {
 
     String url = "http://www.dhsstrive.com/";
-    @Test
+//    @Test
     public void test1() throws Exception {
         Article article = (Article)CrawlerUtils.execute(Article.class, url, new Article());
         System.out.println(article.toString());
@@ -25,7 +25,7 @@ public class TestFramework {
 //        System.out.println(article.getComment().getAuthor());
     }
 
-    @Test
+//    @Test
     public void test2() throws Exception {
         List<Article> list = (List<Article>)CrawlerUtils.execute(Article.class, url,  new ArrayList<Article>());
         for (Article article : list) {

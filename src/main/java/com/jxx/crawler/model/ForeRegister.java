@@ -1,4 +1,7 @@
 package com.jxx.crawler.model;
+
+import java.util.Date;
+
 /**
 *进口注册信息
 * @Author:strange
@@ -64,6 +67,72 @@ public class ForeRegister {
 
     /** 变更情况  UPDATE_CONTENT **/
     private String updateContent;
+
+    /**国产注册类型 **/
+    private Integer optType = 2;
+
+    /** 添加时间  ADD_TIME **/
+    private Date addTime;
+
+    /** 添加人  CREATOR **/
+    private String creator="crawler";
+
+    /** 修改时间  MODE_TIME **/
+    private Date modeTime;
+
+    /** 修改人  UPDATER **/
+    private String updater="crawler";
+
+    /** 是否删除  0否  1是  IS_DELETE **/
+    private Integer isDelete=0;
+
+    public Integer getOptType() {
+        return optType;
+    }
+
+    public void setOptType(Integer optType) {
+        this.optType = optType;
+    }
+
+    public Date getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public Date getModeTime() {
+        return modeTime;
+    }
+
+    public void setModeTime(Date modeTime) {
+        this.modeTime = modeTime;
+    }
+
+    public String getUpdater() {
+        return updater;
+    }
+
+    public void setUpdater(String updater) {
+        this.updater = updater;
+    }
+
+    public Integer getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(Integer isDelete) {
+        this.isDelete = isDelete;
+    }
 
     /**   注册人住所  REGISTER_ADDRESS   **/
     public String getRegisterAddress() {

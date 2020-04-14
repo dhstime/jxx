@@ -41,7 +41,7 @@ public class CrawlerServiceImpl implements CrawlerService {
                 i = chnRecordMapper.insert(chnRecord);
             }else{
                 chnRecord.setChnRecordId(old.getChnRecordId());
-                i = chnRecordMapper.updateByPrimaryKey(chnRecord);
+                i = chnRecordMapper.updateByPrimaryKeySelective(chnRecord);
             }
             return i;
         }catch (Exception e){
@@ -59,7 +59,7 @@ public class CrawlerServiceImpl implements CrawlerService {
             i = chnRegisterMapper.insert(chnRegister);
         }else{
             chnRegister.setChnRegisterId(old.getChnRegisterId());
-            i = chnRegisterMapper.updateByPrimaryKey(chnRegister);
+            i = chnRegisterMapper.updateByPrimaryKeySelective(chnRegister);
         }
         }catch (Exception e){
             logger.error("saveChnRegister Number:{},error:{]",chnRegister.getChnRegisterNumber(),e);
@@ -77,7 +77,7 @@ public class CrawlerServiceImpl implements CrawlerService {
             i = foreRecordMapper.insert(foreRecord);
         }else{
             foreRecord.setForeRecordId(old.getForeRecordId());
-            i = foreRecordMapper.updateByPrimaryKey(foreRecord);
+            i = foreRecordMapper.updateByPrimaryKeySelective(foreRecord);
         }
         }catch (Exception e){
             logger.error("saveForeRecordd number:{},error:{}",foreRecord.getForeRecordNumber(),e);
@@ -94,7 +94,7 @@ public class CrawlerServiceImpl implements CrawlerService {
             i = foreRegisterMapper.insert(foreRegister);
         }else{
             foreRegister.setForeRegisterId(old.getForeRegisterId());
-            i = foreRegisterMapper.updateByPrimaryKey(foreRegister);
+            i = foreRegisterMapper.updateByPrimaryKeySelective(foreRegister);
         }
         }catch (Exception e){
             logger.error("saveForeRegister number:{},error:{}",foreRegister.getForeRegisterNumber(),e);
