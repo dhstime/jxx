@@ -11,7 +11,7 @@ import java.io.*;
 
 public class JsoupTest {
     //设置访问路径
-    public static String targetUrl = "http://www.dhsstrive.com/";
+    public static String targetUrl = "https://weixin.sogou.com/weixin?query=%E5%8C%BB%E7%96%97%E5%99%A8%E6%A2%B0%E7%BB%8F%E9%94%80%E5%95%86%E8%81%94%E7%9B%9F&_sug_type_=&s_from=input&_sug_=n&type=2&page=1&ie=utf8";
     /**
     *创建连接
     * @Author:strange
@@ -39,17 +39,17 @@ public class JsoupTest {
     * @Author:strange
     * @Date:17:21 2020-02-29
     */
-//    @Test
+    @Test
     public void testJsoup1() throws Exception {
 
         Connection.Response response = creatConnect(targetUrl);
-//        String body = response.body();
+        String body = response.body();
         //写入文件
 //        write(body,"demo.txt");
         //获取元素
-        getElement(response);
+//        getElement(response);
 
-//        System.out.println(body);
+        System.out.println(body);
     }
     /**
     *获取主页元素内容

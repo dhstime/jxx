@@ -5,4 +5,6 @@ public interface DataService {
    public  String getData();
 
     void insert() throws Exception;
+
+    void thread(double random);
 }

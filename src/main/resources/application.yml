@@ -71,8 +71,8 @@ mybatis:
 logging:
   level:
     #扫描的包路径
-    com.jxx.mapper: info
-    com.jxx.crawler.mapper: info
+    com.jxx.mapper: debug
+    com.jxx.crawler.mapper: debug
 
 ---
 spring:

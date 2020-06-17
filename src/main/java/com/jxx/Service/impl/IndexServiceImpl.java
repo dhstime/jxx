@@ -1,10 +1,11 @@
 package com.jxx.Service.impl;
 
 import com.jxx.Service.IndexService;
+import com.jxx.common.BaseService.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 @Service
-public abstract class IndexServiceImpl implements IndexService {
+public  class IndexServiceImpl extends BaseServiceImpl implements IndexService {
 //    @Value("${node.host}")
     private String host;
 //    @Value("${node.port}")
@@ -18,5 +19,16 @@ public abstract class IndexServiceImpl implements IndexService {
         String msg = "ip地址是"+host+"端口是"+port+"启动"+port2;
         return msg;
     }
+
+    @Override
+    public String getorder() {
+        return null;
+    }
+
+    @Override
+    public void thread() {
+        exec();
+    }
+
 
 }
