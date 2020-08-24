@@ -8,6 +8,8 @@ server:
     context-path: /
 spring:
   profiles: dev
+  application:
+    name: jxx
   datasource:
     #引入druid数据源
     #mycat配置主从数据库
@@ -20,7 +22,7 @@ spring:
       # 使用druid数据源连接池
     type: com.alibaba.druid.pool.DruidDataSource
       #加载驱动
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driverClassName: com.mysql.cj.jdbc.Driver
     filters: stat
     maxActive: 20
     initialSize: 1
@@ -66,14 +68,12 @@ mybatis:
   #开启驼峰映射
   configuration:
     map-underscore-to-camel-case: true
-
 #引入logger日志
 logging:
   level:
     #扫描的包路径
     com.jxx.mapper: debug
     com.jxx.crawler.mapper: debug
-
 ---
 spring:
   profiles: prod

@@ -1,5 +1,7 @@
 package com.jxx.nettyTest.netty;
 
+import java.nio.channels.Channel;
+
 /**
  * 
  *
@@ -7,4 +9,6 @@ package com.jxx.nettyTest.netty;
  * @date $
  */
 public class NettyTest {
+    public static void main(String[] args) {
+    }
 }

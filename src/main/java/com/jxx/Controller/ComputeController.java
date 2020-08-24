@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 
@@ -58,5 +59,13 @@ public class ComputeController {
     @RequestMapping("/thread2")
     public void thread2(){
        indexService.thread();
+    }
+
+    @RequestMapping("/getpdf")
+    public ModelAndView getPdf(){
+        ModelAndView mv = new ModelAndView();
+        mv.addObject("value","pdf");
+        mv.setViewName("index.html");
+        return mv;
     }
 }

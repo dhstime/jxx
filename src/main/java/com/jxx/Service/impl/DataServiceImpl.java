@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.jxx.common.BaseService.BaseServiceImpl;
 import com.jxx.fuction.abstractFactory.User;
 import com.jxx.mapper.UserMapper;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,12 +21,17 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class DataServiceImpl extends BaseServiceImpl implements com.jxx.Service.DataService {
 
+    private final  IndexServiceImpl indexService;
+
+    public DataServiceImpl(ObjectProvider<IndexServiceImpl> serviceObjectProvider){
+        this.indexService = serviceObjectProvider.getIfAvailable();
+    }
+
     @Resource
     private UserMapper userMapper;
 
     @Override
     public String getData() {
-
         return "id是"+1+"名字是"+2;
     }
 
