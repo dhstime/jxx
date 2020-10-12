@@ -6,7 +6,7 @@ package com.jxx.common.model;
  * @Description TODO
  * @createTime 2020年08月06日 15:24:00
  */
-public class Order extends LogicalShow{
+public class Order {
 
     private  Integer id;
 
@@ -34,14 +34,5 @@ public class Order extends LogicalShow{
                 "id=" + id +
                 ", num=" + num +
                 '}';
-    }
-
-
-    public int add(int a){
-        System.out.println("int "+a);
-        return a;
-    }
-    public void add(String a){
-        System.out.println("string"+ a);
     }
 }

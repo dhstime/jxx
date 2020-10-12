@@ -1,0 +1,19 @@
+## examples/runnable.av
+
+let callable = lambda() ->
+  new java.util.Date()
+end;
+
+p(call(callable));
+
+let task = new java.util.concurrent.FutureTask(callable);
+run(task);
+p(get(task));
+
+let r = lambda() ->
+  p("run in thread");
+end;
+
+let t = new Thread(r);
+start(t);
+join(t);

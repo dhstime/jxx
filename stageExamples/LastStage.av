@@ -1,0 +1,12 @@
+## stageExamples/LastStage.av
+
+a =  invoiceNum + nowNum;
+
+if allNum < a {
+    throw new IllegalArgumentException("本次申请数量不合法");
+}
+
+if allNum == a {
+    return  amount - invoiceNum  * price;
+}
+ return nowNum * price;

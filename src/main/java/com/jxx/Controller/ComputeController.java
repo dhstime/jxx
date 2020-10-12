@@ -1,6 +1,8 @@
 package com.jxx.Controller;
 
 import cn.hutool.core.util.RandomUtil;
+import com.googlecode.aviator.AviatorEvaluator;
+import com.googlecode.aviator.Expression;
 import com.jxx.Service.DataService;
 import com.jxx.Service.IndexService;
 import com.jxx.common.ResultInfo;
@@ -9,6 +11,7 @@ import com.jxx.crawler.model.ChnRegister;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -40,10 +43,15 @@ public class ComputeController {
         return resultInfo;
     }
 
-    @RequestMapping("/solr")
-    public ResultInfo solr() throws Exception {
-        ResultInfo resultInfo = new ResultInfo();
-        return resultInfo;
+    @RequestMapping("/avi")
+    public ResultInfo avi() throws Exception {
+        String aa = "name != nil ? ('hello,' + name) : 'who are u ?'";
+        Expression compile = AviatorEvaluator.compile(aa);
+        String s = (String) compile.execute();
+        System.out.println(s);
+        s = (String) compile.execute(compile.newEnv("name","da"));
+        System.out.println(s);
+        return null;
     }
 
     @RequestMapping("/insert")

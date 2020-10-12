@@ -1,0 +1,6 @@
+## examples/new.av
+
+let d = new com.jxx.common.MoneyUtil();
+
+p(type(d));
+p(d);

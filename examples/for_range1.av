@@ -1,0 +1,9 @@
+## examples/for_range1.av
+
+for i in range(0, 10) {
+  println(i);
+}
+
+for i in range(0, 10, 2) {
+  println(i);
+}
