@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <iframe src="http://localhost:8090/" id="iframe"></iframe>
+    <form id="form">
+        <input type="text" id="msg" value="Message to send">
+        <input type="submit">
+    </form>
+</body>
+<script type="text/javascript">
+    window.onload = function () {
+        var win = document.getElementById("iframe").contentWindow;
+        document.getElementById("form").onsubmit = function (e) {
+            win.postMessage(document.getElementById("msg").value);
+            e.preventDefault();
+        };
+    };
+</script>
+</html>

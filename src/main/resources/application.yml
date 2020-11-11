@@ -44,6 +44,7 @@ spring:
   thymeleaf:
     prefix: classpath:/templates/
     suffix:
+    cache: false
   aop:
     auto: true
 #  #配置Redis连接信息
@@ -72,8 +73,8 @@ mybatis:
 logging:
   level:
     #扫描的包路径
-    com.jxx.mapper: debug
-    com.jxx.crawler.mapper: debug
+    com.jxx.mapper: error
+    com.jxx.crawler.mapper: error
 ---
 spring:
   profiles: prod

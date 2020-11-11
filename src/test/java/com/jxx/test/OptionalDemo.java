@@ -62,7 +62,7 @@ public class OptionalDemo {
         //flatMap与map（Funtion）非常相似，区别在于lambda表达式的返回值。
         //map方法的lambda表达式返回值可以是任何类型，但是返回值会包装成Optional实例。
         //但是flatMap方法的lambda返回值总是Optional类型。
-        upperName = name.flatMap((value) -> Optional.of(value.toUpperCase()));
+        upperName = name.flatMap((value) -> Optional.of(value.toLowerCase()));
         System.out.println(upperName.orElse("No value found"));
 
         //filter方法检查Optiona值是否满足给定条件。

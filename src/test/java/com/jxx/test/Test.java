@@ -10,9 +10,7 @@ import com.jxx.common.model.Order;
 import com.jxx.common.model.QuoteorderGoods;
 import sun.security.provider.MD5;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -81,17 +79,20 @@ public class Test {
 //        }
 
 
-        FileInputStream fileInputStream = new FileInputStream("/Users/dhs/Downloads/2.txt");
+        FileInputStream fileInputStream = new FileInputStream("/Users/dhs/Downloads/1.txt");
         InputStreamReader isr = new InputStreamReader(fileInputStream);
         BufferedReader br = new BufferedReader(isr);
+        FileOutputStream fileOutputStream = new FileOutputStream("/Users/dhs/Downloads/2.sql");
+        OutputStreamWriter osw = new OutputStreamWriter(fileOutputStream);
+        BufferedWriter bw = new BufferedWriter(osw);
         String str = null;
-        StringBuffer res = new StringBuffer();
         while((str = br.readLine() )!= null){
-            String[] s = str.split("\t");
-            String sql = "UPDATE T_WAREHOUSE_GOODS_OPERATE_LOG SET VEDENG_BATCH_NUMER='"+s[1]+"' WHERE WAREHOUSE_GOODS_OPERATE_LOG_ID="+s[0]+";";
-            System.out.println(sql);
-//            res = res.append(s[0]).append(",");
+            StringBuffer res = new StringBuffer();
+
+
         }
 //        System.out.println(res);
+        fileInputStream.close();
+        fileOutputStream.close();
     }
 }

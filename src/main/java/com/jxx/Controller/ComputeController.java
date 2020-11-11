@@ -5,6 +5,7 @@ import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.Expression;
 import com.jxx.Service.DataService;
 import com.jxx.Service.IndexService;
+import com.jxx.Service.impl.DataServiceImpl;
 import com.jxx.common.ResultInfo;
 import com.jxx.crawler.mapper.ChnRegisterMapper;
 import com.jxx.crawler.model.ChnRegister;
@@ -17,6 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 @RestController
@@ -28,7 +33,7 @@ public class ComputeController {
     @Resource
     private ChnRegisterMapper chnRegisterMapper;
 
-    @Autowired
+    @Resource(name = "DataServiceImpl")
     private DataService dataService;
 
     @Autowired
@@ -64,6 +69,7 @@ public class ComputeController {
         double random = Math.random();
         dataService.thread(random);
     }
+
     @RequestMapping("/thread2")
     public void thread2(){
        indexService.thread();
@@ -74,6 +80,25 @@ public class ComputeController {
         ModelAndView mv = new ModelAndView();
         mv.addObject("value","pdf");
         mv.setViewName("index.html");
+        return mv;
+    }
+
+    @RequestMapping("/click")
+    public ModelAndView click(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
+        Cookie[] cookies = httpServletRequest.getCookies();
+        HttpSession session = httpServletRequest.getSession();
+        for (Cookie cookie : cookies) {
+            System.out.println(cookie);
+        }
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("clickjacking.html");
+        return mv;
+    }
+
+    @RequestMapping("/canvas")
+    public ModelAndView canvas(){
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("canvas.html");
         return mv;
     }
 }

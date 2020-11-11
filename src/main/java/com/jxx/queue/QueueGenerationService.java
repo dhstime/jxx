@@ -32,7 +32,7 @@ public class QueueGenerationService {
     //线程状态
     private Future<?> serviceThreadStatus = null;
 
-    @PostConstruct
+//    @PostConstruct
     public void init() {
         serviceThreadStatus = service.submit(new Thread(new Runnable() {
             @Override
