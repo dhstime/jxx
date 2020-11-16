@@ -18,11 +18,9 @@ import java.util.Optional;
 public class Test2 {
     @Test
     public void test(){
-        List<Integer> list = new ArrayList<>();
-        list.parallelStream().forEach(integer -> {
-
-        });
-
+        String sku = "V123";
+        String substring = sku.substring(1);
+        System.out.println(substring);
     }
 
 }

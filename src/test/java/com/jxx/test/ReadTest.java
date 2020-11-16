@@ -84,7 +84,7 @@ public class ReadTest{
             sql = appenSql(sql,BOX_PACKAGE_NUM,"BOX_PACKAGE_NUM");
 
             String substring = sql.substring(0 , sql.length()-1);
-            String endsql =" WHERE SKU_NO= \""+sku+"\";";
+            String endsql =" WHERE SKU_NO= \'"+sku+"\';";
             System.out.println(substring + endsql);
         }
     }
