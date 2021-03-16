@@ -16,9 +16,9 @@ spring:
 #    url: ${jdbc_url}
 #    username: ${jdbc_username}
 #    password: ${jdbc_password}
-    url: jdbc:mysql://127.0.0.1:3306/jtdb?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
-    username: root
-    password: root
+    url: jdbc:mysql://192.168.1.53:3306/erp_ivedeng_com?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    username: erpuser
+    password: neweu3453563
       # 使用druid数据源连接池
     type: com.alibaba.druid.pool.DruidDataSource
       #加载驱动

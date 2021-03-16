@@ -32,7 +32,7 @@ public class QueueGenerationService {
     //线程状态
     private Future<?> serviceThreadStatus = null;
 
-//    @PostConstruct
+    @PostConstruct
     public void init() {
         serviceThreadStatus = service.submit(new Thread(new Runnable() {
             @Override
@@ -77,7 +77,7 @@ public class QueueGenerationService {
     public void activeService() {
         running = true;
         if (service.isShutdown()) {
-            service = new ThreadPoolExecutor(1, 1,
+            service = new ThreadPoolExecutor(2, 2,
                     0L, TimeUnit.MILLISECONDS,  new LinkedBlockingQueue<Runnable>(1024),
                     new ThreadFactoryBuilder().setNameFormat("demo-pool-%d").build(), new ThreadPoolExecutor.AbortPolicy());
             init();

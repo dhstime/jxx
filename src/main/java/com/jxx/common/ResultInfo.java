@@ -99,4 +99,16 @@ public class ResultInfo<T> {
     public void setStatus(Integer status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "ResultInfo{" +
+                "code=" + code +
+                ", message='" + message + '\'' +
+                ", param=" + param +
+                ", data=" + data +
+                ", listData=" + listData +
+                ", status=" + status +
+                '}';
+    }
 }

@@ -47,6 +47,13 @@ public class ComputeController {
         resultInfo.setData(chnRegister);
         return resultInfo;
     }
+    @RequestMapping("/getId")
+    public ResultInfo getId(Integer id){
+        ResultInfo resultInfo = new ResultInfo();
+        ChnRegister chnRegister = chnRegisterMapper.getChnRegisterById(id);
+        resultInfo.setData(chnRegister);
+        return resultInfo;
+    }
 
     @RequestMapping("/avi")
     public ResultInfo avi() throws Exception {
