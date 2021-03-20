@@ -1,6 +1,8 @@
 package com.jxx.mapper;
 
-import com.jxx.excel.Export;
+import com.jxx.excel.InExport;
+import com.jxx.excel.OutExport;
+import com.jxx.excel.StockExport;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -13,5 +15,11 @@ import java.util.List;
  */
 public interface ExportMapper {
 
-    public List<Export> selectAll(@Param("startTime") Long startTime, @Param("endTime") Long endTime);
+    List<OutExport> selectOutAll(@Param("startTime") Long startTime, @Param("endTime") Long endTime);
+
+    List<InExport> selectInAll(@Param("startTime")Long startTime,@Param("endTime") Long endTime);
+
+    Integer getMaxId(@Param("endTime")Long endTime);
+
+    List<StockExport> selectStockSnapshot(Integer maxid);
 }

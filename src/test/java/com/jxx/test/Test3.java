@@ -2,7 +2,6 @@ package com.jxx.test;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
-import com.jxx.excel.Export;
 import com.jxx.mapper.ExportMapper;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.Test;

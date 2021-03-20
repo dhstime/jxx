@@ -5,25 +5,29 @@ import lombok.Data;
 
 /**
  * @author Strange
- * @ClassName Export.java
+ * @ClassName OutExport.java
  * @Description TODO
  * @createTime 2021年03月10日 21:43:00
  */
 @Data
-public class Export {
+public class OutExport {
 
     @Excel(name = "单号")
     private String 单号;
+    @Excel(name = "单据类型")
+    private String 单据类型;
     @Excel(name = "订单状态")
     private String 订单状态;
+    @Excel(name = "是否直发")
+    private String 是否直发;
     @Excel(name = "创建时间")
     private String 创建时间;
     @Excel(name = "生效时间")
     private String 生效时间;
     @Excel(name = "客户名称")
     private String 客户名称;
-    @Excel(name = "客户id")
-    private String 客户id;
+    @Excel(name = "客户ID")
+    private String 客户ID;
     @Excel(name = "客户等级")
     private String 客户等级;
     @Excel(name = "客户类别")
@@ -62,10 +66,12 @@ public class Export {
     private String 贝登条码;
     @Excel(name = "厂商条码")
     private String 厂商条码;
-    @Excel(name = "数量")
+    @Excel(name = "数量",type = 10)
     private String 数量;
-    @Excel(name = "金额")
-    private String 金额;
+    @Excel(name = "单价",type = 10)
+    private String 单价;
+    @Excel(name = "出库金额",type = 10)
+    private String 出库金额;
     @Excel(name = "批次")
     private String 批次;
     @Excel(name = "出库时间")
