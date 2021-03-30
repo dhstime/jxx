@@ -16,6 +16,8 @@ public class OutExport {
     private String 单号;
     @Excel(name = "单据类型")
     private String 单据类型;
+    @Excel(name = "关联单号")
+    private String 关联单号;
     @Excel(name = "订单状态")
     private String 订单状态;
     @Excel(name = "是否直发")

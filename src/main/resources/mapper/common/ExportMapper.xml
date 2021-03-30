@@ -14,11 +14,13 @@
     WHEN 7 THEN
     ASS.AFTER_SALES_NO
     WHEN 10 THEN
-    OO.order_no
+    IF(L.LEND_OUT_ID IS NOT NULL,L.LEND_OUT_NO,OO.order_no)
     WHEN 13 THEN
     OO.order_no
     WHEN 14 THEN
     OO.order_no
+    WHEN 15 THEN
+    IA.INVENTORY_ADJUSTMENT_NO
     ELSE ''
     END) AS '单号',
     CASE A.OPERATE_TYPE
@@ -36,42 +38,51 @@
     WHEN 12 THEN '盘盈入库'
     WHEN 13 THEN '报废出库'
     WHEN 14 THEN '领用出库'
+    WHEN 15 THEN '调整盘亏出库'
     ELSE ''
     END  AS  '单据类型',
+    ASS.ORDER_NO '关联单号',
     CASE
     WHEN SA.STATUS = 1 THEN
     '进行中'
     WHEN SA.STATUS = 2 THEN
     '已完结'
     WHEN SA.STATUS = 3 THEN
-    '已关闭' ELSE '待确认'
+    '已关闭'
+    WHEN SA.STATUS = 0 THEN
+    '待确认'
+    ELSE ''
     END '订单状态',
-
     CASE SA.DELIVERY_DIRECT
     WHEN 1 THEN '是'
     WHEN 0 THEN '否'
-    ELSE ''
+    ELSE '否'
     END AS '是否直发',
     FROM_UNIXTIME(
-    IF
-    (
-    SA.ADD_TIME = 0,
-    NULL,
-    SA.ADD_TIME
-    ) / 1000,
-    '%Y-%m-%d'
-    ) AS '创建时间',
+    IFNULL(	CASE A.OPERATE_TYPE
+    WHEN 2 THEN SA.ADD_TIME
+    WHEN 4 THEN ASS.ADD_TIME
+    WHEN 6 THEN ASS.ADD_TIME
+    WHEN 7 THEN ASS.ADD_TIME
+    WHEN 10 THEN IF(L.LEND_OUT_ID IS NOT NULL,L.ADD_TIME,UNIX_TIMESTAMP(OO.ADD_TIME) *1000)
+    WHEN 13 THEN  UNIX_TIMESTAMP(OO.ADD_TIME) *1000
+    WHEN 14 THEN  UNIX_TIMESTAMP(OO.ADD_TIME) *1000
+    WHEN 15 THEN  IA.ADD_TIME
+    ELSE NULL END ,NULL) /1000,'%Y-%m-%d'
+    )  '创建时间',
     FROM_UNIXTIME(
-    IF
-    (
-    SA.VALID_TIME = 0,
-    NULL,
-    SA.VALID_TIME
-    ) / 1000,
-    '%Y-%m-%d'
-    ) AS '生效时间',
+    IFNULL(	CASE A.OPERATE_TYPE
+    WHEN 2 THEN SA.VALID_TIME
+    WHEN 4 THEN ASS.VALID_TIME
+    WHEN 6 THEN ASS.VALID_TIME
+    WHEN 7 THEN ASS.VALID_TIME
+    ELSE NULL END ,NULL) /1000,'%Y-%m-%d'
+    )  '生效时间',
     CASE A.OPERATE_TYPE
     WHEN 2 THEN SA.TRADER_NAME
+    WHEN 4 THEN T.TRADER_NAME
+    WHEN 6 THEN T.TRADER_NAME
+    WHEN 7 THEN T.TRADER_NAME
     WHEN 10 THEN	IF(L.TRADER_NAME IS NOT NULL,L.TRADER_NAME,OO.borrow_trader_name)
     ELSE '' END
     AS'客户名称',
@@ -89,8 +100,7 @@
     WHEN CC.CUSTOMER_NATURE = 466 THEN
     '终端' ELSE ''
     END AS '客户性质',
-    (
-    SELECT
+    (SELECT
     F.ORG_NAME
     FROM
     T_R_USER_POSIT D
@@ -98,12 +108,9 @@
     LEFT JOIN T_ORGANIZATION F ON E.ORG_ID = F.ORG_ID
     WHERE
     D.USER_ID = ccc.USER_ID
-    LIMIT 1
-    ) AS '归属部门',
+    LIMIT 1 ) AS '归属部门',
     e.TITLE '发票类型',
-    IFNULL(
-    R3.REGION_NAME,
-    IFNULL( R2.REGION_NAME, R1.REGION_NAME )) '客户归属省',
+    IFNULL(R3.REGION_NAME,IFNULL( R2.REGION_NAME, R1.REGION_NAME )) '客户归属省',
     AB.SHOW_NAME 商品名称,
     AB.SKU_NO SKU,
     BRA.BRAND_NAME 品牌,
@@ -132,7 +139,9 @@
     LEFT JOIN T_TRADER T ON ASD.TRADER_ID=T.TRADER_ID
     LEFT JOIN T_WMS_OUTPUT_ORDER_GOODS OOG ON OOG.id=A.RELATED_ID AND A.OPERATE_TYPE IN (10,13,14)
     LEFT JOIN T_WMS_OUTPUT_ORDER OO ON OO.id=OOG.wms_output_order_id
-    LEFT JOIN T_LEND_OUT L ON A.RELATED_ID = L.LEND_OUT_ID  AND A.OPERATE_TYPE = 10
+    LEFT JOIN T_LEND_OUT L ON A.RELATED_ID = L.LEND_OUT_ID  AND A.OPERATE_TYPE = 10 AND A.ADD_TIME &lt;=1514736000000
+    LEFT JOIN T_WMS_INVENTORY_ADJUSTMENT_DETAIL IAD ON IAD.INVENTORY_ADJUSTMENT_DETAIL_ID = A.RELATED_ID AND A.OPERATE_TYPE = 15
+    LEFT JOIN T_WMS_INVENTORY_ADJUSTMENT IA ON IA.INVENTORY_ADJUSTMENT_ID = IAD.INVENTORY_ADJUSTMENT_ID
     LEFT JOIN T_BARCODE BR ON BR.BARCODE_ID = A.BARCODE_ID
     LEFT JOIN V_CORE_SKU AB ON AB.SKU_ID = A.GOODS_ID
     LEFT JOIN V_CORE_SPU BB ON AB.SPU_ID = BB.SPU_ID
@@ -166,7 +175,7 @@
     AND A.IS_ENABLE = 1
     AND A.ADD_TIME > #{startTime} AND A.ADD_TIME  &lt; #{endTime}
     AND A.NUM &lt; 0
-    GROUP BY A.BARCODE_ID;
+    GROUP BY A.WAREHOUSE_GOODS_OPERATE_LOG_ID
   </select>
   <select id="selectInAll" resultType="com.jxx.excel.InExport">
     SELECT
@@ -204,46 +213,58 @@
     WHEN 14 THEN '领用出库'
     ELSE ''
     END  AS  '单据类型',
+    ASS.ORDER_NO '关联单号',
     CASE
     WHEN C.STATUS = 1 THEN
     '进行中'
     WHEN C.STATUS = 2 THEN
     '已完结'
     WHEN C.STATUS = 3 THEN
-    '已关闭' ELSE '待确认'
+    '已关闭'
+    WHEN C.STATUS = 0 THEN
+    '待确认'
+    ELSE ''
     END '订单状态',
-
     CASE C.DELIVERY_DIRECT
     WHEN 1 THEN '是'
     WHEN 0 THEN '否'
-    ELSE ''
+    ELSE '否'
     END AS '是否直发',
     FROM_UNIXTIME(
-    IF
-    (
-    C.ADD_TIME = 0,
-    NULL,
-    C.ADD_TIME
-    ) / 1000,
-    '%Y-%m-%d'
-    ) AS '创建时间',
+    IFNULL(	CASE A.OPERATE_TYPE
+    WHEN 1 THEN C.ADD_TIME
+    WHEN 3 THEN ASS.ADD_TIME
+    WHEN 5 THEN ASS.ADD_TIME
+    WHEN 8 THEN ASS.ADD_TIME
+    WHEN 9 THEN IF(L.LEND_OUT_ID IS NOT NULL,L.ADD_TIME,UNIX_TIMESTAMP(OO.add_time) *1000)
+    WHEN 12 THEN  UNIX_TIMESTAMP(IO.ADD_TIME) *1000
+    ELSE NULL END ,NULL) /1000,'%Y-%m-%d'
+    )  '创建时间',
     FROM_UNIXTIME(
-    IF
-    (
-    C.VALID_TIME = 0,
-    NULL,
-    C.VALID_TIME
-    ) / 1000,
-    '%Y-%m-%d'
-    ) AS '生效时间',
-
+    IFNULL(	CASE A.OPERATE_TYPE
+    WHEN 1 THEN C.VALID_TIME
+    WHEN 3 THEN ASS.VALID_TIME
+    WHEN 5 THEN ASS.VALID_TIME
+    WHEN 8 THEN ASS.VALID_TIME
+    ELSE NULL END ,NULL) /1000,'%Y-%m-%d'
+    )  '生效时间',
     CASE A.OPERATE_TYPE
     WHEN 1 THEN C.TRADER_NAME
+    WHEN 3 THEN AST.TRADER_NAME
+    WHEN 5 THEN AST.TRADER_NAME
+    WHEN 8 THEN AST.TRADER_NAME
     WHEN 9 THEN
     IF(L.TRADER_NAME IS NOT NULL,L.TRADER_NAME,OO.borrow_trader_name)
     ELSE '' END  '客户名称',
     C.TRADER_ID '客户ID',
-    IF(TS.TRADER_TYPE = 1, '生产厂家','经销商') 客户类别,
+    CASE TS.TRADER_TYPE
+    WHEN 1 THEN
+    '生产厂家'
+    WHEN 2 THEN
+    '经销商'
+    ELSE
+    ''
+    END  AS '客户类别',
     TSS.TITLE 客户等级,
     (
     SELECT
@@ -284,10 +305,12 @@
     LEFT JOIN T_BUYORDER C ON B.BUYORDER_ID = C.BUYORDER_ID AND C.VALID_STATUS = 1 AND A.OPERATE_TYPE=1
     LEFT JOIN T_AFTER_SALES_GOODS ASG ON ASG.AFTER_SALES_GOODS_ID=A.RELATED_ID AND A.OPERATE_TYPE IN (3,5,8)
     LEFT JOIN T_AFTER_SALES ASS ON ASG.AFTER_SALES_ID=ASS.AFTER_SALES_ID
+    LEFT JOIN T_AFTER_SALES_DETAIL ASD ON ASD.AFTER_SALES_ID = ASS.AFTER_SALES_ID
+    LEFT JOIN T_TRADER AST ON AST.TRADER_ID= ASD.TRADER_ID
     LEFT JOIN T_TRADER T ON C.TRADER_ID=T.TRADER_ID
-    LEFT JOIN T_WMS_OUTPUT_ORDER_GOODS OOG ON OOG.id=A.RELATED_ID AND A.OPERATE_TYPE = 9
+    LEFT JOIN T_WMS_OUTPUT_ORDER_GOODS OOG ON OOG.id=A.RELATED_ID AND A.OPERATE_TYPE = 9 AND A.ADD_TIME >1514736000000
     LEFT JOIN T_WMS_OUTPUT_ORDER OO ON OOG.wms_output_order_id=OO.id
-    LEFT JOIN T_LEND_OUT L ON A.RELATED_ID = L.LEND_OUT_ID  AND A.OPERATE_TYPE = 9
+    LEFT JOIN T_LEND_OUT L ON A.RELATED_ID = L.LEND_OUT_ID  AND A.OPERATE_TYPE = 9 AND A.ADD_TIME &lt;=1514736000000
     LEFT JOIN T_WMS_INPUT_ORDER_GOODS IOG ON IOG.WMS_INPUT_ORDER_GOODS_ID = A.RELATED_ID AND A.OPERATE_TYPE=12
     LEFT JOIN T_WMS_INPUT_ORDER IO ON IOG.WMS_INPUT_ORDER_ID=IO.WMS_INPUT_ORDER_ID
     LEFT JOIN T_WMS_INVENTORY_ADJUSTMENT_DETAIL IAD ON IAD.INVENTORY_ADJUSTMENT_DETAIL_ID = A.RELATED_ID AND A.OPERATE_TYPE = 11
@@ -321,7 +344,7 @@
     AND A.IS_ENABLE=1
     AND A.NUM > 0
     AND A.ADD_TIME > #{startTime} AND A.ADD_TIME  &lt; #{endTime}
-    GROUP BY A.BARCODE_ID
+    GROUP BY A.WAREHOUSE_GOODS_OPERATE_LOG_ID
   </select>
   <select id="getMaxId" resultType="java.lang.Integer">
     SELECT MAX(A.WAREHOUSE_GOODS_OPERATE_LOG_ID) FROM T_WAREHOUSE_GOODS_OPERATE_LOG A WHERE A.ADD_TIME  &lt;= #{endTime}
@@ -492,6 +515,260 @@
     LEFT JOIN T_UNIT UN ON UN.UNIT_ID=AB.BASE_UNIT_ID
     WHERE A.ALLNUM > 0
     GROUP BY A.EXPIRATION_DATE,A.OPERATE_TYPE,A.RELATED_ID;
+  </select>
+  <select id="selectDirectOutAll" resultType="com.jxx.excel.OutExport">
+    SELECT
+      SA.SALEORDER_ID AS 'ORDER_ID',
+      SA.SALEORDER_NO AS '单号',
+      CASE
+        WHEN SA.STATUS = 1 THEN
+          '进行中'
+        WHEN SA.STATUS = 2 THEN
+          '已完结'
+        WHEN SA.STATUS = 3 THEN
+          '已关闭' ELSE '待确认'
+        END '订单状态',
+
+      CASE SA.DELIVERY_DIRECT
+        WHEN 1 THEN '是'
+        ELSE '否'
+        END AS '是否直发',
+
+      '销售直发' AS '单据类型',
+
+      FROM_UNIXTIME(
+                IF
+                  (
+                        SA.ADD_TIME = 0,
+                        NULL,
+                        SA.ADD_TIME
+                  ) / 1000,
+                '%Y-%m-%d'
+        ) AS '创建时间',
+
+      FROM_UNIXTIME(
+                IF
+                  (
+                        SA.VALID_TIME = 0,
+                        NULL,
+                        SA.VALID_TIME
+                  ) / 1000,
+                '%Y-%m-%d'
+        ) AS '生效时间',
+
+      SA.TRADER_NAME '客户名称',
+      SA.TRADER_ID '客户ID',
+      SD_CUS.TITLE '客户等级',
+
+      CASE
+        WHEN TC.CUSTOMER_TYPE = 426 THEN
+          '科研医疗'
+        WHEN TC.CUSTOMER_TYPE = 427 THEN
+          '临床医疗' ELSE ''
+        END AS '客户类别',
+      CASE
+        WHEN TC.CUSTOMER_NATURE = 465 THEN
+          '分销'
+        WHEN TC.CUSTOMER_NATURE = 466 THEN
+          '终端' ELSE ''
+        END AS '客户性质',
+
+      (
+        SELECT
+          F.ORG_NAME
+        FROM
+          T_R_USER_POSIT D
+            LEFT JOIN T_POSITION E ON D.POSITION_ID = E.POSITION_ID
+            LEFT JOIN T_ORGANIZATION F ON E.ORG_ID = F.ORG_ID
+        WHERE
+          D.USER_ID = U1.USER_ID
+        LIMIT 1
+      ) AS '归属部门',
+
+	SD_INV.TITLE AS '发票类型',
+
+		IFNULL(
+		R3.REGION_NAME,
+	IFNULL( R2.REGION_NAME, R1.REGION_NAME )) '客户归属省',
+  SKU.SHOW_NAME '商品名称',
+  SKU.SKU_NO  AS 'SKU',
+  BRA.BRAND_NAME AS '品牌',
+	SKU.MODEL '规格',
+  UN.UNIT_NAME '计量单位',
+  CB.BASE_CATEGORY_NAME '三级分类',
+  DB.BASE_CATEGORY_NAME '二级分类',
+  EB.BASE_CATEGORY_NAME  '一级分类',
+	TC3.CATEGORY_NAME AS '老三级分类',
+  TC2.CATEGORY_NAME AS '老二级分类',
+  TC1.CATEGORY_NAME AS '老一级分类',
+	 '' AS '贝登条码',
+	 '' AS '厂商条码',
+	BG.NUM   '数量',
+	BG.PRICE  '单价',
+	BG.NUM*SG.PRICE '出库金额',
+		'' AS '批次',
+
+	FROM_UNIXTIME(
+	IF
+		(
+			SG.DELIVERY_TIME = 0,
+			NULL,
+			SG.DELIVERY_TIME
+		) / 1000,
+		'%Y-%m-%d'
+	) AS '出库时间'
+    FROM
+      T_SALEORDER SA
+      LEFT JOIN T_SALEORDER_GOODS SG ON SA.SALEORDER_ID = SG.SALEORDER_ID
+      LEFT JOIN T_R_BUYORDER_J_SALEORDER RBS ON RBS.SALEORDER_GOODS_ID = SG.SALEORDER_GOODS_ID
+      LEFT JOIN T_BUYORDER_GOODS BG ON BG.BUYORDER_GOODS_ID = RBS.BUYORDER_GOODS_ID
+      LEFT JOIN T_TRADER TRA ON TRA.TRADER_ID = SA.TRADER_ID
+      LEFT JOIN T_TRADER_CUSTOMER TC ON TC.TRADER_ID = SA.TRADER_ID
+      LEFT JOIN T_SYS_OPTION_DEFINITION SD_CUS ON SD_CUS.SYS_OPTION_DEFINITION_ID = TC.CUSTOMER_LEVEL
+      LEFT JOIN T_R_TRADER_J_USER RTU ON SA.TRADER_ID = RTU.TRADER_ID AND  RTU.TRADER_TYPE =1
+      LEFT JOIN T_USER U1 ON RTU.USER_ID = U1.USER_ID
+      LEFT JOIN T_SYS_OPTION_DEFINITION SD_INV ON SD_INV.SYS_OPTION_DEFINITION_ID = SA.INVOICE_TYPE
+      LEFT JOIN V_CORE_SKU SKU ON SKU.SKU_ID = SG.GOODS_ID
+      LEFT JOIN V_CORE_SPU SPU ON SPU.SPU_ID = SKU.SPU_ID
+      LEFT JOIN T_BRAND BRA ON BRA.BRAND_ID = SPU.BRAND_ID
+      LEFT JOIN V_BASE_CATEGORY CB ON SPU.CATEGORY_ID = CB.BASE_CATEGORY_ID
+      LEFT JOIN V_BASE_CATEGORY DB ON CB.PARENT_ID = DB.BASE_CATEGORY_ID
+      LEFT JOIN V_BASE_CATEGORY EB ON DB.PARENT_ID = EB.BASE_CATEGORY_ID
+      LEFT JOIN T_UNIT UN ON UN.UNIT_ID = SKU.BASE_UNIT_ID
+      LEFT JOIN T_GOODS goods on goods.GOODS_ID=SG.GOODS_ID
+      LEFT JOIN T_CATEGORY TC1 ON TC1.CATEGORY_ID=goods.CATEGORY_ID AND TC1.STATUS=1
+      LEFT JOIN T_CATEGORY TC2 ON TC2.CATEGORY_ID=TC1.PARENT_ID AND TC2.STATUS=1
+      LEFT JOIN T_CATEGORY TC3 ON TC3.CATEGORY_ID=TC2.CATEGORY_ID AND TC3.STATUS=1
+      LEFT JOIN T_REGION R1 ON R1.region_id = TRA.AREA_ID
+      LEFT JOIN T_REGION R2 ON R2.region_id = R1.PARENT_ID
+      AND R2.REGION_ID > 100000
+      LEFT JOIN T_REGION R3 ON R3.region_id = R2.PARENT_ID
+      AND R1.REGION_ID > 100000
+    WHERE 1=1
+      AND SA.DELIVERY_DIRECT = 1
+      AND SG.DELIVERY_TIME >= #{startTime}
+      AND SG.DELIVERY_TIME &lt; #{endTime}
+      AND SG.IS_DELETE = 0
+      AND SG.NUM > 0
+      AND RBS.BUYORDER_GOODS_ID IS NOT NULL
+    GROUP BY SG.SALEORDER_GOODS_ID
+
+  </select>
+  <select id="selectDirectInAll" resultType="com.jxx.excel.InExport">
+    SELECT
+      B.BUYORDER_ID AS 'ORDER_ID',
+      B.BUYORDER_NO AS '单号',
+      '采购直发' AS '单据类型',
+      '' AS '关联单号',
+      CASE
+        WHEN B.STATUS = 1 THEN
+          '进行中'
+        WHEN B.STATUS = 2 THEN
+          '已完结'
+        WHEN B.STATUS = 3 THEN
+          '已关闭' ELSE '待确认'
+        END '订单状态',
+      CASE B.DELIVERY_DIRECT
+        WHEN 1 THEN '是'
+        ELSE '否'
+        END AS '是否直发',
+      FROM_UNIXTIME(
+                IF
+                  (
+                        B.ADD_TIME = 0,
+                        NULL,
+                        B.ADD_TIME
+                  ) / 1000,
+                '%Y-%m-%d'
+        ) AS '创建时间',
+      FROM_UNIXTIME(
+                IF
+                  (
+                        B.VALID_TIME = 0,
+                        NULL,
+                        B.VALID_TIME
+                  ) / 1000,
+                '%Y-%m-%d'
+        ) AS '生效时间',
+      B.TRADER_NAME '客户名称',
+      B.TRADER_ID '客户ID',
+      SD_CUS.TITLE '客户等级',
+      CASE
+        WHEN TC.CUSTOMER_TYPE = 426 THEN
+          '科研医疗'
+        WHEN TC.CUSTOMER_TYPE = 427 THEN
+          '临床医疗' ELSE ''
+        END AS '客户类别',
+      CASE
+        WHEN TC.CUSTOMER_NATURE = 465 THEN
+          '分销'
+        WHEN TC.CUSTOMER_NATURE = 466 THEN
+          '终端' ELSE ''
+        END AS '客户性质',
+      ORG.ORG_NAME AS '归属部门',
+      SD_INV.TITLE AS '发票类型',
+      IFNULL(
+              R3.REGION_NAME,
+              IFNULL( R2.REGION_NAME, R1.REGION_NAME )) '客户归属省',
+      SKU.SHOW_NAME '商品名称',
+      SKU.SKU_NO  AS 'SKU',
+      BRA.BRAND_NAME AS '品牌',
+      SKU.MODEL '规格',
+      UN.UNIT_NAME '计量单位',
+      CB.BASE_CATEGORY_NAME '三级分类',
+      DB.BASE_CATEGORY_NAME '二级分类',
+      EB.BASE_CATEGORY_NAME  '一级分类',
+      TC3.CATEGORY_NAME AS '老三级分类',
+      TC2.CATEGORY_NAME AS '老二级分类',
+      TC1.CATEGORY_NAME AS '老一级分类',
+      '' AS '贝登条码',
+      '' AS '厂商条码',
+      BG.NUM '数量',
+      BG.PRICE '单价',
+      BG.NUM*BG.PRICE '入库金额',
+      '' AS '批次',
+      FROM_UNIXTIME(
+                IF
+                  (
+                        B.DELIVERY_TIME = 0,
+                        NULL,
+                        B.DELIVERY_TIME
+                  ) / 1000,
+                '%Y-%m-%d'
+        ) AS '入库时间'
+    FROM
+      T_BUYORDER B
+        LEFT JOIN T_BUYORDER_GOODS BG ON B.BUYORDER_ID = BG.BUYORDER_ID
+        LEFT JOIN T_TRADER TRA ON TRA.TRADER_ID = B.TRADER_ID
+        LEFT JOIN T_TRADER_CUSTOMER TC ON TC.TRADER_ID = B.TRADER_ID
+        LEFT JOIN T_SYS_OPTION_DEFINITION SD_CUS ON SD_CUS.SYS_OPTION_DEFINITION_ID = TC.CUSTOMER_LEVEL
+        LEFT JOIN T_R_TRADER_J_USER RTU ON RTU.TRADER_ID = B.TRADER_ID AND RTU.TRADER_TYPE = 2
+        LEFT JOIN T_USER U1 ON RTU.USER_ID = U1.USER_ID
+        LEFT JOIN T_ORGANIZATION ORG ON ORG.ORG_ID = B.ORG_ID
+        LEFT JOIN T_SYS_OPTION_DEFINITION SD_INV ON SD_INV.SYS_OPTION_DEFINITION_ID = B.INVOICE_TYPE
+        LEFT JOIN V_CORE_SKU SKU ON SKU.SKU_ID = BG.GOODS_ID
+        LEFT JOIN V_CORE_SPU SPU ON SPU.SPU_ID = SKU.SPU_ID
+        LEFT JOIN T_BRAND BRA ON BRA.BRAND_ID = SPU.BRAND_ID
+        LEFT JOIN V_BASE_CATEGORY CB ON SPU.CATEGORY_ID = CB.BASE_CATEGORY_ID
+        LEFT JOIN V_BASE_CATEGORY DB ON CB.PARENT_ID = DB.BASE_CATEGORY_ID
+        LEFT JOIN V_BASE_CATEGORY EB ON DB.PARENT_ID = EB.BASE_CATEGORY_ID
+        LEFT JOIN T_UNIT UN ON UN.UNIT_ID = SKU.BASE_UNIT_ID
+        LEFT JOIN T_GOODS goods on goods.GOODS_ID=BG.GOODS_ID
+        LEFT JOIN T_CATEGORY TC1 ON TC1.CATEGORY_ID=goods.CATEGORY_ID AND TC1.STATUS=1
+        LEFT JOIN T_CATEGORY TC2 ON TC2.CATEGORY_ID=TC1.PARENT_ID AND TC2.STATUS=1
+        LEFT JOIN T_CATEGORY TC3 ON TC3.CATEGORY_ID=TC2.CATEGORY_ID AND TC3.STATUS=1
+        LEFT JOIN T_REGION R1 ON R1.region_id = TRA.AREA_ID
+        LEFT JOIN T_REGION R2 ON R2.region_id = R1.PARENT_ID
+        AND R2.REGION_ID > 100000
+        LEFT JOIN T_REGION R3 ON R3.region_id = R2.PARENT_ID
+        AND R1.REGION_ID > 100000
+    WHERE 1=1
+      AND BG.NUM > 0
+      AND BG.IS_DELETE = 0
+      AND B.DELIVERY_DIRECT = 1
+      AND B.STATUS IN (1,2)
+      AND B.DELIVERY_TIME  >= #{startTime}
+      AND B.DELIVERY_TIME &lt; #{endTime}
   </select>
 
 

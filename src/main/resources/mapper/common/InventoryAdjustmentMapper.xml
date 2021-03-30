@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jxx.mapper.InventoryAdjustmentMapper">
+
+    <select id="getDetailsByInfo" resultType="com.jxx.common.model.po.InventoryAdjustmentDetailPo">
+        SELECT
+            A.INVENTORY_ADJUSTMENT_NO,B.SKU_NO,ABS(B.NUM) NUM,B.ADD_TIME,B.VEDENG_BATCH_NUMER,B.ORDER_NO
+        FROM
+            T_WMS_INVENTORY_ADJUSTMENT A
+                LEFT JOIN T_WMS_INVENTORY_ADJUSTMENT_DETAIL B ON A.INVENTORY_ADJUSTMENT_ID = B.INVENTORY_ADJUSTMENT_ID
+        WHERE
+            A.INVENTORY_ADJUSTMENT_NO = #{inventoryAdjustmentNo}
+          AND B.SKU_NO = #{skuNo}
+          AND B.VEDENG_BATCH_NUMER = #{vedengBatchNumer}
+
+    </select>
+</mapper>

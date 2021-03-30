@@ -18,6 +18,8 @@ public class InExport {
     private String 单据类型;
     @Excel(name = "订单状态")
     private String 订单状态;
+    @Excel(name = "关联单号")
+    private String 关联单号;
     @Excel(name = "是否直发")
     private String 是否直发;
     @Excel(name = "创建时间")
@@ -72,8 +74,5 @@ public class InExport {
     private String 批次;
     @Excel(name = "入库时间")
     private String 入库时间;
-
-
-
 
 }

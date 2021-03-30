@@ -28,7 +28,6 @@ public class Test2 {
         String str = null;
         while((str = br.readLine() )!= null){
             try {
-                str.getBytes();
                 String[] split = str.split(";");
                 String id = split[0];
                 String uri = split[1];

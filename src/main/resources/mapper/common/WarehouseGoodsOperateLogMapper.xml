@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.jxx.mapper.WarehouseGoodsOperateLogMapper" >
+
+
+    <select id="selectById" resultType="com.jxx.common.model.WarehouseGoodsOperateLog">
+        SELECT
+            A.*
+        FROM
+            T_WAREHOUSE_GOODS_OPERATE_LOG A
+        WHERE
+            A.WAREHOUSE_GOODS_OPERATE_LOG_ID = #{warehouseGoodsOperateLogId}
+    </select>
+    <select id="getBuyorder" resultType="com.jxx.common.model.WarehouseGoodsOperateLog">
+        SELECT
+        (CASE A.OPERATE_TYPE
+        WHEN 1 THEN
+        C.BUYORDER_NO
+        WHEN 3 THEN
+        ASS.AFTER_SALES_NO
+        WHEN 5 THEN
+        ASS.AFTER_SALES_NO
+        WHEN 8 THEN
+        ASS.AFTER_SALES_NO
+        WHEN 9 THEN
+        IF(L.LEND_OUT_NO IS NOT NULL,L.LEND_OUT_NO,OO.order_no)
+        WHEN 12 THEN
+        IO.ORDER_NO
+        WHEN 11 THEN
+        IA.INVENTORY_ADJUSTMENT_NO
+        ELSE ''
+        END) AS orderNo,
+
+        FROM_UNIXTIME(
+        IFNULL(	CASE A.OPERATE_TYPE
+        WHEN 1 THEN C.ADD_TIME
+        WHEN 3 THEN ASS.ADD_TIME
+        WHEN 5 THEN ASS.ADD_TIME
+        WHEN 8 THEN ASS.ADD_TIME
+        WHEN 9 THEN IF(L.LEND_OUT_ID IS NOT NULL,L.ADD_TIME,OO.add_time)
+        WHEN 12 THEN  UNIX_TIMESTAMP(IO.ADD_TIME) *1000
+        ELSE NULL END ,NULL) /1000,'%Y-%m-%d'
+        )  '创建时间',
+        AB.SKU_NO,
+        A.WAREHOUSE_GOODS_OPERATE_LOG_ID,
+        (CASE A.OPERATE_TYPE
+        WHEN 1 THEN
+        B.NUM
+        WHEN 3 THEN
+        ASG.NUM
+        WHEN 5 THEN
+        ASG.NUM
+        WHEN 8 THEN
+        ASG.NUM
+        WHEN 9 THEN
+        IF(L.LEND_OUT_NO IS NOT NULL,L.LEND_OUT_NUM,OOG.output_num)
+        WHEN 12 THEN
+        IOG.INPUT_NUM
+        WHEN 11 THEN
+        IAD.NUM
+        ELSE ''
+        END) AS '订单商品数量',
+        (CASE A.OPERATE_TYPE
+        WHEN 1 THEN
+        B.ARRIVAL_NUM
+        WHEN 3 THEN
+        ASG.ARRIVAL_NUM
+        WHEN 5 THEN
+        ASG.ARRIVAL_NUM
+        WHEN 8 THEN
+        ASG.ARRIVAL_NUM
+        WHEN 9 THEN
+        IF(L.LEND_OUT_NO IS NOT NULL,L.RETURN_NUM,OOG.already_input_num)
+        WHEN 12 THEN
+        IOG.ARRIVAL_NUM
+        WHEN 11 THEN
+        IAD.NUM
+        ELSE ''
+        END) AS 'ORDER_ARRIVAL_NUM',
+        A.NUM LOG_NUM,
+        A.ADD_TIME,
+        A.LAST_STOCK_NUM,
+        A.VEDENG_BATCH_NUMER,
+        A.COMMENTS
+        FROM
+        T_WAREHOUSE_GOODS_OPERATE_LOG A
+        LEFT JOIN T_BUYORDER_GOODS B ON B.BUYORDER_GOODS_ID = A.RELATED_ID AND B.IS_DELETE = 0
+        LEFT JOIN T_BUYORDER C ON B.BUYORDER_ID = C.BUYORDER_ID AND C.VALID_STATUS = 1 AND A.OPERATE_TYPE = 1
+        LEFT JOIN T_AFTER_SALES_GOODS ASG ON ASG.AFTER_SALES_GOODS_ID=A.RELATED_ID AND A.OPERATE_TYPE IN (3,5,8)
+        LEFT JOIN T_AFTER_SALES ASS ON ASG.AFTER_SALES_ID=ASS.AFTER_SALES_ID
+        LEFT JOIN T_AFTER_SALES_DETAIL ASD ON ASD.AFTER_SALES_ID = ASS.AFTER_SALES_ID
+        LEFT JOIN T_WMS_OUTPUT_ORDER_GOODS OOG ON OOG.id=A.RELATED_ID AND A.OPERATE_TYPE = 9 AND A.ADD_TIME >1514736000000
+        LEFT JOIN T_WMS_OUTPUT_ORDER OO ON OOG.wms_output_order_id=OO.id
+        LEFT JOIN T_LEND_OUT L ON A.RELATED_ID = L.LEND_OUT_ID  AND A.OPERATE_TYPE = 9 AND A.ADD_TIME &lt;=1514736000000
+        LEFT JOIN T_WMS_INPUT_ORDER_GOODS IOG ON IOG.WMS_INPUT_ORDER_GOODS_ID = A.RELATED_ID AND A.OPERATE_TYPE=12
+        LEFT JOIN T_WMS_INPUT_ORDER IO ON IOG.WMS_INPUT_ORDER_ID=IO.WMS_INPUT_ORDER_ID
+        LEFT JOIN T_WMS_INVENTORY_ADJUSTMENT_DETAIL IAD ON IAD.INVENTORY_ADJUSTMENT_DETAIL_ID = A.RELATED_ID AND A.OPERATE_TYPE = 11
+        LEFT JOIN T_WMS_INVENTORY_ADJUSTMENT IA ON IA.INVENTORY_ADJUSTMENT_ID = IAD.INVENTORY_ADJUSTMENT_ID
+        LEFT JOIN T_BARCODE BR ON BR.BARCODE_ID = A.BARCODE_ID
+        LEFT JOIN V_CORE_SKU AB ON AB.SKU_ID = A.GOODS_ID
+        LEFT JOIN V_CORE_SPU BB ON AB.SPU_ID = BB.SPU_ID
+        WHERE
+        A.LOG_TYPE = 0
+        AND C.BUYORDER_NO=#{buyorderNo} AND AB.SKU_NO=#{sku}
+    </select>
+</mapper>

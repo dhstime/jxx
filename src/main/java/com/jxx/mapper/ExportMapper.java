@@ -22,4 +22,9 @@ public interface ExportMapper {
     Integer getMaxId(@Param("endTime")Long endTime);
 
     List<StockExport> selectStockSnapshot(Integer maxid);
+
+    List<OutExport> selectDirectOutAll(@Param("startTime") Long startTime, @Param("endTime") Long endTime);
+
+    List<InExport> selectDirectInAll(@Param("startTime")Long startTime,@Param("endTime") Long endTime);
+
 }
