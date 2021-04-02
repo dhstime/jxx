@@ -17,6 +17,10 @@ public class StockExport {
     private String 入库单号;
     @Excel(name = "单据类型")
     private String 单据类型;
+    @Excel(name = "供应商名称")
+    private String 供应商名称;
+    @Excel(name = "供应商id")
+    private String 供应商ID;
     @Excel(name = "关联单号")
     private String 关联单号;
     @Excel(name = "创建日期")

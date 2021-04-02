@@ -26,9 +26,9 @@ public class InExport {
     private String 创建时间;
     @Excel(name = "生效时间")
     private String 生效时间;
-    @Excel(name = "客户名称")
+    @Excel(name = "供应商名称")
     private String 客户名称;
-    @Excel(name = "客户ID")
+    @Excel(name = "供应商ID")
     private String 客户ID;
     @Excel(name = "客户类别")
     private String 客户类别;

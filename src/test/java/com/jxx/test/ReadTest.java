@@ -95,4 +95,23 @@ public class ReadTest{
         }
         return sql.append(filed + " = " + value +",");
     }
+
+    @Test
+    public void test2() throws Exception{
+        FileInputStream fileInputStream = new FileInputStream("/Users/dhs/Downloads/2.txt");
+        InputStreamReader isr = new InputStreamReader(fileInputStream);
+        BufferedReader br = new BufferedReader(isr);
+        String str;
+        while((str = br.readLine() )!= null){
+            String[] split = str.split("\t");
+            String id = split[0];
+            String costPrice = split[1];
+
+            StringBuilder sql = new StringBuilder("UPDATE T_WAREHOUSE_GOODS_OPERATE_LOG SET ");
+            sql = appenSql(sql,costPrice,"NEW_COST_PRICE");
+            String substring = sql.substring(0 , sql.length()-1);
+            String endsql =" WHERE WAREHOUSE_GOODS_OPERATE_LOG_ID= "+id+";";
+            System.out.println(substring + endsql);
+        }
+    }
 }

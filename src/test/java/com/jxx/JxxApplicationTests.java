@@ -27,14 +27,14 @@ public class JxxApplicationTests {
     @Test
     public void test() throws Exception{
 
-        LocalDateTime startTime = LocalDateTime.of(2021,3,1,0,0,0);
+        LocalDateTime startTime = LocalDateTime.of(2019,7,1,0,0,0);
 
         do {
             LocalDateTime endTime = startTime.plusMonths(1);
 
             List<OutExport> outlist = exportMapper.selectOutAll(localDatetime2TimeStamp(startTime),localDatetime2TimeStamp(endTime));
+            //直发销售
             List<OutExport> outExports = exportMapper.selectDirectOutAll(localDatetime2TimeStamp(startTime), localDatetime2TimeStamp(endTime));
-
             outlist.addAll(outExports);
 
             Workbook outworkbook = ExcelExportUtil.exportExcel(new ExportParams("出库记录",""),OutExport.class,outlist);
@@ -44,8 +44,8 @@ public class JxxApplicationTests {
             outfos.close();
 
             List<InExport> inLIst = exportMapper.selectInAll(localDatetime2TimeStamp(startTime),localDatetime2TimeStamp(endTime));
+            //直发采购
             List<InExport> inExports = exportMapper.selectDirectInAll(localDatetime2TimeStamp(startTime), localDatetime2TimeStamp(endTime));
-
             inLIst.addAll(inExports);
 
             Workbook inworkbook = ExcelExportUtil.exportExcel(new ExportParams("入库记录",""),InExport.class,inLIst);
@@ -54,17 +54,20 @@ public class JxxApplicationTests {
             inworkbook.write(infos);
             infos.close();
 
-            Integer maxid = exportMapper.getMaxId(localDatetime2TimeStamp(endTime));
-            List<StockExport> stockExportList = exportMapper.selectStockSnapshot(maxid);
+            List<StockExport> stockExportList = exportMapper.selectStockSnapshot(localDatetime2TimeStamp(startTime), localDatetime2TimeStamp(endTime));
+
             Workbook stockworkbook = ExcelExportUtil.exportExcel(new ExportParams("库存明细",""),StockExport.class,stockExportList);
             String stockfileName = "库存明细" + startTime.getYear() + "-" + startTime.getMonth().getValue();
             FileOutputStream stockfos = new FileOutputStream("/Users/dhs/Downloads/数据/库存明细/"+stockfileName + ".xlsx");
             stockworkbook.write(stockfos);
             stockfos.close();
 
+            System.out.println(startTime.toString());
             startTime = endTime;
+
         } while (startTime.isBefore(LocalDateTime.of(2021,4,1,0,0,0)));
     }
+
     private Long localDatetime2TimeStamp(LocalDateTime time){
         return time.toInstant(ZoneOffset.of("+8")).toEpochMilli();
     }
