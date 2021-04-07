@@ -3,7 +3,6 @@ package com.jxx.excel;
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import lombok.Data;
 
-import java.math.BigDecimal;
 
 /**
  * @author Strange

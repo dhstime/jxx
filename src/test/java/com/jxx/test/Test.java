@@ -79,20 +79,6 @@ public class Test {
 //        }
 
 
-        FileInputStream fileInputStream = new FileInputStream("/Users/dhs/Downloads/1.txt");
-        InputStreamReader isr = new InputStreamReader(fileInputStream);
-        BufferedReader br = new BufferedReader(isr);
-        FileOutputStream fileOutputStream = new FileOutputStream("/Users/dhs/Downloads/2.sql");
-        OutputStreamWriter osw = new OutputStreamWriter(fileOutputStream);
-        BufferedWriter bw = new BufferedWriter(osw);
-        String str = null;
-        while((str = br.readLine() )!= null){
-            StringBuffer res = new StringBuffer();
 
-
-        }
-//        System.out.println(res);
-        fileInputStream.close();
-        fileOutputStream.close();
     }
 }

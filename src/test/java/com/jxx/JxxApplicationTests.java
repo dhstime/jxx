@@ -27,7 +27,7 @@ public class JxxApplicationTests {
     @Test
     public void test() throws Exception{
 
-        LocalDateTime startTime = LocalDateTime.of(2019,7,1,0,0,0);
+        LocalDateTime startTime = LocalDateTime.of(2018,12,1,0,0,0);
 
         do {
             LocalDateTime endTime = startTime.plusMonths(1);
