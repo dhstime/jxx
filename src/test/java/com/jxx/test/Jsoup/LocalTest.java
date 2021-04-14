@@ -1,15 +1,8 @@
 package com.jxx.test.Jsoup;
 
-import com.jxx.Jsoup.utils.CrawlerUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import org.junit.Test;
-import sun.security.provider.MD5;
-
-import java.util.Map;
 
 /**
  *

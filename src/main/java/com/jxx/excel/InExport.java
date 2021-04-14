@@ -20,6 +20,8 @@ public class InExport {
     private String 订单状态;
     @Excel(name = "关联单号")
     private String 关联单号;
+    @Excel(name = "备注")
+    private String 备注;
     @Excel(name = "是否直发")
     private String 是否直发;
     @Excel(name = "创建时间")

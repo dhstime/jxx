@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
+import java.math.BigDecimal;
 
 /**
  * @author Strange
@@ -39,5 +40,11 @@ public class Test2 {
         }
         bufferedWriter.close();
         writer.close();
+    }
+
+    @Test
+    public void test1(){
+        BigDecimal a = new BigDecimal("7.00");
+        System.out.println(a.toString());
     }
 }

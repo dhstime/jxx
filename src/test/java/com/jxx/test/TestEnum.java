@@ -1,6 +1,5 @@
 package com.jxx.test;
 
-import com.jxx.compute.Symbol;
 import org.junit.Test;
 
 /**

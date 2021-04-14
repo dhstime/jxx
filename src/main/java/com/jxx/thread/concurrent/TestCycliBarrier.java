@@ -11,10 +11,12 @@ import java.util.concurrent.*;
  * @createTime 2020年11月16日 09:55:00
  */
 public class TestCycliBarrier {
+
     // 类似于一个线程总管 保证所有的任务都在队列之中
     private static ExecutorService service = new ThreadPoolExecutor(2, 4,
             0L, TimeUnit.MILLISECONDS,  new LinkedBlockingQueue<Runnable>(1024),
             new ThreadFactoryBuilder().setNameFormat("demo-pool-%d").build(), new ThreadPoolExecutor.AbortPolicy());
+
     //用来挂起当前线程，直至所有线程都到达barrier状态再同时执行后续任务；
     public static void main(String[] args) {
         int N = 2;

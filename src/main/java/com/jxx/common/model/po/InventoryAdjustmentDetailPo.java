@@ -123,4 +123,7 @@ public class InventoryAdjustmentDetailPo implements Serializable {
      */
     private Integer updater;
 
+    private Integer spuId;
+
+
 }

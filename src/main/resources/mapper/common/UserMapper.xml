@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.jxx.mapper.UserMapper" >
-  <resultMap id="BaseResultMap" type="com.jxx.fuction.abstractFactory.User" >
+  <resultMap id="BaseResultMap" type="com.jxx.designfuction.abstractFactory.User" >
     <!--          -->
     <id column="ID" property="id" jdbcType="INTEGER" />
     <result column="NAME" property="name" jdbcType="VARCHAR" />
     <result column="AGE" property="age" jdbcType="INTEGER" />
   </resultMap>
 
-  <insert id="insert"  parameterType="com.jxx.fuction.abstractFactory.User" useGeneratedKeys="true" keyColumn="ID" keyProperty="id">
+  <insert id="insert" parameterType="com.jxx.designfuction.abstractFactory.User" useGeneratedKeys="true" keyColumn="ID" keyProperty="id">
     INSERT INTO V_USER (ID,NAME,AGE)
     VALUES  (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER})
   </insert>
 
-  <update id="update" parameterType="com.jxx.fuction.abstractFactory.User">
+  <update id="update" parameterType="com.jxx.designfuction.abstractFactory.User">
       update V_USER
     set
       NAME = #{name,jdbcType=VARCHAR},

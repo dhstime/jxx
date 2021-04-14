@@ -1,10 +1,15 @@
 package com.jxx.test;
 
 import com.jxx.JxxApplicationTests;
+import com.jxx.common.model.WarehouseGoodsOperateLog;
+import com.jxx.common.model.WarehouseGoodsOperateLogDto;
 import com.jxx.common.utils.DateUtil;
 import com.jxx.mapper.UnitMapper;
+import com.jxx.mapper.WarehouseGoodsOperateLogMapper;
+import com.ttqia.ez.list.util.StringUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -13,6 +18,9 @@ import javax.annotation.Resource;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * @author Strange
@@ -22,10 +30,14 @@ import java.io.InputStreamReader;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//@MapperScan(basePackages = {"com.jxx.crawler.mapper","com.jxx.mapper"}, sqlSessionFactoryRef = "dataSourceTarget")
 public class ReadTest{
 
     @Resource
     private UnitMapper unitMapper ;
+
+    @Resource
+    private WarehouseGoodsOperateLogMapper warehouseGoodsOperateLogMapper;
 
     @Test
     public void test() throws Exception {
@@ -113,5 +125,65 @@ public class ReadTest{
             String endsql =" WHERE WAREHOUSE_GOODS_OPERATE_LOG_ID= "+id+";";
             System.out.println(substring + endsql);
         }
+    }
+
+
+    @Test
+    public void testADj() throws Exception{
+        FileInputStream fileInputStream = new FileInputStream("/Users/dhs/Downloads/adj.txt");
+        InputStreamReader isr = new InputStreamReader(fileInputStream);
+        BufferedReader br = new BufferedReader(isr);
+        String str;
+        while((str = br.readLine() )!= null){
+            String[] split = str.split("\t");
+            String detailId = split[0];
+            String[] split1 = split[1].split(",");
+            for (String s : split1) {
+                String[] split2 = s.split(":");
+                Integer inId = Integer.valueOf(split2[0]);
+                WarehouseGoodsOperateLogDto warehouseGoodsOperateLog = warehouseGoodsOperateLogMapper.selectDtoById(inId);
+                Integer logId = warehouseGoodsOperateLog.getWarehouseGoodsOperateLogId();
+
+//                StringBuilder sql = new StringBuilder("UPDATE T_WAREHOUSE_GOODS_OPERATE_LOG SET ");
+//                sql = appenSql(sql,"LAST_STOCK_NUM -1","LAST_STOCK_NUM");
+//                sql = appenSql(sql,"(CASE LAST_STOCK_NUM WHEN 0 THEN 1 ELSE 0 END )","IS_USE");//IS_USE = (CASE LAST_STOCK_NUM WHEN 0 THEN 1 ELSE 0 END ),
+//                String substring = sql.substring(0 , sql.length()-1);
+//                String endsql =" WHERE WAREHOUSE_GOODS_OPERATE_LOG_ID= "+logId+";";
+//                System.out.println(substring + endsql);
+                warehouseGoodsOperateLog.setRelatedId(Integer.valueOf(detailId));
+                warehouseGoodsOperateLog.setLastStockNum(0);
+                warehouseGoodsOperateLog.setIsUse(0);
+                warehouseGoodsOperateLog.setOperateType(15);
+                warehouseGoodsOperateLog.setTagSources(logId.toString());
+                warehouseGoodsOperateLog.setWarehouseGoodsOperateLogId(null);
+
+                Class<WarehouseGoodsOperateLogDto> warehouseGoodsOperateLogDtoClass = WarehouseGoodsOperateLogDto.class;
+                Field[] fields = warehouseGoodsOperateLogDtoClass.getDeclaredFields();
+                for (Field field : fields) {
+                    String name = field.getName();
+                    String s1 = declaredMethodInvoke(warehouseGoodsOperateLog, name);
+
+                }
+            }
+        }
+    }
+    private  String declaredMethodInvoke(Object param, String field) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method declaredMethod = param.getClass().getDeclaredMethod(field);
+        return declaredMethod.invoke(param, null).toString();
+    }
+    /**
+     * 将字符串的首字母转大写
+     * @param str 需要转换的字符串
+     * @return
+     */
+    private  String captureName(String str,String rediskey) throws Exception {
+        //多个相同对象则入参为有注解对象
+        if(StringUtil.isBlank(str)){
+            return "";
+        }
+        // 进行字母的ascii编码前移，效率要高于截取字符串进行转换的操作
+        char[] cs=str.toCharArray();
+        cs[0]-=32;
+        return "get"+String.valueOf(cs);
     }
 }

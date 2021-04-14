@@ -1,0 +1,13 @@
+package com.jxx.designfuction.proxy;
+
+public class Person {
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}

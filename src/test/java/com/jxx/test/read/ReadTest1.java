@@ -1,7 +1,5 @@
 package com.jxx.test.read;
 
-import com.jxx.common.utils.DateUtil;
-import com.jxx.study.Intege;
 import org.junit.Test;
 
 import java.io.BufferedReader;

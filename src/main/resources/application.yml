@@ -84,9 +84,9 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     #mycat配置主从数据库
     #url: jdbc:mysql://192.168.56.132:8066/jtdb?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true
-    url: jdbc:mysql://192.168.1.53:3306/erp_ivedeng_com?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
-    username: erpuser
-    password: neweu3453563
+    url: jdbc:mysql://127.0.0.1:3306/jtdb?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: root
 server:
   port: 8100
   servlet:

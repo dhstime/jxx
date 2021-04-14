@@ -1,8 +1,6 @@
 package com.jxx.mapper;
 
-import com.jxx.excel.InExport;
-import com.jxx.excel.OutExport;
-import com.jxx.excel.StockExport;
+import com.jxx.excel.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -27,4 +25,7 @@ public interface ExportMapper {
 
     List<InExport> selectDirectInAll(@Param("startTime")Long startTime,@Param("endTime") Long endTime);
 
+    List<WarehouseInExport> getWarehouseInLogByTime(@Param("startTime") Long startTime, @Param("endTime") Long endTime);
+
+    List<WarehouseOutExport> getWarehouseOutLogByTime(@Param("startTime") Long startTime, @Param("endTime") Long endTime);
 }

@@ -3,6 +3,231 @@
 
 <mapper namespace="com.jxx.mapper.WarehouseGoodsOperateLogMapper" >
 
+    <insert id="insertSelective" parameterType="com.jxx.common.model.WarehouseGoodsOperateLogDto"
+            useGeneratedKeys="true" keyProperty="warehouseGoodsOperateLogId">
+        insert into T_WAREHOUSE_GOODS_OPERATE_LOG
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="barcodeId != null">
+                BARCODE_ID,
+            </if>
+            <if test="companyId != null">
+                COMPANY_ID,
+            </if>
+            <if test="operateType != null">
+                OPERATE_TYPE,
+            </if>
+            <if test="relatedId != null">
+                RELATED_ID,
+            </if>
+            <if test="goodsId != null">
+                GOODS_ID,
+            </if>
+            <if test="barcodeFactory != null">
+                BARCODE_FACTORY,
+            </if>
+            <if test="num != null">
+                NUM,
+            </if>
+            <if test="warehouseId != null">
+                WAREHOUSE_ID,
+            </if>
+            <if test="storageRoomId != null">
+                STORAGE_ROOM_ID,
+            </if>
+            <if test="storageAreaId != null">
+                STORAGE_AREA_ID,
+            </if>
+            <if test="storageLocationId != null">
+                STORAGE_LOCATION_ID,
+            </if>
+            <if test="storageRackId != null">
+                STORAGE_RACK_ID,
+            </if>
+            <if test="batchNumber != null">
+                BATCH_NUMBER,
+            </if>
+            <if test="expirationDate != null">
+                EXPIRATION_DATE,
+            </if>
+            <if test="productDate != null">
+                PRODUCT_DATE,
+            </if>
+            <if test="checkStatus != null">
+                CHECK_STATUS,
+            </if>
+            <if test="checkStatusUser != null">
+                CHECK_STATUS_USER,
+            </if>
+            <if test="checkStatusTime != null">
+                CHECK_STATUS_TIME,
+            </if>
+            <if test="recheckStatus != null">
+                RECHECK_STATUS,
+            </if>
+            <if test="recheckStatusUser != null">
+                RECHECK_STATUS_USER,
+            </if>
+            <if test="recheckStatusTime != null">
+                RECHECK_STATUS_TIME,
+            </if>
+            <if test="comments != null">
+                COMMENTS,
+            </if>
+            <if test="addTime != null">
+                ADD_TIME,
+            </if>
+            <if test="creator != null">
+                CREATOR,
+            </if>
+            <if test="modTime != null">
+                MOD_TIME,
+            </if>
+            <if test="updater != null">
+                UPDATER,
+            </if>
+            <if test="isEnable != null">
+                IS_ENABLE,
+            </if>
+            <if test="warehousePickingDetailId != null">
+                WAREHOUSE_PICKING_DETAIL_ID,
+            </if>
+            <if test="logicalWarehouseId != null">
+                LOGICAL_WAREHOUSE_ID,
+            </if>
+            <if test="vedengBatchNumer != null">
+                VEDENG_BATCH_NUMER,
+            </if>
+            <if test="lastStockNum != null">
+                LAST_STOCK_NUM,
+            </if>
+            <if test="isUse != null">
+                IS_USE,
+            </if>
+            <if test="costPrice != null">
+                COST_PRICE,
+            </if>
+            <if test="sterilizationBatchNo != null">
+                STERILZATION_BATCH_NUMBER,
+            </if>
+            <if test="logType != null">
+                LOG_TYPE,
+            </if>
+            <if test="tagSources != null">
+                TAG_SOURCES,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="barcodeId != null">
+                #{barcodeId,jdbcType=INTEGER},
+            </if>
+            <if test="companyId != null">
+                #{companyId,jdbcType=INTEGER},
+            </if>
+            <if test="operateType != null">
+                #{operateType,jdbcType=BIT},
+            </if>
+            <if test="relatedId != null">
+                #{relatedId,jdbcType=INTEGER},
+            </if>
+            <if test="goodsId != null">
+                #{goodsId,jdbcType=INTEGER},
+            </if>
+            <if test="barcodeFactory != null">
+                #{barcodeFactory,jdbcType=VARCHAR},
+            </if>
+            <if test="num != null">
+                #{num,jdbcType=INTEGER},
+            </if>
+            <if test="warehouseId != null">
+                #{warehouseId,jdbcType=INTEGER},
+            </if>
+            <if test="storageRoomId != null">
+                #{storageRoomId,jdbcType=INTEGER},
+            </if>
+            <if test="storageAreaId != null">
+                #{storageAreaId,jdbcType=INTEGER},
+            </if>
+            <if test="storageLocationId != null">
+                #{storageLocationId,jdbcType=INTEGER},
+            </if>
+            <if test="storageRackId != null">
+                #{storageRackId,jdbcType=INTEGER},
+            </if>
+            <if test="batchNumber != null">
+                #{batchNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="expirationDate != null">
+                #{expirationDate,jdbcType=BIGINT},
+            </if>
+            <if test="productDate != null">
+                #{productDate,jdbcType=BIGINT},
+            </if>
+            <if test="checkStatus != null">
+                #{checkStatus,jdbcType=BIT},
+            </if>
+            <if test="checkStatusUser != null">
+                #{checkStatusUser,jdbcType=INTEGER},
+            </if>
+            <if test="checkStatusTime != null">
+                #{checkStatusTime,jdbcType=BIGINT},
+            </if>
+            <if test="recheckStatus != null">
+                #{recheckStatus,jdbcType=BIT},
+            </if>
+            <if test="recheckStatusUser != null">
+                #{recheckStatusUser,jdbcType=INTEGER},
+            </if>
+            <if test="recheckStatusTime != null">
+                #{recheckStatusTime,jdbcType=BIGINT},
+            </if>
+            <if test="comments != null">
+                #{comments,jdbcType=VARCHAR},
+            </if>
+            <if test="addTime != null">
+                #{addTime,jdbcType=BIGINT},
+            </if>
+            <if test="creator != null">
+                #{creator,jdbcType=INTEGER},
+            </if>
+            <if test="modTime != null">
+                #{modTime,jdbcType=BIGINT},
+            </if>
+            <if test="updater != null">
+                #{updater,jdbcType=INTEGER},
+            </if>
+            <if test="isEnable != null">
+                #{isEnable,jdbcType=BIT},
+            </if>
+            <if test="warehousePickingDetailId != null">
+                #{warehousePickingDetailId,jdbcType=INTEGER},
+            </if>
+            <if test="logicalWarehouseId != null">
+                #{logicalWarehouseId,jdbcType=INTEGER},
+            </if>
+            <if test="vedengBatchNumer != null">
+                #{vedengBatchNumer,jdbcType=VARCHAR},
+            </if>
+            <if test="lastStockNum != null">
+                #{lastStockNum,jdbcType=INTEGER},
+            </if>
+            <if test="isUse != null">
+                #{isUse,jdbcType=INTEGER},
+            </if>
+            <if test="costPrice != null">
+                #{costPrice,jdbcType=DECIMAL},
+            </if>
+            <if test="sterilizationBatchNo != null">
+                #{sterilizationBatchNo,jdbcType=VARCHAR},
+            </if>
+            <if test="logType != null">
+                #{logType,jdbcType=VARCHAR},
+            </if>
+            <if test="tagSources != null">
+                #{tagSources,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
 
     <select id="selectById" resultType="com.jxx.common.model.WarehouseGoodsOperateLog">
         SELECT
@@ -104,4 +329,86 @@
         A.LOG_TYPE = 0
         AND C.BUYORDER_NO=#{buyorderNo} AND AB.SKU_NO=#{sku}
     </select>
+    <select id="getAdjDetilsByAdjNo" resultType="com.jxx.common.model.po.InventoryAdjustmentDetailPo">
+        SELECT
+            SKU.SPU_ID,A.INVENTORY_ADJUSTMENT_NO,SKU.SKU_NAME goodsName,B.*
+        FROM
+            T_WMS_INVENTORY_ADJUSTMENT A
+            LEFT JOIN T_WMS_INVENTORY_ADJUSTMENT_DETAIL B ON A.INVENTORY_ADJUSTMENT_ID = B.INVENTORY_ADJUSTMENT_ID
+            LEFT JOIN V_CORE_SKU SKU ON SKU.SKU_NO=B.SKU_NO
+        WHERE
+            A.INVENTORY_ADJUSTMENT_NO = #{adjNo}
+    </select>
+    <select id="getInorderDetilsByInNo" resultType="com.jxx.common.model.po.WmsInputOrderGoods">
+        SELECT
+            SKU.SPU_ID,A.ORDER_NO,SKU.SKU_NAME,B.*
+        FROM
+            T_WMS_INPUT_ORDER A
+            LEFT JOIN T_WMS_INPUT_ORDER_GOODS B ON A.WMS_INPUT_ORDER_ID = B.WMS_INPUT_ORDER_ID
+            LEFT JOIN V_CORE_SKU SKU ON SKU.SKU_NO=B.SKU_NO
+        WHERE
+            A.ORDER_NO = #{inNo}
+    </select>
+    <select id="selectDtoById" resultType="com.jxx.common.model.WarehouseGoodsOperateLogDto">
+        SELECT
+            A.*
+        FROM
+            T_WAREHOUSE_GOODS_OPERATE_LOG A
+        WHERE
+            A.WAREHOUSE_GOODS_OPERATE_LOG_ID = #{warehouseGoodsOperateLogId}
+    </select>
+
+    <select id="getInorderDetilsByInNoSku" resultType="com.jxx.common.model.po.WmsInputOrderGoods">
+        SELECT
+            SKU.SPU_ID,A.ORDER_NO,SKU.SKU_NAME,B.*
+        FROM
+            T_WMS_INPUT_ORDER A
+                LEFT JOIN T_WMS_INPUT_ORDER_GOODS B ON A.WMS_INPUT_ORDER_ID = B.WMS_INPUT_ORDER_ID
+                LEFT JOIN V_CORE_SKU SKU ON SKU.SKU_NO=B.SKU_NO
+        WHERE
+            A.ORDER_NO = #{orderNo} AND B.SKU_NO = #{sku}
+    </select>
+    <select id="getAdjDetilByDetilId" resultType="com.jxx.common.model.po.InventoryAdjustmentDetailPo">
+        SELECT
+            SKU.SPU_ID,A.INVENTORY_ADJUSTMENT_NO,SKU.SKU_NAME goodsName,B.*
+        FROM
+            T_WMS_INVENTORY_ADJUSTMENT A
+                LEFT JOIN T_WMS_INVENTORY_ADJUSTMENT_DETAIL B ON A.INVENTORY_ADJUSTMENT_ID = B.INVENTORY_ADJUSTMENT_ID
+                LEFT JOIN V_CORE_SKU SKU ON SKU.SKU_NO=B.SKU_NO
+        WHERE
+            B.INVENTORY_ADJUSTMENT_DETAIL_ID = #{adjDetilId}
+    </select>
+    <select id="getWarehouseIn" resultType="com.jxx.common.model.WarehouseGoodsOperateLogDto">
+        SELECT
+            A.*
+        FROM
+            T_WAREHOUSE_GOODS_OPERATE_LOG A
+        WHERE
+            A.OPERATE_TYPE = #{operateType}
+          AND A.RELATED_ID = #{relatedId}
+          AND A.IS_ENABLE = 1
+        ORDER BY A.WAREHOUSE_GOODS_OPERATE_LOG_ID ASC
+    </select>
+    <select id="getAdjDetilByorderNoSku" resultType="com.jxx.common.model.po.InventoryAdjustmentDetailPo">
+        SELECT
+            SKU.SPU_ID,A.INVENTORY_ADJUSTMENT_NO,SKU.SKU_NAME goodsName,B.*
+        FROM
+            T_WMS_INVENTORY_ADJUSTMENT A
+                LEFT JOIN T_WMS_INVENTORY_ADJUSTMENT_DETAIL B ON A.INVENTORY_ADJUSTMENT_ID = B.INVENTORY_ADJUSTMENT_ID
+                LEFT JOIN V_CORE_SKU SKU ON SKU.SKU_NO=B.SKU_NO
+        WHERE
+            B.SKU_NO =#{sku} AND A.INVENTORY_ADJUSTMENT_NO = #{orderNo}
+    </select>
+    <select id="getWarehouseLogByBarcodeId" resultType="com.jxx.common.model.WarehouseGoodsOperateLogDto">
+        SELECT
+            A.*
+        FROM
+            T_WAREHOUSE_GOODS_OPERATE_LOG A
+        WHERE
+            1=1
+          AND A.IS_ENABLE=1
+          AND A.LOG_TYPE = #{logType}
+          AND A.BARCODE_ID = #{barcodeId}
+    </select>
+
 </mapper>

@@ -1,10 +1,7 @@
 package com.jxx.test.Jsoup;
 
-import com.jxx.Jsoup.Pojo.Article;
-import com.jxx.Jsoup.utils.CrawlerUtils;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.junit.Test;
+import com.jxx.crawler.Jsoup.Pojo.Article;
+import com.jxx.crawler.Jsoup.utils.CrawlerUtils;
 
 import java.util.ArrayList;
 import java.util.List;

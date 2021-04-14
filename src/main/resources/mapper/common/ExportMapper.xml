@@ -42,6 +42,11 @@
     ELSE ''
     END  AS  '单据类型',
     ASS.ORDER_NO '关联单号',
+    CASE A.OPERATE_TYPE
+      WHEN 15 THEN
+        IA.REASON
+      ELSE ''
+      END '备注',
     CASE
     WHEN SA.STATUS = 1 THEN
     '进行中'
@@ -214,6 +219,12 @@
     ELSE ''
     END  AS  '单据类型',
     ASS.ORDER_NO '关联单号',
+    CASE A.OPERATE_TYPE
+      WHEN 11 THEN
+        IA.REASON
+      WHEN 12 THEN
+        IO.REMARK
+      END '备注',
     CASE
     WHEN C.STATUS = 1 THEN
     '进行中'
@@ -787,6 +798,32 @@
       AND B.STATUS IN (1,2)
       AND B.DELIVERY_TIME  >= #{startTime}
       AND B.DELIVERY_TIME &lt; #{endTime}
+  </select>
+  <select id="getWarehouseInLogByTime" resultType="com.jxx.excel.WarehouseInExport">
+    SELECT
+      B.SKU_NO sku,B.SKU_NAME 商品名称,SUM(ABS(A.NUM)) num
+    FROM
+      T_WAREHOUSE_GOODS_OPERATE_LOG A
+        LEFT JOIN V_CORE_SKU B ON A.GOODS_ID = B.SKU_ID
+    WHERE
+      A.LOG_TYPE = 0
+      AND A.IS_ENABLE = 1
+      AND A.NUM > 0
+      AND A.ADD_TIME BETWEEN #{startTime} AND #{endTime}
+    GROUP BY A.GOODS_ID
+  </select>
+  <select id="getWarehouseOutLogByTime" resultType="com.jxx.excel.WarehouseOutExport">
+    SELECT
+      B.SKU_NO sku,B.SKU_NAME 商品名称,SUM(ABS(A.NUM)) num
+    FROM
+      T_WAREHOUSE_GOODS_OPERATE_LOG A
+        LEFT JOIN V_CORE_SKU B ON A.GOODS_ID = B.SKU_ID
+    WHERE
+      A.LOG_TYPE = 1
+      AND A.IS_ENABLE = 1
+      AND A.NUM &lt; 0
+      AND A.ADD_TIME BETWEEN #{startTime} AND #{endTime}
+    GROUP BY A.GOODS_ID
   </select>
 
 

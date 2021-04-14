@@ -1,6 +1,6 @@
 package com.jxx.mapper;
 
-import com.jxx.fuction.abstractFactory.User;
+import com.jxx.designfuction.abstractFactory.User;
 
 /**
  * 功能描述
