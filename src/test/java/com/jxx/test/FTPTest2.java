@@ -13,7 +13,7 @@ import java.math.BigDecimal;
  * @Description TODO
  * @createTime 2020年10月15日 10:31:00
  */
-public class Test2 {
+public class FTPTest2 {
     //UPDATE T_ATTACHMENT SET URI = '/upload/default/2019-08/15/image/1565862651000_3397_bf.jpg',ORIGINAL_FILEPATH = '/upload/default/2019-08/15/image/1565862651000_3397.jpg' WHERE ATTACHMENT_ID = 4262656 ;
     @Test
     public void test() throws Exception{

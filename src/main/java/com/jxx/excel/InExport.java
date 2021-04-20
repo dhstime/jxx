@@ -40,10 +40,10 @@ public class InExport {
     private String 发票类型;
     @Excel(name = "客户归属省")
     private String 客户归属省;
-    @Excel(name = "商品名称")
-    private String 商品名称;
     @Excel(name = "SKU")
     private String SKU;
+    @Excel(name = "商品名称")
+    private String 商品名称;
     @Excel(name = "品牌")
     private String 品牌;
     @Excel(name = "规格/型号")

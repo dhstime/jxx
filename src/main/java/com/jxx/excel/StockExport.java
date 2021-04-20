@@ -28,10 +28,10 @@ public class StockExport {
     private String 生效日期;
     @Excel(name = "创建人员")
     private String 创建人员;
-    @Excel(name = "商品名称")
-    private String 商品名称;
     @Excel(name = "SKU")
     private String SKU;
+    @Excel(name = "商品名称")
+    private String 商品名称;
     @Excel(name = "品牌")
     private String 品牌;
     @Excel(name = "规格/型号")

@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -35,7 +36,7 @@ public class DataExportTest extends JxxApplicationTests {
     @Test
     public void test() throws Exception{
 
-        LocalDateTime startTime = LocalDateTime.of(2020,12,1,0,0,0);
+        LocalDateTime startTime = LocalDateTime.of(2019,1,1,0,0,0);
 
         do {
             final CountDownLatch latch = new CountDownLatch(3);
@@ -89,7 +90,7 @@ public class DataExportTest extends JxxApplicationTests {
             System.out.println(startTime.toString());
             startTime = endTime;
 
-        } while (startTime.isBefore(LocalDateTime.of(2021,4,1,0,0,0)));
+        } while (startTime.isBefore(LocalDateTime.of(2019,2,1,0,0,0)));
     }
 
     private void exportStock(LocalDateTime startTime, LocalDateTime endTime) throws IOException {
@@ -97,7 +98,7 @@ public class DataExportTest extends JxxApplicationTests {
 
         Workbook stockworkbook = ExcelExportUtil.exportExcel(new ExportParams("库存明细",""),StockExport.class,stockExportList);
         String stockfileName = "库存明细" + startTime.getYear() + "-" + startTime.getMonth().getValue();
-        FileOutputStream stockfos = new FileOutputStream("/Users/dhs/Downloads/数据/库存明细/"+stockfileName + ".xls");
+        FileOutputStream stockfos = new FileOutputStream("/Users/dhs/Downloads/审计数据/库存明细/"+stockfileName + ".xls");
         stockworkbook.write(stockfos);
         stockfos.close();
     }
@@ -108,10 +109,10 @@ public class DataExportTest extends JxxApplicationTests {
 //        List<InExport> inExports = exportMapper.selectDirectInAll(localDatetime2TimeStamp(startTime), localDatetime2TimeStamp(endTime));
 //        inLIst.addAll(inExports);
 
-        Workbook inworkbook = ExcelExportUtil.exportExcel(new ExportParams("入库记录",""),InExport.class,inLIst);
+        Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams("入库记录",""),InExport.class,inLIst);
         String infileName = "入库" + startTime.getYear() + "-" + startTime.getMonth().getValue();
-        FileOutputStream infos = new FileOutputStream("/Users/dhs/Downloads/数据/入库明细/"+infileName + ".xls");
-        inworkbook.write(infos);
+        FileOutputStream infos = new FileOutputStream("/Users/dhs/Downloads/审计数据/入库明细/"+infileName + ".xls");
+        workbook.write(infos);
         infos.close();
     }
 
@@ -121,50 +122,77 @@ public class DataExportTest extends JxxApplicationTests {
 //        List<OutExport> outExports = exportMapper.selectDirectOutAll(localDatetime2TimeStamp(startTime), localDatetime2TimeStamp(endTime));
 //        outlist.addAll(outExports);
 
-        Workbook outworkbook = ExcelExportUtil.exportExcel(new ExportParams("出库记录",""),OutExport.class,outlist);
+        Workbook  workbook = ExcelExportUtil.exportExcel(new ExportParams("出库记录",""),OutExport.class,outlist);
         String outfileName = "出库" + startTime.getYear() + "-" + startTime.getMonth().getValue();
-        FileOutputStream outfos = new FileOutputStream("/Users/dhs/Downloads/数据/出库明细/"+outfileName + ".xls");
-        outworkbook.write(outfos);
+        FileOutputStream outfos = new FileOutputStream("/Users/dhs/Downloads/审计数据/出库明细/"+outfileName + ".xls");
+        workbook.write(outfos);
         outfos.close();
+
     }
 
     private Long localDatetime2TimeStamp(LocalDateTime time){
         return time.toInstant(ZoneOffset.of("+8")).toEpochMilli();
     }
 
+
     @Test
     public void test1() throws Exception{
-        LocalDateTime startTime = LocalDateTime.of(2021,1,1,0,0,0);
+        LocalDateTime startTime = LocalDateTime.of(2018,12,1,0,0,0);
         do {
 
             LocalDateTime endTime = startTime.plusMonths(1);
 
-            exoprtlogIn(startTime, endTime);
+//            exoprtlogIn(startTime, endTime);
+//
+//            exportlogOut(startTime, endTime);
 
-            exportlogOut(startTime, endTime);
+            exoprtZhifaIn(startTime, endTime);
+
+            exoprtZhifaOut(startTime, endTime);
 
             System.out.println(startTime.toString());
             startTime = endTime;
-        }while (startTime.isBefore(LocalDateTime.of(2021,5,1,0,0,0)));
+        }while (startTime.isBefore(LocalDateTime.of(2021,4,1,0,0,0)));
     }
 
-    private void exportlogOut(LocalDateTime startTime, LocalDateTime endTime)throws Exception {
-        List<WarehouseOutExport> outlist = exportMapper.getWarehouseOutLogByTime(localDatetime2TimeStamp(startTime), localDatetime2TimeStamp(endTime));
 
-        Workbook outworkbook = ExcelExportUtil.exportExcel(new ExportParams("出库记录",""),WarehouseOutExport.class,outlist);
+
+    private void exoprtZhifaIn(LocalDateTime startTime, LocalDateTime endTime) throws Exception{
+        List<InExport> inList = exportMapper.selectDirectInAll(localDatetime2TimeStamp(startTime), localDatetime2TimeStamp(endTime));
+        Workbook outworkbook = ExcelExportUtil.exportExcel(new ExportParams("入库记录",""),InExport.class,inList);
+        String infileName = "入库" + startTime.getYear() + "-" + startTime.getMonth().getValue();
+        FileOutputStream outfos = new FileOutputStream("/Users/dhs/Downloads/审计数据/直发/入库记录/"+infileName + ".xls");
+        outworkbook.write(outfos);
+        outfos.close();
+    }
+
+
+    private void exoprtZhifaOut(LocalDateTime startTime, LocalDateTime endTime) throws Exception{
+        List<OutExport> outlist = exportMapper.selectDirectOutAll(localDatetime2TimeStamp(startTime), localDatetime2TimeStamp(endTime));
+        Workbook outworkbook = ExcelExportUtil.exportExcel(new ExportParams("出库记录",""),OutExport.class,outlist);
         String outfileName = "出库" + startTime.getYear() + "-" + startTime.getMonth().getValue();
-        FileOutputStream outfos = new FileOutputStream("/Users/dhs/Downloads/数据/new/"+outfileName + ".xls");
+        FileOutputStream outfos = new FileOutputStream("/Users/dhs/Downloads/审计数据/直发/出库记录/"+outfileName + ".xls");
         outworkbook.write(outfos);
         outfos.close();
     }
-
-    private void exoprtlogIn(LocalDateTime startTime, LocalDateTime endTime) throws Exception{
-        List<WarehouseInExport> inList = exportMapper.getWarehouseInLogByTime(localDatetime2TimeStamp(startTime), localDatetime2TimeStamp(endTime));
-
-        Workbook outworkbook = ExcelExportUtil.exportExcel(new ExportParams("入库记录",""),WarehouseInExport.class,inList);
-        String outfileName = "入库" + startTime.getYear() + "-" + startTime.getMonth().getValue();
-        FileOutputStream outfos = new FileOutputStream("/Users/dhs/Downloads/数据/new/"+outfileName + ".xls");
-        outworkbook.write(outfos);
-        outfos.close();
-    }
+//
+//    private void exportlogOut(LocalDateTime startTime, LocalDateTime endTime)throws Exception {
+//        List<WarehouseOutExport> outlist = exportMapper.getWarehouseOutLogByTime(localDatetime2TimeStamp(startTime), localDatetime2TimeStamp(endTime));
+//
+//        Workbook outworkbook = ExcelExportUtil.exportExcel(new ExportParams("出库记录",""),WarehouseOutExport.class,outlist);
+//        String outfileName = "出库" + startTime.getYear() + "-" + startTime.getMonth().getValue();
+//        FileOutputStream outfos = new FileOutputStream("/Users/dhs/Downloads/审计数据/new/"+outfileName + ".xls");
+//        outworkbook.write(outfos);
+//        outfos.close();
+//    }
+//
+//    private void exoprtlogIn(LocalDateTime startTime, LocalDateTime endTime) throws Exception{
+//        List<WarehouseInExport> inList = exportMapper.getWarehouseInLogByTime(localDatetime2TimeStamp(startTime), localDatetime2TimeStamp(endTime));
+//
+//        Workbook outworkbook = ExcelExportUtil.exportExcel(new ExportParams("入库记录",""),WarehouseInExport.class,inList);
+//        String outfileName = "入库" + startTime.getYear() + "-" + startTime.getMonth().getValue();
+//        FileOutputStream outfos = new FileOutputStream("/Users/dhs/Downloads/数据/new/"+outfileName + ".xls");
+//        outworkbook.write(outfos);
+//        outfos.close();
+//    }
 }

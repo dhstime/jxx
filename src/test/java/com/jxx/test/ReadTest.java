@@ -127,63 +127,24 @@ public class ReadTest{
         }
     }
 
-
     @Test
-    public void testADj() throws Exception{
-        FileInputStream fileInputStream = new FileInputStream("/Users/dhs/Downloads/adj.txt");
+    public void test3() throws Exception{
+        FileInputStream fileInputStream = new FileInputStream("/Users/dhs/Downloads/3.txt");
         InputStreamReader isr = new InputStreamReader(fileInputStream);
         BufferedReader br = new BufferedReader(isr);
         String str;
         while((str = br.readLine() )!= null){
             String[] split = str.split("\t");
-            String detailId = split[0];
-            String[] split1 = split[1].split(",");
-            for (String s : split1) {
-                String[] split2 = s.split(":");
-                Integer inId = Integer.valueOf(split2[0]);
-                WarehouseGoodsOperateLogDto warehouseGoodsOperateLog = warehouseGoodsOperateLogMapper.selectDtoById(inId);
-                Integer logId = warehouseGoodsOperateLog.getWarehouseGoodsOperateLogId();
+            String id = split[0];
+            String tagId = split[1];
+            String barcodeId = split[2];
 
-//                StringBuilder sql = new StringBuilder("UPDATE T_WAREHOUSE_GOODS_OPERATE_LOG SET ");
-//                sql = appenSql(sql,"LAST_STOCK_NUM -1","LAST_STOCK_NUM");
-//                sql = appenSql(sql,"(CASE LAST_STOCK_NUM WHEN 0 THEN 1 ELSE 0 END )","IS_USE");//IS_USE = (CASE LAST_STOCK_NUM WHEN 0 THEN 1 ELSE 0 END ),
-//                String substring = sql.substring(0 , sql.length()-1);
-//                String endsql =" WHERE WAREHOUSE_GOODS_OPERATE_LOG_ID= "+logId+";";
-//                System.out.println(substring + endsql);
-                warehouseGoodsOperateLog.setRelatedId(Integer.valueOf(detailId));
-                warehouseGoodsOperateLog.setLastStockNum(0);
-                warehouseGoodsOperateLog.setIsUse(0);
-                warehouseGoodsOperateLog.setOperateType(15);
-                warehouseGoodsOperateLog.setTagSources(logId.toString());
-                warehouseGoodsOperateLog.setWarehouseGoodsOperateLogId(null);
-
-                Class<WarehouseGoodsOperateLogDto> warehouseGoodsOperateLogDtoClass = WarehouseGoodsOperateLogDto.class;
-                Field[] fields = warehouseGoodsOperateLogDtoClass.getDeclaredFields();
-                for (Field field : fields) {
-                    String name = field.getName();
-                    String s1 = declaredMethodInvoke(warehouseGoodsOperateLog, name);
-
-                }
-            }
+            StringBuilder sql = new StringBuilder("UPDATE T_WAREHOUSE_GOODS_OPERATE_LOG SET ");
+            sql = appenSql(sql,tagId,"TAG_SOURCES");
+            sql = appenSql(sql,barcodeId,"BARCODE_ID");
+            String substring = sql.substring(0 , sql.length()-1);
+            String endsql =" WHERE WAREHOUSE_GOODS_OPERATE_LOG_ID= "+ id +";";
+            System.out.println(substring + endsql);
         }
-    }
-    private  String declaredMethodInvoke(Object param, String field) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method declaredMethod = param.getClass().getDeclaredMethod(field);
-        return declaredMethod.invoke(param, null).toString();
-    }
-    /**
-     * 将字符串的首字母转大写
-     * @param str 需要转换的字符串
-     * @return
-     */
-    private  String captureName(String str,String rediskey) throws Exception {
-        //多个相同对象则入参为有注解对象
-        if(StringUtil.isBlank(str)){
-            return "";
-        }
-        // 进行字母的ascii编码前移，效率要高于截取字符串进行转换的操作
-        char[] cs=str.toCharArray();
-        cs[0]-=32;
-        return "get"+String.valueOf(cs);
     }
 }

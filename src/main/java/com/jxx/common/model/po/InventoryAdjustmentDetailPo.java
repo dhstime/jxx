@@ -125,5 +125,7 @@ public class InventoryAdjustmentDetailPo implements Serializable {
 
     private Integer spuId;
 
+    private String tagSources;
+
 
 }

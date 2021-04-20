@@ -47,4 +47,6 @@ public class WmsInputOrderGoods {
     private String orderNo;
 
     private String skuName;
+
+    private String tagSources;
 }

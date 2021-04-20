@@ -410,5 +410,40 @@
           AND A.LOG_TYPE = #{logType}
           AND A.BARCODE_ID = #{barcodeId}
     </select>
+    <select id="getZeroPriceLog" resultType="com.jxx.common.model.WarehouseGoodsOperateLogDto">
+        SELECT
+            A.*
+        FROM
+            T_WAREHOUSE_GOODS_OPERATE_LOG A
+        WHERE
+            A.LOG_TYPE = 0
+          AND A.OPERATE_TYPE  IN ( 3, 5, 9, 11 )
+          AND A.IS_ENABLE = 1
+          AND (
+                A.NEW_COST_PRICE IS NULL
+                OR A.NEW_COST_PRICE = 0
+            )
+    </select>
+    <select id="getAvgPrice" resultType="com.jxx.common.model.Order">
+        SELECT
+            A.PRICE,
+            A.NUM,
+            A.GOODS_ID,
+            A.PRICE * A.NUM totalAmount
+        FROM
+            T_BUYORDER_GOODS A
+            LEFT JOIN T_BUYORDER B ON A.BUYORDER_ID = B.BUYORDER_ID
+        WHERE
+            1=1
+          AND A.NUM > 0
+          AND A.GOODS_ID = #{goodsId}
+          AND A.IS_DELETE = 0
+          AND A.PRICE > 0
+          AND A.ARRIVAL_NUM > 0
+        GROUP BY
+            B.BUYORDER_ID
+        ORDER BY A.BUYORDER_GOODS_ID DESC
+            LIMIT 20
+    </select>
 
 </mapper>
