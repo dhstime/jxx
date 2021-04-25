@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jxx.mapper.StockDataDtoMapper">
+  <resultMap id="BaseResultMap" type="com.jxx.excel.StockDataDo">
+    <id column="IN_STOCK_ID" jdbcType="INTEGER" property="inStockId" />
+    <result column="YEAR_MONTH_DAY" jdbcType="VARCHAR" property="yearMonthDay" />
+    <result column="YEAR_MONTH" jdbcType="VARCHAR" property="yearMonth" />
+    <result column="ORDER_NO" jdbcType="VARCHAR" property="orderNo" />
+    <result column="ORDER_TYPE" jdbcType="VARCHAR" property="orderType" />
+    <result column="TRADER_NAME" jdbcType="VARCHAR" property="traderName" />
+    <result column="TRADER_ID" jdbcType="INTEGER" property="traderId" />
+    <result column="ASS_ORDER_NO" jdbcType="VARCHAR" property="assOrderNo" />
+    <result column="ADD_TIME" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="VALID_TIME" jdbcType="TIMESTAMP" property="validTime" />
+    <result column="CREATOR" jdbcType="VARCHAR" property="creator" />
+    <result column="SKU" jdbcType="VARCHAR" property="sku" />
+    <result column="SKU_NAME" jdbcType="VARCHAR" property="skuName" />
+    <result column="BRAND_NAME" jdbcType="VARCHAR" property="brandName" />
+    <result column="MODEL" jdbcType="VARCHAR" property="model" />
+    <result column="UNIT_NAME" jdbcType="VARCHAR" property="unitName" />
+    <result column="NUM" jdbcType="INTEGER" property="num" />
+    <result column="COST_PRICE" jdbcType="DECIMAL" property="costPrice" />
+    <result column="TOTAL_AMOUNT" jdbcType="DECIMAL" property="totalAmount" />
+    <result column="NEW_COST_PRICE" jdbcType="DECIMAL" property="newCostPrice" />
+    <result column="NEW_TOTAL_AMOUNT" jdbcType="DECIMAL" property="newTotalAmount" />
+    <result column="EXPIRE_DATE" jdbcType="TIMESTAMP" property="expireDate" />
+    <result column="ONE_FL" jdbcType="VARCHAR" property="oneFl" />
+    <result column="TWO_FL" jdbcType="VARCHAR" property="twoFl" />
+    <result column="THREE_FL" jdbcType="VARCHAR" property="threeFl" />
+    <result column="OLD_ONE_FL" jdbcType="VARCHAR" property="oldOneFl" />
+    <result column="OLD_TWO_FL" jdbcType="VARCHAR" property="oldTwoFl" />
+    <result column="OLD_THREE_FL" jdbcType="VARCHAR" property="oldThreeFl" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    IN_STOCK_ID, YEAR_MONTH_DAY, YEAR_MONTH, ORDER_NO, ORDER_TYPE, TRADER_NAME, TRADER_ID, 
+    ASS_ORDER_NO, ADD_TIME, VALID_TIME, CREATOR, SKU, SKU_NAME, BRAND_NAME, MODEL, UNIT_NAME, 
+    NUM, COST_PRICE, TOTAL_AMOUNT, NEW_COST_PRICE, NEW_TOTAL_AMOUNT, EXPIRE_DATE, ONE_FL, 
+    TWO_FL, THREE_FL, OLD_ONE_FL, OLD_TWO_FL, OLD_THREE_FL
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from V_STOCK_DATA
+    where IN_STOCK_ID = #{inStockId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from V_STOCK_DATA
+    where IN_STOCK_ID = #{inStockId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jxx.excel.StockDataDo">
+    insert into V_STOCK_DATA (IN_STOCK_ID, YEAR_MONTH_DAY, `YEAR_MONTH`,
+      ORDER_NO, ORDER_TYPE, TRADER_NAME, 
+      TRADER_ID, ASS_ORDER_NO, ADD_TIME, 
+      VALID_TIME, CREATOR, SKU, 
+      SKU_NAME, BRAND_NAME, MODEL, 
+      UNIT_NAME, NUM, COST_PRICE, 
+      TOTAL_AMOUNT, NEW_COST_PRICE, NEW_TOTAL_AMOUNT, 
+      EXPIRE_DATE, ONE_FL, TWO_FL, 
+      THREE_FL, OLD_ONE_FL, OLD_TWO_FL, 
+      OLD_THREE_FL)
+    values (#{inStockId,jdbcType=INTEGER}, #{yearMonthDay,jdbcType=VARCHAR}, #{yearMonth,jdbcType=VARCHAR}, 
+      #{orderNo,jdbcType=VARCHAR}, #{orderType,jdbcType=VARCHAR}, #{traderName,jdbcType=VARCHAR}, 
+      #{traderId,jdbcType=INTEGER}, #{assOrderNo,jdbcType=VARCHAR}, #{addTime,jdbcType=TIMESTAMP}, 
+      #{validTime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{sku,jdbcType=VARCHAR}, 
+      #{skuName,jdbcType=VARCHAR}, #{brandName,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, 
+      #{unitName,jdbcType=VARCHAR}, #{num,jdbcType=INTEGER}, #{costPrice,jdbcType=DECIMAL}, 
+      #{totalAmount,jdbcType=DECIMAL}, #{newCostPrice,jdbcType=DECIMAL}, #{newTotalAmount,jdbcType=DECIMAL}, 
+      #{expireDate,jdbcType=TIMESTAMP}, #{oneFl,jdbcType=VARCHAR}, #{twoFl,jdbcType=VARCHAR}, 
+      #{threeFl,jdbcType=VARCHAR}, #{oldOneFl,jdbcType=VARCHAR}, #{oldTwoFl,jdbcType=VARCHAR}, 
+      #{oldThreeFl,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jxx.excel.StockDataDo">
+    insert into V_STOCK_DATA
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="inStockId != null">
+        IN_STOCK_ID,
+      </if>
+      <if test="yearMonthDay != null">
+        YEAR_MONTH_DAY,
+      </if>
+      <if test="yearMonth != null">
+        `YEAR_MONTH`,
+      </if>
+      <if test="orderNo != null">
+        ORDER_NO,
+      </if>
+      <if test="orderType != null">
+        ORDER_TYPE,
+      </if>
+      <if test="traderName != null">
+        TRADER_NAME,
+      </if>
+      <if test="traderId != null">
+        TRADER_ID,
+      </if>
+      <if test="assOrderNo != null">
+        ASS_ORDER_NO,
+      </if>
+      <if test="addTime != null">
+        ADD_TIME,
+      </if>
+      <if test="validTime != null">
+        VALID_TIME,
+      </if>
+      <if test="creator != null">
+        CREATOR,
+      </if>
+      <if test="sku != null">
+        SKU,
+      </if>
+      <if test="skuName != null">
+        SKU_NAME,
+      </if>
+      <if test="brandName != null">
+        BRAND_NAME,
+      </if>
+      <if test="model != null">
+        MODEL,
+      </if>
+      <if test="unitName != null">
+        UNIT_NAME,
+      </if>
+      <if test="num != null">
+        NUM,
+      </if>
+      <if test="costPrice != null">
+        COST_PRICE,
+      </if>
+      <if test="totalAmount != null">
+        TOTAL_AMOUNT,
+      </if>
+      <if test="newCostPrice != null">
+        NEW_COST_PRICE,
+      </if>
+      <if test="newTotalAmount != null">
+        NEW_TOTAL_AMOUNT,
+      </if>
+      <if test="expireDate != null">
+        EXPIRE_DATE,
+      </if>
+      <if test="oneFl != null">
+        ONE_FL,
+      </if>
+      <if test="twoFl != null">
+        TWO_FL,
+      </if>
+      <if test="threeFl != null">
+        THREE_FL,
+      </if>
+      <if test="oldOneFl != null">
+        OLD_ONE_FL,
+      </if>
+      <if test="oldTwoFl != null">
+        OLD_TWO_FL,
+      </if>
+      <if test="oldThreeFl != null">
+        OLD_THREE_FL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="inStockId != null">
+        #{inStockId,jdbcType=INTEGER},
+      </if>
+      <if test="yearMonthDay != null">
+        #{yearMonthDay,jdbcType=VARCHAR},
+      </if>
+      <if test="yearMonth != null">
+        #{yearMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null">
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null">
+        #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="traderName != null">
+        #{traderName,jdbcType=VARCHAR},
+      </if>
+      <if test="traderId != null">
+        #{traderId,jdbcType=INTEGER},
+      </if>
+      <if test="assOrderNo != null">
+        #{assOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="validTime != null">
+        #{validTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="sku != null">
+        #{sku,jdbcType=VARCHAR},
+      </if>
+      <if test="skuName != null">
+        #{skuName,jdbcType=VARCHAR},
+      </if>
+      <if test="brandName != null">
+        #{brandName,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null">
+        #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="unitName != null">
+        #{unitName,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null">
+        #{num,jdbcType=INTEGER},
+      </if>
+      <if test="costPrice != null">
+        #{costPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="totalAmount != null">
+        #{totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="newCostPrice != null">
+        #{newCostPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="newTotalAmount != null">
+        #{newTotalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="expireDate != null">
+        #{expireDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="oneFl != null">
+        #{oneFl,jdbcType=VARCHAR},
+      </if>
+      <if test="twoFl != null">
+        #{twoFl,jdbcType=VARCHAR},
+      </if>
+      <if test="threeFl != null">
+        #{threeFl,jdbcType=VARCHAR},
+      </if>
+      <if test="oldOneFl != null">
+        #{oldOneFl,jdbcType=VARCHAR},
+      </if>
+      <if test="oldTwoFl != null">
+        #{oldTwoFl,jdbcType=VARCHAR},
+      </if>
+      <if test="oldThreeFl != null">
+        #{oldThreeFl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jxx.excel.StockDataDo">
+    update V_STOCK_DATA
+    <set>
+      <if test="yearMonthDay != null">
+        YEAR_MONTH_DAY = #{yearMonthDay,jdbcType=VARCHAR},
+      </if>
+      <if test="yearMonth != null">
+        `YEAR_MONTH` = #{yearMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null">
+        ORDER_NO = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null">
+        ORDER_TYPE = #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="traderName != null">
+        TRADER_NAME = #{traderName,jdbcType=VARCHAR},
+      </if>
+      <if test="traderId != null">
+        TRADER_ID = #{traderId,jdbcType=INTEGER},
+      </if>
+      <if test="assOrderNo != null">
+        ASS_ORDER_NO = #{assOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        ADD_TIME = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="validTime != null">
+        VALID_TIME = #{validTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        CREATOR = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="sku != null">
+        SKU = #{sku,jdbcType=VARCHAR},
+      </if>
+      <if test="skuName != null">
+        SKU_NAME = #{skuName,jdbcType=VARCHAR},
+      </if>
+      <if test="brandName != null">
+        BRAND_NAME = #{brandName,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null">
+        MODEL = #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="unitName != null">
+        UNIT_NAME = #{unitName,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null">
+        NUM = #{num,jdbcType=INTEGER},
+      </if>
+      <if test="costPrice != null">
+        COST_PRICE = #{costPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="totalAmount != null">
+        TOTAL_AMOUNT = #{totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="newCostPrice != null">
+        NEW_COST_PRICE = #{newCostPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="newTotalAmount != null">
+        NEW_TOTAL_AMOUNT = #{newTotalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="expireDate != null">
+        EXPIRE_DATE = #{expireDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="oneFl != null">
+        ONE_FL = #{oneFl,jdbcType=VARCHAR},
+      </if>
+      <if test="twoFl != null">
+        TWO_FL = #{twoFl,jdbcType=VARCHAR},
+      </if>
+      <if test="threeFl != null">
+        THREE_FL = #{threeFl,jdbcType=VARCHAR},
+      </if>
+      <if test="oldOneFl != null">
+        OLD_ONE_FL = #{oldOneFl,jdbcType=VARCHAR},
+      </if>
+      <if test="oldTwoFl != null">
+        OLD_TWO_FL = #{oldTwoFl,jdbcType=VARCHAR},
+      </if>
+      <if test="oldThreeFl != null">
+        OLD_THREE_FL = #{oldThreeFl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where IN_STOCK_ID = #{inStockId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jxx.excel.StockDataDo">
+    update V_STOCK_DATA
+    set YEAR_MONTH_DAY = #{yearMonthDay,jdbcType=VARCHAR},
+      `YEAR_MONTH` = #{yearMonth,jdbcType=VARCHAR},
+      ORDER_NO = #{orderNo,jdbcType=VARCHAR},
+      ORDER_TYPE = #{orderType,jdbcType=VARCHAR},
+      TRADER_NAME = #{traderName,jdbcType=VARCHAR},
+      TRADER_ID = #{traderId,jdbcType=INTEGER},
+      ASS_ORDER_NO = #{assOrderNo,jdbcType=VARCHAR},
+      ADD_TIME = #{addTime,jdbcType=TIMESTAMP},
+      VALID_TIME = #{validTime,jdbcType=TIMESTAMP},
+      CREATOR = #{creator,jdbcType=VARCHAR},
+      SKU = #{sku,jdbcType=VARCHAR},
+      SKU_NAME = #{skuName,jdbcType=VARCHAR},
+      BRAND_NAME = #{brandName,jdbcType=VARCHAR},
+      MODEL = #{model,jdbcType=VARCHAR},
+      UNIT_NAME = #{unitName,jdbcType=VARCHAR},
+      NUM = #{num,jdbcType=INTEGER},
+      COST_PRICE = #{costPrice,jdbcType=DECIMAL},
+      TOTAL_AMOUNT = #{totalAmount,jdbcType=DECIMAL},
+      NEW_COST_PRICE = #{newCostPrice,jdbcType=DECIMAL},
+      NEW_TOTAL_AMOUNT = #{newTotalAmount,jdbcType=DECIMAL},
+      EXPIRE_DATE = #{expireDate,jdbcType=TIMESTAMP},
+      ONE_FL = #{oneFl,jdbcType=VARCHAR},
+      TWO_FL = #{twoFl,jdbcType=VARCHAR},
+      THREE_FL = #{threeFl,jdbcType=VARCHAR},
+      OLD_ONE_FL = #{oldOneFl,jdbcType=VARCHAR},
+      OLD_TWO_FL = #{oldTwoFl,jdbcType=VARCHAR},
+      OLD_THREE_FL = #{oldThreeFl,jdbcType=VARCHAR}
+    where IN_STOCK_ID = #{inStockId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -44,4 +44,6 @@ public interface WarehouseGoodsOperateLogMapper {
     List<WarehouseGoodsOperateLogDto> getZeroPriceLog();
 
     List<Order> getAvgPrice(Integer goodsId);
+
+    List<WarehouseGoodsOperateLogDto> getNoNumberLogByOrderNo(WarehouseGoodsOperateLogVo search);
 }

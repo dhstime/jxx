@@ -4,6 +4,7 @@
 
   <select id="selectOutAll" resultType="com.jxx.excel.OutExport">
     SELECT
+    A.WAREHOUSE_GOODS_OPERATE_LOG_ID,
     (CASE A.OPERATE_TYPE
     WHEN 2 THEN
     SA.SALEORDER_NO
@@ -184,6 +185,7 @@
   </select>
   <select id="selectInAll" resultType="com.jxx.excel.InExport">
     SELECT
+    A.WAREHOUSE_GOODS_OPERATE_LOG_ID,
     (CASE A.OPERATE_TYPE
     WHEN 1 THEN
     C.BUYORDER_NO
@@ -364,9 +366,7 @@
     AND A.ADD_TIME BETWEEN #{startTime} AND #{endTime}
     GROUP BY A.WAREHOUSE_GOODS_OPERATE_LOG_ID
   </select>
-  <select id="getMaxId" resultType="java.lang.Integer">
-    SELECT MAX(A.WAREHOUSE_GOODS_OPERATE_LOG_ID) FROM T_WAREHOUSE_GOODS_OPERATE_LOG A WHERE A.ADD_TIME  &lt;= #{endTime}
-  </select>
+
   <select id="selectStockSnapshot" resultType="com.jxx.excel.StockExport">
     SELECT
     (CASE A.OPERATE_TYPE
@@ -508,9 +508,6 @@
     AND B.IS_ENABLE = 1
     AND B.BARCODE_ID != 0
     AND B.ADD_TIME  &lt; #{endTime}
-    <!--<if test="endTime != null and endTime/1000 >= 1598889600">
-      AND B.VEDENG_BATCH_NUMER !=''
-    </if>-->
     GROUP BY
     B.BARCODE_ID
     ) AS AA ON E.BARCODE_ID = AA.BARCODE_ID
@@ -522,9 +519,6 @@
     AND E.COMPANY_ID = 1
     AND E.BARCODE_ID != 0
     AND E.ADD_TIME  &lt; #{endTime}
-   <!-- <if test="endTime != null and endTime/1000 >= 1598889600">
-      AND E.VEDENG_BATCH_NUMER !=''
-    </if>-->
     AND E.NUM > 0
     GROUP BY E.BARCODE_ID) A
     LEFT JOIN T_BUYORDER_GOODS B ON B.BUYORDER_GOODS_ID = A.RELATED_ID AND B.IS_DELETE = 0
@@ -650,9 +644,9 @@
   TC1.CATEGORY_NAME AS '老一级分类',
 	 '' AS '贝登条码',
 	 '' AS '厂商条码',
-	BG.NUM   '数量',
+	(SG.NUM - IFNULL(SG.AFTER_RETURN_NUM,0)  ) '数量',
 	BG.PRICE  '单价',
-	BG.NUM*SG.PRICE '出库金额',
+	(SG.NUM - IFNULL(SG.AFTER_RETURN_NUM,0)  ) * BG.PRICE '出库金额',
 		'' AS '批次',
 
 	FROM_UNIXTIME(
@@ -699,8 +693,9 @@
       AND B.DELIVERY_DIRECT = 1
       AND B.STATUS IN (1,2)
       AND SG.IS_DELETE = 0
-      AND SG.NUM > 0
       AND RBS.BUYORDER_GOODS_ID IS NOT NULL
+      AND BG.NUM - IFNULL(BG.AFTER_RETURN_NUM,0) > 0
+      AND SG.NUM - IFNULL(SG.AFTER_RETURN_NUM,0) > 0
       AND SG.DELIVERY_TIME BETWEEN  #{startTime} AND #{endTime}
     GROUP BY SG.SALEORDER_GOODS_ID
 
@@ -774,9 +769,9 @@
       TC1.CATEGORY_NAME AS '老一级分类',
       '' AS '贝登条码',
       '' AS '厂商条码',
-      BG.NUM '数量',
+      (BG.NUM - IFNULL(BG.AFTER_RETURN_NUM,0) ) '数量',
       BG.PRICE '单价',
-      BG.NUM*BG.PRICE '入库金额',
+      (BG.NUM - IFNULL(BG.AFTER_RETURN_NUM,0) ) * BG.PRICE '入库金额',
       '' AS '批次',
       FROM_UNIXTIME(
                 IF
@@ -823,8 +818,9 @@
       AND B.STATUS IN (1,2)
       AND SA.DELIVERY_DIRECT = 1
       AND SG.IS_DELETE = 0
-      AND SG.NUM > 0
       AND RBS.BUYORDER_GOODS_ID IS NOT NULL
+      AND BG.NUM - IFNULL(BG.AFTER_RETURN_NUM,0) > 0
+      AND SG.NUM - IFNULL(SG.AFTER_RETURN_NUM,0) > 0
       AND SG.DELIVERY_TIME BETWEEN  #{startTime} AND #{endTime}
   </select>
   <select id="getWarehouseInLogByTime" resultType="com.jxx.excel.WarehouseInExport">

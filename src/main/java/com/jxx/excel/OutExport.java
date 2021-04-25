@@ -11,7 +11,8 @@ import lombok.Data;
  */
 @Data
 public class OutExport {
-
+    @Excel(name = "id")
+    private Integer warehouseGoodsOperateLogId;
     @Excel(name = "单号")
     private String 单号;
     @Excel(name = "单据类型")

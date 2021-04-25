@@ -24,4 +24,8 @@ public class WarehouseGoodsOperateLogVo {
     private Integer limit;
 
     private Integer barcodeId;
+
+    private String orderNo;
+
+    private String sku;
 }

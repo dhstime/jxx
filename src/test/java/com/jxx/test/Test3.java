@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -68,8 +69,5 @@ public class Test3 {
 
     @Test
     public void test1() throws Exception{
-        FileInputStream fileInputStream = new FileInputStream("/Users/dhs/Downloads/1.txt");
-        InputStreamReader isr = new InputStreamReader(fileInputStream);
-        BufferedReader br = new BufferedReader(isr);
     }
 }

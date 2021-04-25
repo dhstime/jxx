@@ -17,8 +17,6 @@ public interface ExportMapper {
 
     List<InExport> selectInAll(@Param("startTime")Long startTime,@Param("endTime") Long endTime);
 
-    Integer getMaxId(@Param("endTime")Long endTime);
-
     List<StockExport> selectStockSnapshot(@Param("startTime")Long startTime,@Param("endTime") Long endTime);
 
     List<OutExport> selectDirectOutAll(@Param("startTime") Long startTime, @Param("endTime") Long endTime);

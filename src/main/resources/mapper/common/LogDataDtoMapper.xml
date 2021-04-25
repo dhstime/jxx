@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jxx.mapper.LogDataDtoMapper">
+  <resultMap id="BaseResultMap" type="com.jxx.excel.LogDataDo">
+    <id column="IN_LOG_ID" jdbcType="INTEGER" property="inLogId" />
+    <result column="LOG_TYPE" jdbcType="INTEGER" property="logType" />
+    <result column="YEAR_MONTH_DAY" jdbcType="VARCHAR" property="yearMonthDay" />
+    <result column="YEAR_MONTH" jdbcType="VARCHAR" property="yearMonth" />
+    <result column="WAREHOUSE_LOG_ID" jdbcType="INTEGER" property="warehouseLogId" />
+    <result column="ORDER_NO" jdbcType="VARCHAR" property="orderNo" />
+    <result column="ORDER_TYPE" jdbcType="VARCHAR" property="orderType" />
+    <result column="ORDER_STATUS" jdbcType="VARCHAR" property="orderStatus" />
+    <result column="ASS_ORDER_NO" jdbcType="VARCHAR" property="assOrderNo" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="DELIVERY_DIRECT" jdbcType="VARCHAR" property="deliveryDirect" />
+    <result column="ADD_TIME" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="VALID_TIME" jdbcType="TIMESTAMP" property="validTime" />
+    <result column="TRADER_NAME" jdbcType="VARCHAR" property="traderName" />
+    <result column="TRADER_ID" jdbcType="INTEGER" property="traderId" />
+    <result column="TRADER_LEVEL" jdbcType="VARCHAR" property="traderLevel" />
+    <result column="CUSTOMER_TYPE" jdbcType="VARCHAR" property="customerType" />
+    <result column="CUSTOMER_NATURE" jdbcType="VARCHAR" property="customerNature" />
+    <result column="ORG_NAME" jdbcType="VARCHAR" property="orgName" />
+    <result column="INVOICE_TYPE" jdbcType="VARCHAR" property="invoiceType" />
+    <result column="REGION_NAME" jdbcType="VARCHAR" property="regionName" />
+    <result column="SKU_NAME" jdbcType="VARCHAR" property="skuName" />
+    <result column="SKU" jdbcType="VARCHAR" property="sku" />
+    <result column="BRAND_NAME" jdbcType="VARCHAR" property="brandName" />
+    <result column="MODEL" jdbcType="VARCHAR" property="model" />
+    <result column="UNIT_NAME" jdbcType="VARCHAR" property="unitName" />
+    <result column="THREE_FL" jdbcType="VARCHAR" property="threeFl" />
+    <result column="TWO_FL" jdbcType="VARCHAR" property="twoFl" />
+    <result column="ONE_FL" jdbcType="VARCHAR" property="oneFl" />
+    <result column="OLD_THREE_FL" jdbcType="VARCHAR" property="oldThreeFl" />
+    <result column="OLD_TWO_FL" jdbcType="VARCHAR" property="oldTwoFl" />
+    <result column="OLD_ONE_FL" jdbcType="VARCHAR" property="oldOneFl" />
+    <result column="BARCODE" jdbcType="VARCHAR" property="barcode" />
+    <result column="BARCODE_FACTORY" jdbcType="VARCHAR" property="barcodeFactory" />
+    <result column="NUM" jdbcType="INTEGER" property="num" />
+    <result column="NEW_COST_PRICE" jdbcType="DECIMAL" property="newCostPrice" />
+    <result column="TOTAL_AMOUNT" jdbcType="DECIMAL" property="totalAmount" />
+    <result column="BATCH_NUMBER" jdbcType="VARCHAR" property="batchNumber" />
+    <result column="LOG_ADD_TIME" jdbcType="TIMESTAMP" property="logAddTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    IN_LOG_ID, LOG_TYPE, YEAR_MONTH_DAY, YEAR_MONTH, WAREHOUSE_LOG_ID, ORDER_NO, ORDER_TYPE,
+    ORDER_STATUS, ASS_ORDER_NO, REMARK, DELIVERY_DIRECT, ADD_TIME, VALID_TIME, TRADER_NAME, 
+    TRADER_ID, TRADER_LEVEL, CUSTOMER_TYPE, CUSTOMER_NATURE, ORG_NAME, INVOICE_TYPE, 
+    REGION_NAME, SKU_NAME, SKU, BRAND_NAME, MODEL, UNIT_NAME, THREE_FL, TWO_FL, ONE_FL, 
+    OLD_THREE_FL, OLD_TWO_FL, OLD_ONE_FL, BARCODE, BARCODE_FACTORY, NUM, NEW_COST_PRICE, 
+    TOTAL_AMOUNT, BATCH_NUMBER, LOG_ADD_TIME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from V_LOG_DATA
+    where IN_LOG_ID = #{inLogId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from V_LOG_DATA
+    where IN_LOG_ID = #{inLogId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jxx.excel.LogDataDo">
+    insert into V_LOG_DATA (IN_LOG_ID, LOG_TYPE, YEAR_MONTH_DAY,
+      `YEAR_MONTH`, WAREHOUSE_LOG_ID, ORDER_NO,
+      ORDER_TYPE, ORDER_STATUS, ASS_ORDER_NO, 
+      REMARK, DELIVERY_DIRECT, ADD_TIME, 
+      VALID_TIME, TRADER_NAME, TRADER_ID, 
+      TRADER_LEVEL, CUSTOMER_TYPE, CUSTOMER_NATURE, 
+      ORG_NAME, INVOICE_TYPE, REGION_NAME, 
+      SKU_NAME, SKU, BRAND_NAME, 
+      MODEL, UNIT_NAME, THREE_FL, 
+      TWO_FL, ONE_FL, OLD_THREE_FL, 
+      OLD_TWO_FL, OLD_ONE_FL, BARCODE, 
+      BARCODE_FACTORY, NUM, NEW_COST_PRICE, 
+      TOTAL_AMOUNT, BATCH_NUMBER, LOG_ADD_TIME
+      )
+    values (#{inLogId,jdbcType=INTEGER}, #{logType,jdbcType=INTEGER}, #{yearMonthDay,jdbcType=VARCHAR}, 
+      #{yearMonth,jdbcType=VARCHAR}, #{warehouseLogId,jdbcType=INTEGER}, #{orderNo,jdbcType=VARCHAR}, 
+      #{orderType,jdbcType=VARCHAR}, #{orderStatus,jdbcType=VARCHAR}, #{assOrderNo,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{deliveryDirect,jdbcType=VARCHAR}, #{addTime,jdbcType=TIMESTAMP}, 
+      #{validTime,jdbcType=TIMESTAMP}, #{traderName,jdbcType=VARCHAR}, #{traderId,jdbcType=INTEGER}, 
+      #{traderLevel,jdbcType=VARCHAR}, #{customerType,jdbcType=VARCHAR}, #{customerNature,jdbcType=VARCHAR}, 
+      #{orgName,jdbcType=VARCHAR}, #{invoiceType,jdbcType=VARCHAR}, #{regionName,jdbcType=VARCHAR}, 
+      #{skuName,jdbcType=VARCHAR}, #{sku,jdbcType=VARCHAR}, #{brandName,jdbcType=VARCHAR}, 
+      #{model,jdbcType=VARCHAR}, #{unitName,jdbcType=VARCHAR}, #{threeFl,jdbcType=VARCHAR}, 
+      #{twoFl,jdbcType=VARCHAR}, #{oneFl,jdbcType=VARCHAR}, #{oldThreeFl,jdbcType=VARCHAR}, 
+      #{oldTwoFl,jdbcType=VARCHAR}, #{oldOneFl,jdbcType=VARCHAR}, #{barcode,jdbcType=VARCHAR}, 
+      #{barcodeFactory,jdbcType=VARCHAR}, #{num,jdbcType=INTEGER}, #{newCostPrice,jdbcType=DECIMAL}, 
+      #{totalAmount,jdbcType=DECIMAL}, #{batchNumber,jdbcType=VARCHAR}, #{logAddTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jxx.excel.LogDataDo">
+    insert into V_LOG_DATA
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="inLogId != null">
+        IN_LOG_ID,
+      </if>
+      <if test="logType != null">
+        LOG_TYPE,
+      </if>
+      <if test="yearMonthDay != null">
+        YEAR_MONTH_DAY,
+      </if>
+      <if test="yearMonth != null">
+        `YEAR_MONTH`,
+      </if>
+      <if test="warehouseLogId != null">
+        WAREHOUSE_LOG_ID,
+      </if>
+      <if test="orderNo != null">
+        ORDER_NO,
+      </if>
+      <if test="orderType != null">
+        ORDER_TYPE,
+      </if>
+      <if test="orderStatus != null">
+        ORDER_STATUS,
+      </if>
+      <if test="assOrderNo != null">
+        ASS_ORDER_NO,
+      </if>
+      <if test="remark != null">
+        REMARK,
+      </if>
+      <if test="deliveryDirect != null">
+        DELIVERY_DIRECT,
+      </if>
+      <if test="addTime != null">
+        ADD_TIME,
+      </if>
+      <if test="validTime != null">
+        VALID_TIME,
+      </if>
+      <if test="traderName != null">
+        TRADER_NAME,
+      </if>
+      <if test="traderId != null">
+        TRADER_ID,
+      </if>
+      <if test="traderLevel != null">
+        TRADER_LEVEL,
+      </if>
+      <if test="customerType != null">
+        CUSTOMER_TYPE,
+      </if>
+      <if test="customerNature != null">
+        CUSTOMER_NATURE,
+      </if>
+      <if test="orgName != null">
+        ORG_NAME,
+      </if>
+      <if test="invoiceType != null">
+        INVOICE_TYPE,
+      </if>
+      <if test="regionName != null">
+        REGION_NAME,
+      </if>
+      <if test="skuName != null">
+        SKU_NAME,
+      </if>
+      <if test="sku != null">
+        SKU,
+      </if>
+      <if test="brandName != null">
+        BRAND_NAME,
+      </if>
+      <if test="model != null">
+        MODEL,
+      </if>
+      <if test="unitName != null">
+        UNIT_NAME,
+      </if>
+      <if test="threeFl != null">
+        THREE_FL,
+      </if>
+      <if test="twoFl != null">
+        TWO_FL,
+      </if>
+      <if test="oneFl != null">
+        ONE_FL,
+      </if>
+      <if test="oldThreeFl != null">
+        OLD_THREE_FL,
+      </if>
+      <if test="oldTwoFl != null">
+        OLD_TWO_FL,
+      </if>
+      <if test="oldOneFl != null">
+        OLD_ONE_FL,
+      </if>
+      <if test="barcode != null">
+        BARCODE,
+      </if>
+      <if test="barcodeFactory != null">
+        BARCODE_FACTORY,
+      </if>
+      <if test="num != null">
+        NUM,
+      </if>
+      <if test="newCostPrice != null">
+        NEW_COST_PRICE,
+      </if>
+      <if test="totalAmount != null">
+        TOTAL_AMOUNT,
+      </if>
+      <if test="batchNumber != null">
+        BATCH_NUMBER,
+      </if>
+      <if test="logAddTime != null">
+        LOG_ADD_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="inLogId != null">
+        #{inLogId,jdbcType=INTEGER},
+      </if>
+      <if test="logType != null">
+        #{logType,jdbcType=INTEGER},
+      </if>
+      <if test="yearMonthDay != null">
+        #{yearMonthDay,jdbcType=VARCHAR},
+      </if>
+      <if test="yearMonth != null">
+        #{yearMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="warehouseLogId != null">
+        #{warehouseLogId,jdbcType=INTEGER},
+      </if>
+      <if test="orderNo != null">
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null">
+        #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderStatus != null">
+        #{orderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="assOrderNo != null">
+        #{assOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryDirect != null">
+        #{deliveryDirect,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="validTime != null">
+        #{validTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="traderName != null">
+        #{traderName,jdbcType=VARCHAR},
+      </if>
+      <if test="traderId != null">
+        #{traderId,jdbcType=INTEGER},
+      </if>
+      <if test="traderLevel != null">
+        #{traderLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="customerType != null">
+        #{customerType,jdbcType=VARCHAR},
+      </if>
+      <if test="customerNature != null">
+        #{customerNature,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null">
+        #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceType != null">
+        #{invoiceType,jdbcType=VARCHAR},
+      </if>
+      <if test="regionName != null">
+        #{regionName,jdbcType=VARCHAR},
+      </if>
+      <if test="skuName != null">
+        #{skuName,jdbcType=VARCHAR},
+      </if>
+      <if test="sku != null">
+        #{sku,jdbcType=VARCHAR},
+      </if>
+      <if test="brandName != null">
+        #{brandName,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null">
+        #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="unitName != null">
+        #{unitName,jdbcType=VARCHAR},
+      </if>
+      <if test="threeFl != null">
+        #{threeFl,jdbcType=VARCHAR},
+      </if>
+      <if test="twoFl != null">
+        #{twoFl,jdbcType=VARCHAR},
+      </if>
+      <if test="oneFl != null">
+        #{oneFl,jdbcType=VARCHAR},
+      </if>
+      <if test="oldThreeFl != null">
+        #{oldThreeFl,jdbcType=VARCHAR},
+      </if>
+      <if test="oldTwoFl != null">
+        #{oldTwoFl,jdbcType=VARCHAR},
+      </if>
+      <if test="oldOneFl != null">
+        #{oldOneFl,jdbcType=VARCHAR},
+      </if>
+      <if test="barcode != null">
+        #{barcode,jdbcType=VARCHAR},
+      </if>
+      <if test="barcodeFactory != null">
+        #{barcodeFactory,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null">
+        #{num,jdbcType=INTEGER},
+      </if>
+      <if test="newCostPrice != null">
+        #{newCostPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="totalAmount != null">
+        #{totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="batchNumber != null">
+        #{batchNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="logAddTime != null">
+        #{logAddTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jxx.excel.LogDataDo">
+    update V_LOG_DATA
+    <set>
+      <if test="logType != null">
+        LOG_TYPE = #{logType,jdbcType=INTEGER},
+      </if>
+      <if test="yearMonthDay != null">
+        YEAR_MONTH_DAY = #{yearMonthDay,jdbcType=VARCHAR},
+      </if>
+      <if test="yearMonth != null">
+        YEAR_MONTH = #{yearMonth,jdbcType=VARCHAR},
+      </if>
+      <if test="warehouseLogId != null">
+        WAREHOUSE_LOG_ID = #{warehouseLogId,jdbcType=INTEGER},
+      </if>
+      <if test="orderNo != null">
+        ORDER_NO = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null">
+        ORDER_TYPE = #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="orderStatus != null">
+        ORDER_STATUS = #{orderStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="assOrderNo != null">
+        ASS_ORDER_NO = #{assOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryDirect != null">
+        DELIVERY_DIRECT = #{deliveryDirect,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null">
+        ADD_TIME = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="validTime != null">
+        VALID_TIME = #{validTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="traderName != null">
+        TRADER_NAME = #{traderName,jdbcType=VARCHAR},
+      </if>
+      <if test="traderId != null">
+        TRADER_ID = #{traderId,jdbcType=INTEGER},
+      </if>
+      <if test="traderLevel != null">
+        TRADER_LEVEL = #{traderLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="customerType != null">
+        CUSTOMER_TYPE = #{customerType,jdbcType=VARCHAR},
+      </if>
+      <if test="customerNature != null">
+        CUSTOMER_NATURE = #{customerNature,jdbcType=VARCHAR},
+      </if>
+      <if test="orgName != null">
+        ORG_NAME = #{orgName,jdbcType=VARCHAR},
+      </if>
+      <if test="invoiceType != null">
+        INVOICE_TYPE = #{invoiceType,jdbcType=VARCHAR},
+      </if>
+      <if test="regionName != null">
+        REGION_NAME = #{regionName,jdbcType=VARCHAR},
+      </if>
+      <if test="skuName != null">
+        SKU_NAME = #{skuName,jdbcType=VARCHAR},
+      </if>
+      <if test="sku != null">
+        SKU = #{sku,jdbcType=VARCHAR},
+      </if>
+      <if test="brandName != null">
+        BRAND_NAME = #{brandName,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null">
+        MODEL = #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="unitName != null">
+        UNIT_NAME = #{unitName,jdbcType=VARCHAR},
+      </if>
+      <if test="threeFl != null">
+        THREE_FL = #{threeFl,jdbcType=VARCHAR},
+      </if>
+      <if test="twoFl != null">
+        TWO_FL = #{twoFl,jdbcType=VARCHAR},
+      </if>
+      <if test="oneFl != null">
+        ONE_FL = #{oneFl,jdbcType=VARCHAR},
+      </if>
+      <if test="oldThreeFl != null">
+        OLD_THREE_FL = #{oldThreeFl,jdbcType=VARCHAR},
+      </if>
+      <if test="oldTwoFl != null">
+        OLD_TWO_FL = #{oldTwoFl,jdbcType=VARCHAR},
+      </if>
+      <if test="oldOneFl != null">
+        OLD_ONE_FL = #{oldOneFl,jdbcType=VARCHAR},
+      </if>
+      <if test="barcode != null">
+        BARCODE = #{barcode,jdbcType=VARCHAR},
+      </if>
+      <if test="barcodeFactory != null">
+        BARCODE_FACTORY = #{barcodeFactory,jdbcType=VARCHAR},
+      </if>
+      <if test="num != null">
+        NUM = #{num,jdbcType=INTEGER},
+      </if>
+      <if test="newCostPrice != null">
+        NEW_COST_PRICE = #{newCostPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="totalAmount != null">
+        TOTAL_AMOUNT = #{totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="batchNumber != null">
+        BATCH_NUMBER = #{batchNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="logAddTime != null">
+        LOG_ADD_TIME = #{logAddTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where IN_LOG_ID = #{inLogId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jxx.excel.LogDataDo">
+    update V_LOG_DATA
+    set LOG_TYPE = #{logType,jdbcType=INTEGER},
+      YEAR_MONTH_DAY = #{yearMonthDay,jdbcType=VARCHAR},
+      YEAR_MONTH = #{yearMonth,jdbcType=VARCHAR},
+      WAREHOUSE_LOG_ID = #{warehouseLogId,jdbcType=INTEGER},
+      ORDER_NO = #{orderNo,jdbcType=VARCHAR},
+      ORDER_TYPE = #{orderType,jdbcType=VARCHAR},
+      ORDER_STATUS = #{orderStatus,jdbcType=VARCHAR},
+      ASS_ORDER_NO = #{assOrderNo,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      DELIVERY_DIRECT = #{deliveryDirect,jdbcType=VARCHAR},
+      ADD_TIME = #{addTime,jdbcType=TIMESTAMP},
+      VALID_TIME = #{validTime,jdbcType=TIMESTAMP},
+      TRADER_NAME = #{traderName,jdbcType=VARCHAR},
+      TRADER_ID = #{traderId,jdbcType=INTEGER},
+      TRADER_LEVEL = #{traderLevel,jdbcType=VARCHAR},
+      CUSTOMER_TYPE = #{customerType,jdbcType=VARCHAR},
+      CUSTOMER_NATURE = #{customerNature,jdbcType=VARCHAR},
+      ORG_NAME = #{orgName,jdbcType=VARCHAR},
+      INVOICE_TYPE = #{invoiceType,jdbcType=VARCHAR},
+      REGION_NAME = #{regionName,jdbcType=VARCHAR},
+      SKU_NAME = #{skuName,jdbcType=VARCHAR},
+      SKU = #{sku,jdbcType=VARCHAR},
+      BRAND_NAME = #{brandName,jdbcType=VARCHAR},
+      MODEL = #{model,jdbcType=VARCHAR},
+      UNIT_NAME = #{unitName,jdbcType=VARCHAR},
+      THREE_FL = #{threeFl,jdbcType=VARCHAR},
+      TWO_FL = #{twoFl,jdbcType=VARCHAR},
+      ONE_FL = #{oneFl,jdbcType=VARCHAR},
+      OLD_THREE_FL = #{oldThreeFl,jdbcType=VARCHAR},
+      OLD_TWO_FL = #{oldTwoFl,jdbcType=VARCHAR},
+      OLD_ONE_FL = #{oldOneFl,jdbcType=VARCHAR},
+      BARCODE = #{barcode,jdbcType=VARCHAR},
+      BARCODE_FACTORY = #{barcodeFactory,jdbcType=VARCHAR},
+      NUM = #{num,jdbcType=INTEGER},
+      NEW_COST_PRICE = #{newCostPrice,jdbcType=DECIMAL},
+      TOTAL_AMOUNT = #{totalAmount,jdbcType=DECIMAL},
+      BATCH_NUMBER = #{batchNumber,jdbcType=VARCHAR},
+      LOG_ADD_TIME = #{logAddTime,jdbcType=TIMESTAMP}
+    where IN_LOG_ID = #{inLogId,jdbcType=INTEGER}
+  </update>
+  <select id="findMaxId" resultType="Integer">
+    SELECT (CASE WHEN MAX(WAREHOUSE_LOG_ID) IS NULL THEN 1 ELSE MAX(WAREHOUSE_LOG_ID + 1) END) from V_LOG_DATA
+  </select>
+</mapper>

@@ -14,11 +14,11 @@ import javax.sql.DataSource;
  * @Description TODO
  * @createTime 2021年04月10日 11:27:00
  */
-@Configuration
+//@Configuration
 public class MybatisDBConfig {
 
-    @Bean(name = "dataSourceTarget")
-    @Primary
+//    @Bean(name = "dataSourceTarget")
+//    @Primary
     public DataSource dataSourceTarget(){
         DruidDataSource dataSource = new DruidDataSource();
         dataSource.setUrl("jdbc:mysql://192.168.1.53:3306/erp_ivedeng_com?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true");
