@@ -32,12 +32,6 @@ public class DatabaseExport extends JxxApplicationTests{
     @Resource
     private LogDataDtoMapper logDataDtoMapper;
 
-//    @Test
-//    public void exportAll() throws Exception{
-//        exportIn();
-//        exportOut();
-//        importStockData();
-//    }
 
     @Test
     public void exportIn() throws Exception {

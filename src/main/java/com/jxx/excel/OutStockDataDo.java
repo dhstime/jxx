@@ -4,6 +4,7 @@ import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.format.DateTimeFormat;
+import com.alibaba.excel.annotation.format.NumberFormat;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -31,7 +32,7 @@ public class OutStockDataDo {
     private String yearMonth;
 
     @Excel(name = "id")
-    @ExcelIgnore
+    @ExcelProperty("id")
     private Integer warehouseLogId;
 
     @Excel(name = "单号")

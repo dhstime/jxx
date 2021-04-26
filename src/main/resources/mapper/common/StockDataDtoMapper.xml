@@ -362,4 +362,9 @@
       OLD_THREE_FL = #{oldThreeFl,jdbcType=VARCHAR}
     where IN_STOCK_ID = #{inStockId,jdbcType=INTEGER}
   </update>
+
+  <select id="selectStockData" resultType="com.jxx.excel.StockDataDo">
+    SELECT * FROM V_STOCK_DATA A WHERE A.`YEAR_MONTH` = #{dateStr}
+  </select>
+
 </mapper>

@@ -20,7 +20,7 @@ public class InStockDataDo {
     @ExcelIgnore
     private String yearMonth;
     @Excel(name = "id")
-    @ExcelIgnore
+    @ExcelProperty("id")
     private Integer warehouseLogId;
 
     @Excel(name = "单号")

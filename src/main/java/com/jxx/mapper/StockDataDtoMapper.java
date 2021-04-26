@@ -1,6 +1,9 @@
 package com.jxx.mapper;
 
 import com.jxx.excel.StockDataDo;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface StockDataDtoMapper {
     int deleteByPrimaryKey(Integer inStockId);
@@ -14,4 +17,6 @@ public interface StockDataDtoMapper {
     int updateByPrimaryKeySelective(StockDataDo record);
 
     int updateByPrimaryKey(StockDataDo record);
+
+    List<StockDataDo> selectStockData(@Param("dateStr")String dateStr);
 }

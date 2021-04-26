@@ -2,6 +2,7 @@ package com.jxx.mapper;
 
 import com.jxx.excel.InStockDataDo;
 import com.jxx.excel.LogDataDo;
+import com.jxx.excel.OutStockDataDo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -20,5 +21,7 @@ public interface LogDataDtoMapper {
 
     int updateByPrimaryKey(LogDataDo record);
 
-    List<InStockDataDo> selectLogData( @Param("dateStr") String dateStr);
+    List<InStockDataDo> selectInLogData( @Param("dateStr") String dateStr);
+
+    List<OutStockDataDo> selectOutLogData(@Param("dateStr")String dateStr);
 }

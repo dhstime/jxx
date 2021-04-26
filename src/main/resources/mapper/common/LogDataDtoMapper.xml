@@ -494,7 +494,7 @@
     where IN_LOG_ID = #{inLogId,jdbcType=INTEGER}
   </update>
 
-  <select id="selectLogData" resultType="com.jxx.excel.InStockDataDo">
+  <select id="selectInLogData" resultType="com.jxx.excel.InStockDataDo">
     SELECT
         *
     FROM
@@ -502,6 +502,15 @@
     WHERE
       A.YEAR_MONTH = #{dateStr}
       AND A.LOG_TYPE = 0
+  </select>
+  <select id="selectOutLogData" resultType="com.jxx.excel.OutStockDataDo">
+    SELECT
+      *
+    FROM
+      V_LOG_DATA A
+    WHERE
+      A.YEAR_MONTH = #{dateStr}
+      AND A.LOG_TYPE = 1
   </select>
 
 

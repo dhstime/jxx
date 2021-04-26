@@ -6,6 +6,7 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.jxx.JxxApplicationTests;
+import com.jxx.common.utils.ThreadPool;
 import com.jxx.excel.*;
 import com.jxx.excel.easyexcel.BizMergeStrategy;
 import com.jxx.excel.easyexcel.TitleSheetWriteHandler;
@@ -32,10 +33,6 @@ public class DataExportTest extends JxxApplicationTests {
     @Resource
     private ExportMapper exportMapper;
 
-    private static ExecutorService service = new ThreadPoolExecutor(3, 3,
-            0L, TimeUnit.MILLISECONDS,  new LinkedBlockingQueue<Runnable>(1024),
-            new ThreadFactoryBuilder().setNameFormat("demo-pool-%d").build(), new ThreadPoolExecutor.AbortPolicy());
-
     @Test
     public void pufaExport() throws Exception{
 
@@ -48,7 +45,7 @@ public class DataExportTest extends JxxApplicationTests {
 
             LocalDateTime finalStartTime = startTime;
 
-            service.submit(new Thread(){
+            ThreadPool.submit(new Thread(){
                 public void run() {
                     try {
                         //出库明细
@@ -61,11 +58,11 @@ public class DataExportTest extends JxxApplicationTests {
                 }
             });
 
-            service.submit( new Thread(){
+            ThreadPool.submit( new Thread(){
                 public void run() {
                     try {
                         //入库明细
-//                        exportIn(finalStartTime, endTime);
+                        exportIn(finalStartTime, endTime);
                         //将count值减1
                         latch.countDown();
                     } catch (Exception e) {
@@ -74,11 +71,11 @@ public class DataExportTest extends JxxApplicationTests {
                 }
             });
 
-            service.submit(new Thread(){
+            ThreadPool.submit(new Thread(){
                 public void run() {
                     try {
                         //库存明细
-//                        exportStock(finalStartTime, endTime);
+                        exportStock(finalStartTime, endTime);
                         //将count值减1
                         latch.countDown();
                     } catch (Exception e) {
@@ -101,12 +98,11 @@ public class DataExportTest extends JxxApplicationTests {
 
         String stockfileName = "库存明细" + startTime.getYear() + "-" + startTime.getMonth().getValue();
         String sheetName = "库存" + startTime.getYear() + "-" + startTime.getMonth().getValue();
-        String path = "/Users/dhs/Downloads/审计数据/库存明细/" + stockfileName + ".xls";
+        String path = "/Users/dhs/Downloads/审计数据/库存明细/" + stockfileName + ".xlsx";
         Workbook stockworkbook = ExcelExportUtil.exportExcel(new ExportParams(stockfileName,sheetName),StockExport.class,stockExportList);
         FileOutputStream stockfos = new FileOutputStream(path);
         stockworkbook.write(stockfos);
         stockfos.close();
-//        EasyExcel.write(path,StockExport.class).sheet(sheetName).doWrite(stockExportList);
 
     }
 
@@ -117,12 +113,11 @@ public class DataExportTest extends JxxApplicationTests {
 //        inLIst.addAll(inExports);
         String titleName = "入库记录" + startTime.getYear() + "-" + startTime.getMonth().getValue();
         String sheetName = "入库" + startTime.getYear() + "-" + startTime.getMonth().getValue();
-        String path = "/Users/dhs/Downloads/审计数据/入库明细/" + sheetName + ".xls";
+        String path = "/Users/dhs/Downloads/审计数据/入库明细/" + sheetName + ".xlsx";
         Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams(titleName,sheetName),InExport.class,inList);
         FileOutputStream infos = new FileOutputStream(path);
         workbook.write(infos);
         infos.close();
-//        EasyExcel.write(path,InExport.class).sheet(titleName).doWrite(inList);
 
     }
 
@@ -133,12 +128,11 @@ public class DataExportTest extends JxxApplicationTests {
 //        outlist.addAll(outExports);
         String titleName = "出库记录" + startTime.getYear() + "-" + startTime.getMonth().getValue();
         String sheetName = "出库" + startTime.getYear() + "-" + startTime.getMonth().getValue();
-        String path = "/Users/dhs/Downloads/审计数据/出库明细/" + sheetName + ".xls";
+        String path = "/Users/dhs/Downloads/审计数据/出库明细/" + sheetName + ".xlsx";
         Workbook  workbook = ExcelExportUtil.exportExcel(new ExportParams(titleName,sheetName),OutExport.class,outlist);
         FileOutputStream outfos = new FileOutputStream(path);
         workbook.write(outfos);
         outfos.close();
-//        EasyExcel.write(path,OutExport.class).sheet(titleName).doWrite(outlist);
 
     }
 
@@ -175,18 +169,11 @@ public class DataExportTest extends JxxApplicationTests {
         String infileName = "入库" + startTime.getYear() + "-" + startTime.getMonth().getValue();
 
         String path = "/Users/dhs/Downloads/审计数据/直发/入库记录/" + infileName + ".xlsx";
-//        Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams(titleName,infileName),InExport.class,inList);
-//        FileOutputStream outfos = new FileOutputStream(path);
-//        workbook.write(outfos);
-//        outfos.close();
+        Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams(titleName,infileName),InExport.class,inList);
+        FileOutputStream outfos = new FileOutputStream(path);
+        workbook.write(outfos);
+        outfos.close();
 
-        EasyExcel.write(path, InExport.class)
-                .registerWriteHandler(new TitleSheetWriteHandler(titleName,31)) // 标题及样式，lastCol为标题第0列到底lastCol列的宽度
-                //设置默认样式及写入头信息开始的行数
-                .relativeHeadRowIndex(1)
-                .registerWriteHandler(BizMergeStrategy.CellStyleStrategy()) // 设置样式
-                .sheet(infileName)
-                .doWrite(inList);
     }
 
 
@@ -195,18 +182,11 @@ public class DataExportTest extends JxxApplicationTests {
         String titleName = "出库记录" + startTime.getYear() + "-" + startTime.getMonth().getValue();
         String outfileName = "出库" + startTime.getYear() + "-" + startTime.getMonth().getValue();
         String path = "/Users/dhs/Downloads/审计数据/直发/出库记录/" + outfileName + ".xlsx";
-//        Workbook  workbook = ExcelExportUtil.exportExcel(new ExportParams(titleName,outfileName),OutExport.class,outlist);
-//        FileOutputStream outfos = new FileOutputStream(path);
-//        workbook.write(outfos);
-//        outfos.close();
+        Workbook  workbook = ExcelExportUtil.exportExcel(new ExportParams(titleName,outfileName),OutExport.class,outlist);
+        FileOutputStream outfos = new FileOutputStream(path);
+        workbook.write(outfos);
+        outfos.close();
 
-        EasyExcel.write(path, OutExport.class)
-                .registerWriteHandler(new TitleSheetWriteHandler(titleName,31)) // 标题及样式，lastCol为标题第0列到底lastCol列的宽度
-                //设置默认样式及写入头信息开始的行数
-                .relativeHeadRowIndex(1)
-                .registerWriteHandler(BizMergeStrategy.CellStyleStrategy()) // 设置样式
-                .sheet(outfileName)
-                .doWrite(outlist);
     }
 //
 //    private void exportlogOut(LocalDateTime startTime, LocalDateTime endTime)throws Exception {
