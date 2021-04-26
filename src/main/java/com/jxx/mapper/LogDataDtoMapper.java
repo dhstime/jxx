@@ -1,6 +1,10 @@
 package com.jxx.mapper;
 
+import com.jxx.excel.InStockDataDo;
 import com.jxx.excel.LogDataDo;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface LogDataDtoMapper {
 
@@ -16,5 +20,5 @@ public interface LogDataDtoMapper {
 
     int updateByPrimaryKey(LogDataDo record);
 
-    int findMaxId();
+    List<InStockDataDo> selectLogData( @Param("dateStr") String dateStr);
 }

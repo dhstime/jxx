@@ -447,7 +447,7 @@
     </select>
     <select id="getNoNumberLogByOrderNo" resultType="com.jxx.common.model.WarehouseGoodsOperateLogDto">
         SELECT
-        A.WAREHOUSE_GOODS_OPERATE_LOG_ID,
+        A.*,
         (CASE A.OPERATE_TYPE
         WHEN 1 THEN
         C.BUYORDER_NO
@@ -530,6 +530,28 @@
         GROUP BY A.WAREHOUSE_GOODS_OPERATE_LOG_ID
         HAVING ORDER_NO = #{orderNo}
         ORDER BY A.ADD_TIME ASC
+    </select>
+    <select id="getLogOtherBytagSource" resultType="com.jxx.common.model.WarehouseGoodsOperateLogDto">
+        SELECT
+            *
+        FROM
+            T_WAREHOUSE_GOODS_OPERATE_LOG A
+        WHERE
+            A.TAG_SOURCES IN
+        <foreach collection="idList" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+        AND A.OPERATE_TYPE = 13
+        AND A.IS_ENABLE = 1
+    </select>
+    <select id="getBFDetailByOrderIdSku" resultType="com.jxx.common.model.OrderGoods">
+        SELECT
+               A.id AS orderGoodsId,
+               A.sku_no AS sku
+        FROM T_WMS_OUTPUT_ORDER_GOODS A
+        WHERE A.wms_output_order_id=#{orderId}
+          AND sku_no =#{sku}
+
     </select>
 
 </mapper>

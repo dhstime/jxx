@@ -1,6 +1,7 @@
 package com.jxx.mapper;
 
 import com.jxx.common.model.Order;
+import com.jxx.common.model.OrderGoods;
 import com.jxx.common.model.WarehouseGoodsOperateLog;
 import com.jxx.common.model.WarehouseGoodsOperateLogDto;
 import com.jxx.common.model.po.InventoryAdjustmentDetailPo;
@@ -46,4 +47,8 @@ public interface WarehouseGoodsOperateLogMapper {
     List<Order> getAvgPrice(Integer goodsId);
 
     List<WarehouseGoodsOperateLogDto> getNoNumberLogByOrderNo(WarehouseGoodsOperateLogVo search);
+
+    List<WarehouseGoodsOperateLogDto> getLogOtherBytagSource(@Param("idList") List<Integer> idList);
+
+    OrderGoods getBFDetailByOrderIdSku(@Param("orderId") Integer orderId, @Param("sku") String sku);
 }

@@ -493,7 +493,16 @@
       LOG_ADD_TIME = #{logAddTime,jdbcType=TIMESTAMP}
     where IN_LOG_ID = #{inLogId,jdbcType=INTEGER}
   </update>
-  <select id="findMaxId" resultType="Integer">
-    SELECT (CASE WHEN MAX(WAREHOUSE_LOG_ID) IS NULL THEN 1 ELSE MAX(WAREHOUSE_LOG_ID + 1) END) from V_LOG_DATA
+
+  <select id="selectLogData" resultType="com.jxx.excel.InStockDataDo">
+    SELECT
+        *
+    FROM
+      V_LOG_DATA A
+    WHERE
+      A.YEAR_MONTH = #{dateStr}
+      AND A.LOG_TYPE = 0
   </select>
+
+
 </mapper>

@@ -2,6 +2,7 @@ package com.jxx.dataTest;
 
 import cn.afterturn.easypoi.excel.ExcelImportUtil;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.jxx.JxxApplicationTests;
 import com.jxx.excel.*;
 import com.jxx.mapper.LogDataDtoMapper;
@@ -15,17 +16,28 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Strange
  * @ClassName DatabaseExport.java
- * @Description TODO
+ * @Description TODO 保存导出execl数据到表
  * @createTime 2021年04月21日 13:12:00
  */
 public class DatabaseExport extends JxxApplicationTests{
 
     @Resource
     private LogDataDtoMapper logDataDtoMapper;
+
+//    @Test
+//    public void exportAll() throws Exception{
+//        exportIn();
+//        exportOut();
+//        importStockData();
+//    }
 
     @Test
     public void exportIn() throws Exception {
@@ -34,7 +46,7 @@ public class DatabaseExport extends JxxApplicationTests{
             LocalDateTime startTime = LocalDateTime.of(2018,12,1,0,0,0);
             do {
                 String fileName = "入库" + startTime.getYear() + "-" + startTime.getMonth().getValue();
-                File file = new File("/Users/dhs/Downloads/审计数据/入库明细/"+fileName + ".xlsx");
+                File file = new File("/Users/dhs/Downloads/审计数据/入库明细/"+fileName + ".xls");
                 LocalDateTime endTime = startTime.plusMonths(1);
                 boolean flag = true;
                 int startSheetIndex = 0;
@@ -79,7 +91,7 @@ public class DatabaseExport extends JxxApplicationTests{
             LocalDateTime startTime = LocalDateTime.of(2018,12,1,0,0,0);
             do {
                 String fileName = "出库" + startTime.getYear() + "-" + startTime.getMonth().getValue();
-                File file = new File("/Users/dhs/Downloads/审计数据/出库明细/"+fileName + ".xlsx");
+                File file = new File("/Users/dhs/Downloads/审计数据/出库明细/"+fileName + ".xls");
                 LocalDateTime endTime = startTime.plusMonths(1);
                 boolean flag = true;
                 int startSheetIndex = 0;
@@ -126,7 +138,7 @@ public class DatabaseExport extends JxxApplicationTests{
             LocalDateTime startTime = LocalDateTime.of(2018,12,1,0,0,0);
             do {
                 String fileName = "库存明细" + startTime.getYear() + "-" + startTime.getMonth().getValue();
-                File file = new File("/Users/dhs/Downloads/审计数据/库存明细/"+fileName + ".xlsx");
+                File file = new File("/Users/dhs/Downloads/审计数据/库存明细/"+fileName + ".xls");
                 LocalDateTime endTime = startTime.plusMonths(1);
                 boolean flag = true;
                 int startSheetIndex = 0;
