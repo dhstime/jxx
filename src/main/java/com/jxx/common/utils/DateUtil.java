@@ -733,14 +733,6 @@ public class DateUtil {
 		return 0l;
 	}
 
-	/**
-	 * <b>Description:</b>获取近多少天的开始时间和结束时间<br>
-	 * @param
-	 * @return
-	 * @Note
-	 * <b>Author:calvin</b>
-	 * <br><b>Date:</b> 2020/5/26
-	 */
 	public static String getDateStrBeforeDays(int days){
 		Calendar now = Calendar.getInstance();
 		now.set(Calendar.DATE, now.get(Calendar.DATE) - days);
@@ -764,6 +756,15 @@ public class DateUtil {
 	public static Boolean compareYearAndMonthWithNow(Date date){
 		Date now = new Date();
 		return getYearOfDate(date) == getYearOfDate(now) && getMonthOfDate(date) == getMonthOfDate(now);
+	}
+
+	public static String yearMonthStr(LocalDateTime startTime) {
+		int value = startTime.getMonth().getValue();
+		String month = value +"";
+		if (value < 10){
+			month = "0"+month;
+		}
+		return startTime.getYear() + "-" + month;
 	}
 }
 

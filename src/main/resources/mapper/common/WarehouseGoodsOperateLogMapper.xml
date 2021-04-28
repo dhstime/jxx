@@ -553,5 +553,16 @@
           AND sku_no =#{sku}
 
     </select>
+    <select id="getPanyingDetail" resultType="com.jxx.common.model.OrderGoods">
+        SELECT
+            B.WMS_INPUT_ORDER_GOODS_ID AS orderGoodsId,
+               B.INPUT_NUM AS num
+        FROM
+            T_WMS_INPUT_ORDER A
+            LEFT JOIN T_WMS_INPUT_ORDER_GOODS B ON A.WMS_INPUT_ORDER_ID = B.WMS_INPUT_ORDER_ID
+        WHERE
+            A.ORDER_NO = #{orderNo}
+          AND B.SKU_NO = #{sku}
+    </select>
 
 </mapper>

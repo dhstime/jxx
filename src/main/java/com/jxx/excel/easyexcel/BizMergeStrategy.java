@@ -101,7 +101,7 @@ public class BizMergeStrategy extends AbstractMergeStrategy {
         headWriteCellStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
         //设置头字体
         WriteFont headWriteFont = new WriteFont();
-        headWriteFont.setFontHeightInPoints((short)13);
+        headWriteFont.setFontHeightInPoints((short)12);
         headWriteFont.setBold(true);
         headWriteCellStyle.setWriteFont(headWriteFont);
         //设置头居中

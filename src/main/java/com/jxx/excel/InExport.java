@@ -1,7 +1,6 @@
 package com.jxx.excel;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
-import com.alibaba.excel.annotation.ExcelProperty;
 import lombok.Data;
 
 /**

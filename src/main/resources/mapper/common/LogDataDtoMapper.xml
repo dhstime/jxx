@@ -512,6 +512,16 @@
       A.YEAR_MONTH = #{dateStr}
       AND A.LOG_TYPE = 1
   </select>
+    <select id="getLogDataByOrderNoSku" resultType="com.jxx.excel.LogDataDo">
+      SELECT
+        *
+      FROM
+        V_LOG_DATA A
+      WHERE
+        A.ORDER_NO = #{orderNo}
+        AND A.SKU = #{sku}
+        AND A.LOG_TYPE = #{logType}
+    </select>
 
 
 </mapper>

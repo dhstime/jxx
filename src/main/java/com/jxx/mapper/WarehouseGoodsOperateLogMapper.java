@@ -51,4 +51,6 @@ public interface WarehouseGoodsOperateLogMapper {
     List<WarehouseGoodsOperateLogDto> getLogOtherBytagSource(@Param("idList") List<Integer> idList);
 
     OrderGoods getBFDetailByOrderIdSku(@Param("orderId") Integer orderId, @Param("sku") String sku);
+
+    OrderGoods getPanyingDetail(@Param("orderNo") String orderNo, @Param("sku") String sku);
 }

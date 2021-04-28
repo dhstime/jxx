@@ -39,9 +39,9 @@ public class DatabaseExport extends JxxApplicationTests{
         try {
             LocalDateTime startTime = LocalDateTime.of(2018,12,1,0,0,0);
             do {
+                LocalDateTime endTime = startTime.plusMonths(1);
                 String fileName = "入库" + startTime.getYear() + "-" + startTime.getMonth().getValue();
                 File file = new File("/Users/dhs/Downloads/审计数据/入库明细/"+fileName + ".xls");
-                LocalDateTime endTime = startTime.plusMonths(1);
                 boolean flag = true;
                 int startSheetIndex = 0;
 
@@ -164,6 +164,38 @@ public class DatabaseExport extends JxxApplicationTests{
 
         }catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void test(){
+
+        File file = new File("/Users/dhs/Downloads/出库2020-9.xlsx");
+        boolean flag = true;
+        int startSheetIndex = 0;
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleMonthFormat = new SimpleDateFormat("yyyy-MM");
+
+        while (flag){
+            ImportParams params = new ImportParams();
+            params.setTitleRows(1);
+            params.setHeadRows(1);
+            params.setStartSheetIndex(startSheetIndex);
+            params.setSheetNum(1);
+            List<OutStockDataDo> list = ExcelImportUtil.importExcel(file, OutStockDataDo.class, params);
+            startSheetIndex ++;
+            if(list.size() != 59998){
+                flag = false;
+            }
+            for (OutStockDataDo outStockDataDo : list) {
+                outStockDataDo.setYearMonthDay(simpleDateFormat.format(outStockDataDo.getLogAddTime()));
+                outStockDataDo.setYearMonth(simpleMonthFormat.format(outStockDataDo.getLogAddTime()));
+                outStockDataDo.setLogType(1);//出库
+                LogDataDo logDataDo = new LogDataDo();
+                BeanUtils.copyProperties(outStockDataDo,logDataDo);
+                logDataDtoMapper.insertSelective(logDataDo);
+            }
         }
     }
 

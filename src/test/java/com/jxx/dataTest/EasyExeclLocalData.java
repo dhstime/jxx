@@ -4,6 +4,7 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.jxx.JxxApplicationTests;
+import com.jxx.common.utils.DateUtil;
 import com.jxx.common.utils.ThreadPool;
 import com.jxx.excel.InStockDataDo;
 import com.jxx.excel.OutStockDataDo;
@@ -25,7 +26,7 @@ import java.util.concurrent.*;
  * @Description TODO 导出本地出入库明细
  * @createTime 2021年04月26日 15:16:00
  */
-public class EasyExecl extends JxxApplicationTests {
+public class EasyExeclLocalData extends JxxApplicationTests {
 
     @Resource
     private LogDataDtoMapper logDataDtoMapper;
@@ -34,7 +35,7 @@ public class EasyExecl extends JxxApplicationTests {
     private StockDataDtoMapper stockDataDtoMapper;
 
     @Test
-    public void test() throws Exception{
+    public void exportAll() throws Exception{
         LocalDateTime startTime = LocalDateTime.of(2018,12,1,0,0,0);
         do {
             final CountDownLatch latch = new CountDownLatch(3);
@@ -85,7 +86,7 @@ public class EasyExecl extends JxxApplicationTests {
     }
 
     private void exprotStock(LocalDateTime startTime) {
-        List<StockDataDo> list = stockDataDtoMapper.selectStockData(yearMonthStr(startTime));
+        List<StockDataDo> list = stockDataDtoMapper.selectStockData(DateUtil.yearMonthStr(startTime));
         String stockfileName = "库存明细" + startTime.getYear() + "-" + startTime.getMonth().getValue();
         String path = "/Users/dhs/Downloads/审计数据/库存明细/" + stockfileName + ".xlsx";
 
@@ -100,7 +101,7 @@ public class EasyExecl extends JxxApplicationTests {
     }
 
     private void exprotOut(LocalDateTime startTime) {
-        List<OutStockDataDo> list = logDataDtoMapper.selectOutLogData(yearMonthStr(startTime));
+        List<OutStockDataDo> list = logDataDtoMapper.selectOutLogData(DateUtil.yearMonthStr(startTime));
 
         String sheetName = "出库" + startTime.getYear() + "-" + startTime.getMonth().getValue();
         String path = "/Users/dhs/Downloads/审计数据/出库明细/" + sheetName + ".xlsx";
@@ -116,7 +117,7 @@ public class EasyExecl extends JxxApplicationTests {
     }
 
     private void exprotIn(LocalDateTime startTime) {
-        List<InStockDataDo> list = logDataDtoMapper.selectInLogData(yearMonthStr(startTime));
+        List<InStockDataDo> list = logDataDtoMapper.selectInLogData(DateUtil.yearMonthStr(startTime));
 
         String sheetName = "入库" + startTime.getYear() + "-" + startTime.getMonth().getValue();
         String path = "/Users/dhs/Downloads/审计数据/入库明细/" + sheetName + ".xlsx";
@@ -131,14 +132,21 @@ public class EasyExecl extends JxxApplicationTests {
                 .doWrite(list);
     }
 
-    private String yearMonthStr(LocalDateTime startTime) {
-        int value = startTime.getMonth().getValue();
-        String month = value +"";
-        if (value < 10){
-            month = "0"+month;
-        }
-        return startTime.getYear() + "-" + month;
-    }
 
+    @Test
+    public void test(){
+        List<InStockDataDo> list = logDataDtoMapper.selectInLogData("2018-12");
+        String sheetName = "入库" + 2018 + "-" + 12;
+        String path = "/Users/dhs/Downloads/" + sheetName + ".xlsx";
+
+        EasyExcel.write(path, InStockDataDo.class)
+                .excelType(ExcelTypeEnum.XLSX).head(InStockDataDo.class)
+                .registerWriteHandler(new TitleSheetWriteHandler(sheetName,31)) // 标题及样式，lastCol为标题第0列到底lastCol列的宽度
+                //设置默认样式及写入头信息开始的行数
+                .relativeHeadRowIndex(1)
+                .registerWriteHandler(BizMergeStrategy.CellStyleStrategy()) // 设置样式
+                .sheet(sheetName)
+                .doWrite(list);
+    }
 
 }
