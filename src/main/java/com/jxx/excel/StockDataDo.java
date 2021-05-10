@@ -109,5 +109,16 @@ public class StockDataDo {
     @ExcelProperty("三级分类")
     private String threeFl;
 
+    @Excel(name = "老一级分类")
+    @ExcelProperty("老一级分类")
+    private String oldOneFl;
+
+    @Excel(name = "老二级分类")
+    @ExcelProperty("老二级分类")
+    private String oldTwoFl;
+
+    @Excel(name = "老三级分类")
+    @ExcelProperty("老三级分类")
+    private String oldThreeFl;
 
 }

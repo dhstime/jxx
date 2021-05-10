@@ -134,7 +134,7 @@ public class EasyExeclLocalData extends JxxApplicationTests {
 
 
     @Test
-    public void test(){
+    public void testExecl(){
         List<InStockDataDo> list = logDataDtoMapper.selectInLogData("2018-12");
         String sheetName = "入库" + 2018 + "-" + 12;
         String path = "/Users/dhs/Downloads/" + sheetName + ".xlsx";
@@ -147,6 +147,34 @@ public class EasyExeclLocalData extends JxxApplicationTests {
                 .registerWriteHandler(BizMergeStrategy.CellStyleStrategy()) // 设置样式
                 .sheet(sheetName)
                 .doWrite(list);
+    }
+
+    @Test
+    public void customTest(){
+        List<InStockDataDo> inList = logDataDtoMapper.selectInSometing();
+        String inSheetName = "入库记录";
+        String inPath = "/Users/dhs/Downloads/" + "出口客户入库记录" + ".xlsx";
+        EasyExcel.write(inPath, InStockDataDo.class)
+                .excelType(ExcelTypeEnum.XLSX).head(InStockDataDo.class)
+                .registerWriteHandler(new TitleSheetWriteHandler(inSheetName,31)) // 标题及样式，lastCol为标题第0列到底lastCol列的宽度
+                //设置默认样式及写入头信息开始的行数
+                .relativeHeadRowIndex(1)
+                .registerWriteHandler(BizMergeStrategy.CellStyleStrategy()) // 设置样式
+                .sheet(inSheetName)
+                .doWrite(inList);
+
+        List<OutStockDataDo> outList = logDataDtoMapper.selectOutSometing();
+        String outSheetName = "出库记录";
+        String outPath = "/Users/dhs/Downloads/" + "出口客户出库记录" + ".xlsx";
+
+        EasyExcel.write(outPath, OutStockDataDo.class)
+                .excelType(ExcelTypeEnum.XLSX).head(OutStockDataDo.class)
+                .registerWriteHandler(new TitleSheetWriteHandler(outSheetName,31)) // 标题及样式，lastCol为标题第0列到底lastCol列的宽度
+                //设置默认样式及写入头信息开始的行数
+                .relativeHeadRowIndex(1)
+                .registerWriteHandler(BizMergeStrategy.CellStyleStrategy()) // 设置样式
+                .sheet(outSheetName)
+                .doWrite(outList);
     }
 
 }

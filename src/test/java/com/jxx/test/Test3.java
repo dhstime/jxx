@@ -67,7 +67,4 @@ public class Test3 {
         }
     }
 
-    @Test
-    public void test1() throws Exception{
-    }
 }

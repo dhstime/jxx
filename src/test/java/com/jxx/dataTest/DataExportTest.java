@@ -2,14 +2,9 @@ package com.jxx.dataTest;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
-import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.support.ExcelTypeEnum;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.jxx.JxxApplicationTests;
 import com.jxx.common.utils.ThreadPool;
 import com.jxx.excel.*;
-import com.jxx.excel.easyexcel.BizMergeStrategy;
-import com.jxx.excel.easyexcel.TitleSheetWriteHandler;
 import com.jxx.mapper.ExportMapper;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.Test;
@@ -36,7 +31,7 @@ public class DataExportTest extends JxxApplicationTests {
     @Test
     public void pufaExport() throws Exception{
 
-        LocalDateTime startTime = LocalDateTime.of(2019,9,1,0,0,0);
+        LocalDateTime startTime = LocalDateTime.of(2018,12,1,0,0,0);
 
         do {
             final CountDownLatch latch = new CountDownLatch(3);
@@ -75,7 +70,7 @@ public class DataExportTest extends JxxApplicationTests {
                 public void run() {
                     try {
                         //库存明细
-                        exportStock(finalStartTime, endTime);
+//                        exportStock(finalStartTime, endTime);
                         //将count值减1
                         latch.countDown();
                     } catch (Exception e) {

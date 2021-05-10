@@ -53,4 +53,8 @@ public interface WarehouseGoodsOperateLogMapper {
     OrderGoods getBFDetailByOrderIdSku(@Param("orderId") Integer orderId, @Param("sku") String sku);
 
     OrderGoods getPanyingDetail(@Param("orderNo") String orderNo, @Param("sku") String sku);
+
+    Order getBuyorderInfo(String orderNo);
+
+    Order getAfterSaleInfo(String orderNo);
 }

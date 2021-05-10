@@ -564,5 +564,27 @@
             A.ORDER_NO = #{orderNo}
           AND B.SKU_NO = #{sku}
     </select>
+    <select id="getBuyorderInfo" resultType="com.jxx.common.model.Order">
+        SELECT
+            A.BUYORDER_NO orderNo,
+            A.TRADER_NAME,
+            A.TRADER_ID
+        FROM
+            T_BUYORDER A
+        WHERE
+            A.BUYORDER_NO = #{orderNo}
+    </select>
+    <select id="getAfterSaleInfo" resultType="com.jxx.common.model.Order">
+        SELECT
+            A.AFTER_SALES_NO orderNo,
+            C.TRADER_ID ,
+            C.TRADER_NAME
+        FROM
+            T_AFTER_SALES A
+                LEFT JOIN T_AFTER_SALES_DETAIL B ON A.AFTER_SALES_ID = B.AFTER_SALES_ID
+                LEFT JOIN T_TRADER C ON C.TRADER_ID = B.TRADER_ID
+        WHERE
+            A.AFTER_SALES_NO = #{orderNo}
+    </select>
 
 </mapper>

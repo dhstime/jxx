@@ -12,6 +12,7 @@ import java.util.Date;
 @Data
 public class InStockDataDo {
     @ExcelIgnore
+//    @ExcelProperty("id")
     private Integer inLogId;
     @ExcelIgnore
     private Integer logType;
@@ -21,6 +22,7 @@ public class InStockDataDo {
     private String yearMonth;
     @Excel(name = "id")
     @ExcelProperty("id")
+//    @ExcelIgnore
     private Integer warehouseLogId;
 
     @Excel(name = "单号")
@@ -137,10 +139,10 @@ public class InStockDataDo {
     @ExcelProperty("批次")
     private String batchNumber;
 
-    @Excel(name = "入库时间",importFormat = "yyyy-MM-dd")
-    @ExcelProperty(value = "入库时间")
+    @Excel(name = "入库时间",format = "yyyy-MM-dd")
+    @ExcelProperty(value = "入库时间",format = "yyyy-MM-dd")
     @DateTimeFormat("yyyy-MM-dd")
-    private Date logAddTime;
+    private String logAddTime;
 
 
 }

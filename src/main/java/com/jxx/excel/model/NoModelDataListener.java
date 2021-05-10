@@ -2,6 +2,7 @@ package com.jxx.excel.model;
 
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
+import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,16 +15,16 @@ import java.util.Map;
  *
  * @author Jiaju Zhuang
  */
-public class NoModelDataListener extends AnalysisEventListener<Map<Integer, String>> {
+public class NoModelDataListener<T> extends AnalysisEventListener<T> {
     private static final Logger LOGGER = LoggerFactory.getLogger(NoModelDataListener.class);
     /**
      * 每隔5条存储数据库，实际使用中可以3000条，然后清理list ，方便内存回收
      */
     private static final int BATCH_COUNT = 5;
-    public  List<Map<Integer, String>> list = new ArrayList<Map<Integer, String>>();
+    public  List<T> list = new ArrayList<>();
 
     @Override
-    public void invoke(Map<Integer, String> data, AnalysisContext context) {
+    public void invoke(T data, AnalysisContext context) {
        // LOGGER.info("解析到一条数据:{}", JSON.toJSONString(data));
         list.add(data);
     }

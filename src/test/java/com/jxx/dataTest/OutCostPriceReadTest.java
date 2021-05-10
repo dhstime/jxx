@@ -43,7 +43,7 @@ public class OutCostPriceReadTest extends JxxApplicationTests {
     @Test
     public void OutCostPriceReadTest(){
         String path = "/Users/dhs/Downloads/进销存.xlsx";
-        NoModelDataListener listen = new NoModelDataListener();
+        NoModelDataListener<HashMap<Integer,String>> listen = new NoModelDataListener();
         ExcelReaderBuilder readerBuilder = EasyExcel.read(path, listen);
         readerBuilder.doReadAll();
         Map<String, Map<String,BigDecimal>> stockpriceMap = new HashMap<>();

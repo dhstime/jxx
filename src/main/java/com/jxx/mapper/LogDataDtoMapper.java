@@ -26,4 +26,8 @@ public interface LogDataDtoMapper {
     List<OutStockDataDo> selectOutLogData(@Param("dateStr")String dateStr);
 
     List<LogDataDo> getLogDataByOrderNoSku(@Param("orderNo") String orderNo, @Param("sku") String sku,@Param("logType") Integer logType);
+
+    List<InStockDataDo> selectInSometing();
+
+    List<OutStockDataDo> selectOutSometing();
 }

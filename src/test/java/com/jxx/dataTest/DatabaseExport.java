@@ -2,9 +2,14 @@ package com.jxx.dataTest;
 
 import cn.afterturn.easypoi.excel.ExcelImportUtil;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelReader;
+import com.alibaba.excel.read.builder.ExcelReaderBuilder;
+import com.alibaba.excel.read.metadata.ReadSheet;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.jxx.JxxApplicationTests;
 import com.jxx.excel.*;
+import com.jxx.excel.model.NoModelDataListener;
 import com.jxx.mapper.LogDataDtoMapper;
 import com.jxx.mapper.StockDataDtoMapper;
 import org.junit.Test;
@@ -12,9 +17,11 @@ import org.springframework.beans.BeanUtils;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -24,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Strange
  * @ClassName DatabaseExport.java
- * @Description TODO 保存导出execl数据到表
+ * @Description TODO 保存导出execl数据落表
  * @createTime 2021年04月21日 13:12:00
  */
 public class DatabaseExport extends JxxApplicationTests{
@@ -32,41 +39,42 @@ public class DatabaseExport extends JxxApplicationTests{
     @Resource
     private LogDataDtoMapper logDataDtoMapper;
 
+    @Resource
+    private StockDataDtoMapper stockDataDtoMapper;
+
 
     @Test
     public void exportIn() throws Exception {
 
         try {
-            LocalDateTime startTime = LocalDateTime.of(2018,12,1,0,0,0);
+            LocalDateTime startTime = LocalDateTime.of(2019,10,1,0,0,0);
             do {
                 LocalDateTime endTime = startTime.plusMonths(1);
                 String fileName = "入库" + startTime.getYear() + "-" + startTime.getMonth().getValue();
-                File file = new File("/Users/dhs/Downloads/审计数据/入库明细/"+fileName + ".xls");
-                boolean flag = true;
-                int startSheetIndex = 0;
+                File file = new File("/Users/dhs/Downloads/审计数据/入库明细/"+fileName + ".xlsx");
 
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                SimpleDateFormat simpleMonthFormat = new SimpleDateFormat("yyyy-MM");
+                SimpleDateFormat day = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat month = new SimpleDateFormat("yyyy-MM");
 
-                while (flag){
-                    ImportParams params = new ImportParams();
-                    params.setTitleRows(1);
-                    params.setHeadRows(1);
-                    params.setStartSheetIndex(startSheetIndex);
-                    params.setSheetNum(1);
-                    List<InStockDataDo> list = ExcelImportUtil.importExcel(file, InStockDataDo.class, params);
-                    startSheetIndex ++;
-                    if(list.size() != 59998){
-                        flag = false;
-                    }
-                    for (InStockDataDo inStockDataDo : list) {
-                        inStockDataDo.setYearMonthDay(simpleDateFormat.format(inStockDataDo.getLogAddTime()));
-                        inStockDataDo.setYearMonth(simpleMonthFormat.format(inStockDataDo.getLogAddTime()));
-                        inStockDataDo.setLogType(0);//入库
-                        LogDataDo logDataDo = new LogDataDo();
-                        BeanUtils.copyProperties(inStockDataDo,logDataDo);
-                        logDataDtoMapper.insertSelective(logDataDo);
-                    }
+                ImportParams params = new ImportParams();
+                params.setTitleRows(1);
+                params.setHeadRows(1);
+                params.setStartSheetIndex(0);
+                params.setSheetNum(1);
+                LogDataDo logDataDo = new LogDataDo();
+//                List<InStockDataDo> list = ExcelImportUtil.importExcel(file, InStockDataDo.class, params);
+                NoModelDataListener<InStockDataDo> listen = new NoModelDataListener();
+                EasyExcel.read(file, InStockDataDo.class, listen).sheet().headRowNumber(2).doRead();
+                List<InStockDataDo> list = listen.list;
+                for (InStockDataDo inStockDataDo : list) {
+                    Date date = day.parse(inStockDataDo.getLogAddTime());
+                    inStockDataDo.setYearMonthDay(day.format(date));
+                    inStockDataDo.setYearMonth(month.format(date));
+                    inStockDataDo.setLogType(0);//入库
+                    inStockDataDo.setDeliveryDirect("否");
+                    BeanUtils.copyProperties(inStockDataDo,logDataDo);
+                    logDataDo.setLogAddTime(date);
+                    logDataDtoMapper.insertSelective(logDataDo);
                 }
 
                 System.out.println(startTime.toString());
@@ -85,33 +93,33 @@ public class DatabaseExport extends JxxApplicationTests{
             LocalDateTime startTime = LocalDateTime.of(2018,12,1,0,0,0);
             do {
                 String fileName = "出库" + startTime.getYear() + "-" + startTime.getMonth().getValue();
-                File file = new File("/Users/dhs/Downloads/审计数据/出库明细/"+fileName + ".xls");
+                File file = new File("/Users/dhs/Downloads/审计数据/出库明细/"+fileName + ".xlsx");
                 LocalDateTime endTime = startTime.plusMonths(1);
-                boolean flag = true;
-                int startSheetIndex = 0;
 
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                SimpleDateFormat simpleMonthFormat = new SimpleDateFormat("yyyy-MM");
 
-                while (flag){
-                    ImportParams params = new ImportParams();
-                    params.setTitleRows(1);
-                    params.setHeadRows(1);
-                    params.setStartSheetIndex(startSheetIndex);
-                    params.setSheetNum(1);
-                    List<OutStockDataDo> list = ExcelImportUtil.importExcel(file, OutStockDataDo.class, params);
-                    startSheetIndex ++;
-                    if(list.size() != 59998){
-                        flag = false;
-                    }
-                    for (OutStockDataDo outStockDataDo : list) {
-                        outStockDataDo.setYearMonthDay(simpleDateFormat.format(outStockDataDo.getLogAddTime()));
-                        outStockDataDo.setYearMonth(simpleMonthFormat.format(outStockDataDo.getLogAddTime()));
-                        outStockDataDo.setLogType(1);//出库
-                        LogDataDo logDataDo = new LogDataDo();
-                        BeanUtils.copyProperties(outStockDataDo,logDataDo);
-                        logDataDtoMapper.insertSelective(logDataDo);
-                    }
+                SimpleDateFormat day = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat month = new SimpleDateFormat("yyyy-MM");
+
+                ImportParams params = new ImportParams();
+                params.setTitleRows(1);
+                params.setHeadRows(1);
+                params.setStartSheetIndex(0);
+                params.setSheetNum(1);
+                LogDataDo logDataDo = new LogDataDo();
+//                List<OutStockDataDo> list = ExcelImportUtil.importExcel(file, OutStockDataDo.class, params);
+
+                NoModelDataListener<OutStockDataDo> listen = new NoModelDataListener();
+                EasyExcel.read(file, OutStockDataDo.class, listen).sheet().headRowNumber(2).doRead();
+                List<OutStockDataDo> list = listen.list;
+                for (OutStockDataDo outStockDataDo : list) {
+                    Date date = day.parse(outStockDataDo.getLogAddTime());
+                    outStockDataDo.setYearMonthDay(day.format(date));
+                    outStockDataDo.setYearMonth(month.format(date));
+                    outStockDataDo.setLogType(1);//出库
+                    outStockDataDo.setDeliveryDirect("否");
+                    BeanUtils.copyProperties(outStockDataDo,logDataDo);
+                    logDataDo.setLogAddTime(date);
+                    logDataDtoMapper.insertSelective(logDataDo);
                 }
 
                 System.out.println(startTime.toString());
@@ -123,8 +131,7 @@ public class DatabaseExport extends JxxApplicationTests{
         }
     }
 
-    @Resource
-    private StockDataDtoMapper stockDataDtoMapper;
+
 
     @Test
     public void importStockData(){
@@ -132,30 +139,25 @@ public class DatabaseExport extends JxxApplicationTests{
             LocalDateTime startTime = LocalDateTime.of(2018,12,1,0,0,0);
             do {
                 String fileName = "库存明细" + startTime.getYear() + "-" + startTime.getMonth().getValue();
-                File file = new File("/Users/dhs/Downloads/审计数据/库存明细/"+fileName + ".xls");
+                File file = new File("/Users/dhs/Downloads/审计数据/库存明细/"+fileName + ".xlsx");
                 LocalDateTime endTime = startTime.plusMonths(1);
-                boolean flag = true;
-                int startSheetIndex = 0;
 
                 DateTimeFormatter day = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 DateTimeFormatter month = DateTimeFormatter.ofPattern("yyyy-MM");
 
-                while (flag){
-                    ImportParams params = new ImportParams();
-                    params.setTitleRows(1);
-                    params.setHeadRows(1);
-                    params.setStartSheetIndex(startSheetIndex);
-                    params.setSheetNum(1);
-                    List<StockDataDo> list = ExcelImportUtil.importExcel(file, StockDataDo.class, params);
-                    startSheetIndex ++;
-                    if(list.size() != 59998){
-                        flag = false;
-                    }
-                    for (StockDataDo stockDataDo : list) {
-                        stockDataDo.setYearMonthDay(day.format(startTime));
-                        stockDataDo.setYearMonth(month.format(startTime));
-                        stockDataDtoMapper.insertSelective(stockDataDo);
-                    }
+                ImportParams params = new ImportParams();
+                params.setTitleRows(1);
+                params.setHeadRows(1);
+                params.setStartSheetIndex(0);
+                params.setSheetNum(1);
+//                List<StockDataDo> list = ExcelImportUtil.importExcel(file, StockDataDo.class, params);
+                NoModelDataListener<StockDataDo> listen = new NoModelDataListener();
+                EasyExcel.read(file, StockDataDo.class, listen).sheet().headRowNumber(2).doRead();
+                List<StockDataDo> list = listen.list;
+                for (StockDataDo stockDataDo : list) {
+                    stockDataDo.setYearMonthDay(day.format(startTime));
+                    stockDataDo.setYearMonth(month.format(startTime));
+                    stockDataDtoMapper.insertSelective(stockDataDo);
                 }
 
                 System.out.println(startTime.toString());
@@ -168,35 +170,71 @@ public class DatabaseExport extends JxxApplicationTests{
     }
 
     @Test
-    public void test(){
+    public void exoprtZhifaOut() throws Exception{
+        File file = new File("/Users/dhs/Downloads/审计数据/直发/直发出库.xlsx");
 
-        File file = new File("/Users/dhs/Downloads/出库2020-9.xlsx");
-        boolean flag = true;
-        int startSheetIndex = 0;
+        SimpleDateFormat day = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat month = new SimpleDateFormat("yyyy-MM");
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat simpleMonthFormat = new SimpleDateFormat("yyyy-MM");
+        ImportParams params = new ImportParams();
+        params.setTitleRows(1);
+        params.setHeadRows(1);
+        params.setStartSheetIndex(0);
+        params.setSheetNum(1);
+        List<OutStockDataDo> list = ExcelImportUtil.importExcel(file, OutStockDataDo.class, params);
 
-        while (flag){
-            ImportParams params = new ImportParams();
-            params.setTitleRows(1);
-            params.setHeadRows(1);
-            params.setStartSheetIndex(startSheetIndex);
-            params.setSheetNum(1);
-            List<OutStockDataDo> list = ExcelImportUtil.importExcel(file, OutStockDataDo.class, params);
-            startSheetIndex ++;
-            if(list.size() != 59998){
-                flag = false;
-            }
-            for (OutStockDataDo outStockDataDo : list) {
-                outStockDataDo.setYearMonthDay(simpleDateFormat.format(outStockDataDo.getLogAddTime()));
-                outStockDataDo.setYearMonth(simpleMonthFormat.format(outStockDataDo.getLogAddTime()));
-                outStockDataDo.setLogType(1);//出库
-                LogDataDo logDataDo = new LogDataDo();
-                BeanUtils.copyProperties(outStockDataDo,logDataDo);
-                logDataDtoMapper.insertSelective(logDataDo);
-            }
+        int warehouseLogId = 100000;
+
+        for (OutStockDataDo outStockDataDo : list) {
+            Date date = day.parse(outStockDataDo.getLogAddTime());
+            outStockDataDo.setYearMonthDay(day.format(date));
+            outStockDataDo.setYearMonth(month.format(date));
+            outStockDataDo.setLogType(1);//出库
+            outStockDataDo.setDeliveryDirect("是");
+            LogDataDo logDataDo = new LogDataDo();
+            BeanUtils.copyProperties(outStockDataDo,logDataDo);
+            logDataDo.setLogAddTime(date);
+            logDataDo.setWarehouseLogId(warehouseLogId);
+            logDataDtoMapper.insertSelective(logDataDo);
+            warehouseLogId++;
+//            System.out.println(logDataDo.toString());
         }
+        System.out.println("exoprtZhifaOut  end");
     }
+
+    @Test
+    public void exoprtZhifaIn() throws Exception {
+        File file = new File("/Users/dhs/Downloads/审计数据/直发/直发入库.xlsx");
+
+        SimpleDateFormat day = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat month = new SimpleDateFormat("yyyy-MM");
+
+        ImportParams params = new ImportParams();
+        params.setTitleRows(1);
+        params.setHeadRows(1);
+        params.setStartSheetIndex(0);
+        params.setSheetNum(1);
+        List<InStockDataDo> list = ExcelImportUtil.importExcel(file, InStockDataDo.class, params);
+
+        int warehouseLogId = 200000;
+
+        for (InStockDataDo inStockDataDo : list) {
+            Date date = day.parse(inStockDataDo.getLogAddTime());
+            inStockDataDo.setYearMonthDay(day.format(date));
+            inStockDataDo.setYearMonth(month.format(date));
+            inStockDataDo.setLogType(0);//入库
+            inStockDataDo.setDeliveryDirect("是");
+            LogDataDo logDataDo = new LogDataDo();
+            BeanUtils.copyProperties(inStockDataDo,logDataDo);
+            logDataDo.setLogAddTime(date);
+            logDataDo.setWarehouseLogId(warehouseLogId);
+            logDataDtoMapper.insertSelective(logDataDo);
+            warehouseLogId++;
+//            System.out.println(logDataDo.toString());
+
+        }
+        System.out.println("exoprtZhifaIn  end");
+    }
+
 
 }

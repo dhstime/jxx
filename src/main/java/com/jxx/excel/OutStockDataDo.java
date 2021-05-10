@@ -23,6 +23,7 @@ import java.util.Date;
 @Data
 public class OutStockDataDo {
     @ExcelIgnore
+//    @ExcelProperty("id")
     private Integer inLogId;
     @ExcelIgnore
     private Integer logType;
@@ -33,6 +34,7 @@ public class OutStockDataDo {
 
     @Excel(name = "id")
     @ExcelProperty("id")
+//    @ExcelIgnore
     private Integer warehouseLogId;
 
     @Excel(name = "单号")
@@ -161,6 +163,6 @@ public class OutStockDataDo {
     @Excel(name = "出库时间",importFormat = "yyyy-MM-dd")
     @ExcelProperty("出库时间")
     @DateTimeFormat("yyyy-MM-dd")
-    private Date logAddTime;
+    private String logAddTime;
 
 }

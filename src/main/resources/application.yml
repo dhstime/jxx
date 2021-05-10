@@ -87,7 +87,7 @@ spring:
   datasource:
     #引入druid数据源
     #mycat配置主从数据库
-    url: jdbc:mysql://127.0.0.1:3306/jtdb?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    url: jdbc:mysql://127.0.0.1:3306/jtdb?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&sessionVariables=sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'
     username: root
     password: root
 #    url: jdbc:mysql://192.168.2.54:3306/DEV_NEW_ERP_VEDENG_COM?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true

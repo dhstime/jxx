@@ -21,4 +21,10 @@ public class Order {
     private BigDecimal price;
 
     private BigDecimal totalAmount;
+
+    private String traderName;
+
+    private String traderId;
+
+    private String orderNo;
 }
