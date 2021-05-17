@@ -70,7 +70,7 @@ public class DataExportTest extends JxxApplicationTests {
                 public void run() {
                     try {
                         //库存明细
-//                        exportStock(finalStartTime, endTime);
+                        exportStock(finalStartTime, endTime);
                         //将count值减1
                         latch.countDown();
                     } catch (Exception e) {

@@ -364,7 +364,13 @@
   </update>
 
   <select id="selectStockData" resultType="com.jxx.excel.StockDataDo">
-    SELECT * FROM V_STOCK_DATA A WHERE A.`YEAR_MONTH` = #{dateStr}
+    SELECT
+      *
+    FROM
+      V_STOCK_DATA A
+    WHERE
+      A.`YEAR_MONTH` = #{dateStr}
+      AND A.IS_DELETE = 0
   </select>
 
 </mapper>

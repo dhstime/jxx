@@ -47,7 +47,7 @@ public class DatabaseExport extends JxxApplicationTests{
     public void exportIn() throws Exception {
 
         try {
-            LocalDateTime startTime = LocalDateTime.of(2019,10,1,0,0,0);
+            LocalDateTime startTime = LocalDateTime.of(2018,12,1,0,0,0);
             do {
                 LocalDateTime endTime = startTime.plusMonths(1);
                 String fileName = "入库" + startTime.getYear() + "-" + startTime.getMonth().getValue();
@@ -171,7 +171,7 @@ public class DatabaseExport extends JxxApplicationTests{
 
     @Test
     public void exoprtZhifaOut() throws Exception{
-        File file = new File("/Users/dhs/Downloads/审计数据/直发/直发出库.xlsx");
+        File file = new File("/Users/dhs/Downloads/审计数据/直发/直发出库2.xlsx");
 
         SimpleDateFormat day = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat month = new SimpleDateFormat("yyyy-MM");
@@ -183,7 +183,7 @@ public class DatabaseExport extends JxxApplicationTests{
         params.setSheetNum(1);
         List<OutStockDataDo> list = ExcelImportUtil.importExcel(file, OutStockDataDo.class, params);
 
-        int warehouseLogId = 100000;
+        int warehouseLogId = 150000;
 
         for (OutStockDataDo outStockDataDo : list) {
             Date date = day.parse(outStockDataDo.getLogAddTime());
@@ -195,7 +195,7 @@ public class DatabaseExport extends JxxApplicationTests{
             BeanUtils.copyProperties(outStockDataDo,logDataDo);
             logDataDo.setLogAddTime(date);
             logDataDo.setWarehouseLogId(warehouseLogId);
-            logDataDtoMapper.insertSelective(logDataDo);
+//            logDataDtoMapper.insertSelective(logDataDo);
             warehouseLogId++;
 //            System.out.println(logDataDo.toString());
         }
@@ -204,7 +204,7 @@ public class DatabaseExport extends JxxApplicationTests{
 
     @Test
     public void exoprtZhifaIn() throws Exception {
-        File file = new File("/Users/dhs/Downloads/审计数据/直发/直发入库.xlsx");
+        File file = new File("/Users/dhs/Downloads/审计数据/直发/直发入库2.xlsx");
 
         SimpleDateFormat day = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat month = new SimpleDateFormat("yyyy-MM");
@@ -216,7 +216,7 @@ public class DatabaseExport extends JxxApplicationTests{
         params.setSheetNum(1);
         List<InStockDataDo> list = ExcelImportUtil.importExcel(file, InStockDataDo.class, params);
 
-        int warehouseLogId = 200000;
+        int warehouseLogId = 250000;
 
         for (InStockDataDo inStockDataDo : list) {
             Date date = day.parse(inStockDataDo.getLogAddTime());
@@ -228,7 +228,7 @@ public class DatabaseExport extends JxxApplicationTests{
             BeanUtils.copyProperties(inStockDataDo,logDataDo);
             logDataDo.setLogAddTime(date);
             logDataDo.setWarehouseLogId(warehouseLogId);
-            logDataDtoMapper.insertSelective(logDataDo);
+//            logDataDtoMapper.insertSelective(logDataDo);
             warehouseLogId++;
 //            System.out.println(logDataDo.toString());
 

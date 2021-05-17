@@ -56,7 +56,7 @@ public class OutCostPriceReadTest extends JxxApplicationTests {
             int index = 12;
             do {
                 LocalDateTime endTime = startTime.plusMonths(1);
-                String time = startTime.getYear() + "-" + startTime.getMonth().getValue();
+                String time = DateUtil.yearMonthStr(startTime);
                 BigDecimal outPrice = new BigDecimal(item.get(index));
                 if(outPrice.compareTo(BigDecimal.ZERO) > 0) {
                     monthPrice.put(time, outPrice);
@@ -69,20 +69,20 @@ public class OutCostPriceReadTest extends JxxApplicationTests {
                 stockpriceMap.put(sku,monthPrice);
             }
         });
-        System.out.println(count);
-        for (String sku : stockpriceMap.keySet()) {
-
-            Map<String, BigDecimal> stringBigDecimalMap = stockpriceMap.get(sku);
-            for (String dateStr : stringBigDecimalMap.keySet()) {
-                String[] split = dateStr.split("-");
-                LocalDateTime startTime = LocalDateTime.of(Integer.valueOf(split[0]),Integer.valueOf(split[1]),1,0,0,0);
-
-                BigDecimal costPrice = stringBigDecimalMap.get(dateStr);
-
-                System.out.println(DateUtil.yearMonthStr(startTime) +" : "+sku+ " : " +costPrice);
-            }
-
-        }
+//        System.out.println(count);
+//        for (String sku : stockpriceMap.keySet()) {
+//
+//            Map<String, BigDecimal> stringBigDecimalMap = stockpriceMap.get(sku);
+//            for (String dateStr : stringBigDecimalMap.keySet()) {
+//                String[] split = dateStr.split("-");
+//                LocalDateTime startTime = LocalDateTime.of(Integer.valueOf(split[0]),Integer.valueOf(split[1]),1,0,0,0);
+//
+//                BigDecimal costPrice = stringBigDecimalMap.get(dateStr);
+//
+//                System.out.println(DateUtil.yearMonthStr(startTime) +" : "+sku+ " : " +costPrice);
+//            }
+//
+//        }
 
     }
 

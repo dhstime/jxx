@@ -30,4 +30,15 @@ public interface LogDataDtoMapper {
     List<InStockDataDo> selectInSometing();
 
     List<OutStockDataDo> selectOutSometing();
+    //获取直接赋予加权价
+    List<LogDataDo> getOutWeightedPriceLogInfo();
+
+    //销售售后入库类型
+    List<LogDataDo> getSaleAfterInLogList();
+
+    List<LogDataDo> getSaleOutLOgList(@Param("orderNo") String orderNo, @Param("sku") String sku);
+
+    List<InStockDataDo> getInLogListBySku(String sku);
+
+    List<OutStockDataDo> getOutLogListBySku(String sku);
 }
