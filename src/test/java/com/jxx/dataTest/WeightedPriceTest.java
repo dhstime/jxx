@@ -59,10 +59,12 @@ public class WeightedPriceTest  extends JxxApplicationTests {
                 stockpriceMap.put(sku,monthPrice);
             }
         });
+        LogDataDo search = new LogDataDo();
+
+        LogDataDo update = new LogDataDo();
 
         //获取直接赋予加权价
-        List<LogDataDo> outWeightedPriceLogList = logDataDtoMapper.getOutWeightedPriceLogInfo();
-        LogDataDo update = new LogDataDo();
+        List<LogDataDo> outWeightedPriceLogList = logDataDtoMapper.getOutWeightedPriceLogInfo(search);
         for (LogDataDo logDataDo : outWeightedPriceLogList) {
             Map<String, BigDecimal> monthPrice = stockpriceMap.get(logDataDo.getSku());
             BigDecimal weightedPrice = monthPrice.get(logDataDo.getYearMonth());
@@ -74,12 +76,12 @@ public class WeightedPriceTest  extends JxxApplicationTests {
         //所有有售后部分的销售单
         HashMap<String,List<LogDataDo>> saleOutMap = new HashMap<>();
         //销售售后入库类型
-        List<LogDataDo> saleAfterInLogList = logDataDtoMapper.getSaleAfterInLogList();
+        List<LogDataDo> saleAfterInLogList = logDataDtoMapper.getSaleAfterInLogList(search);
         for (LogDataDo logDataDo : saleAfterInLogList) {
             String key = logDataDo.getAssOrderNo() + "," + logDataDo.getSku();
             List<LogDataDo> logDataDoList = saleOutMap.get(key);
             if(CollectionUtils.isEmpty(logDataDoList)){
-                logDataDoList =  logDataDtoMapper.getSaleOutLOgList(logDataDo.getAssOrderNo(),logDataDo.getSku());;
+                logDataDoList =  logDataDtoMapper.getSaleOutLogList(logDataDo.getAssOrderNo(), logDataDo.getAssOrderNo(),logDataDo.getSku());;
                 saleOutMap.put(key,logDataDoList);
             }
         }

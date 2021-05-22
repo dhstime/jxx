@@ -118,5 +118,9 @@ public class LogDataDo {
     @Excel(name = "入库时间",importFormat = "yyyy-MM-dd")
     private Date logAddTime;
 
+    private BigDecimal realPrice;
+
+    private BigDecimal realTotalAmount;
+
 
 }

@@ -31,14 +31,32 @@ public interface LogDataDtoMapper {
 
     List<OutStockDataDo> selectOutSometing();
     //获取直接赋予加权价
-    List<LogDataDo> getOutWeightedPriceLogInfo();
+    List<LogDataDo> getOutWeightedPriceLogInfo(LogDataDo month);
 
     //销售售后入库类型
-    List<LogDataDo> getSaleAfterInLogList();
+    List<LogDataDo> getSaleAfterInLogList(LogDataDo month);
 
-    List<LogDataDo> getSaleOutLOgList(@Param("orderNo") String orderNo, @Param("sku") String sku);
+    List<LogDataDo> getSaleOutLogList( @Param("orderNo") String orderNo, @Param("sku") String sku,@Param("yearMonth") String yearMonth);
 
-    List<InStockDataDo> getInLogListBySku(String sku);
+    List<InStockDataDo> getInLogListBySku(List<String> sku);
 
-    List<OutStockDataDo> getOutLogListBySku(String sku);
+    List<OutStockDataDo> getOutLogListBySku(List<String> sku);
+
+    int updateByOrderNo(LogDataDo logDataDo);
+
+    int updateRealPriceById(LogDataDo update);
+
+    List<LogDataDo> getTotalInfo(LogDataDo search);
+
+    LogDataDo getInfoByWarehouseId(Integer warehouseId);
+
+    List<LogDataDo> getSaleOutPriceLogList(LogDataDo search);
+
+    List<LogDataDo> getWeihthedInTotalInfo(LogDataDo search);
+
+    List<LogDataDo> getAdjLogInfo(LogDataDo search);
+
+    List<LogDataDo> getWeightPriceSource(String yearMonth);
+
+    List<LogDataDo> getAfterSaleInlogList(String yearMonth);
 }

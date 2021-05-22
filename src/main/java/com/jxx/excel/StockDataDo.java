@@ -76,21 +76,27 @@ public class StockDataDo {
     @ExcelProperty("库存数量")
     private Integer num;
 
-    @Excel(name = "成本价")
-    @ExcelProperty("成本价")
-    private BigDecimal costPrice;
-
-    @Excel(name = "库存金额")
-    @ExcelProperty("库存金额")
-    private BigDecimal totalAmount;
+//    @Excel(name = "成本价")
+//    @ExcelProperty("成本价")
+//    private BigDecimal costPrice;
+//
+//    @Excel(name = "库存金额")
+//    @ExcelProperty("库存金额")
+//    private BigDecimal totalAmount;
 
     @Excel(name = "成本价新")
-    @ExcelProperty("成本价新")
+    @ExcelProperty("业务单价(含税)")
     private BigDecimal newCostPrice;
 
     @Excel(name = "库存金额新")
-    @ExcelProperty("库存金额新")
+    @ExcelProperty("业务金额(含税)")
     private BigDecimal newTotalAmount;
+
+    @ExcelProperty("财务单价(不含税)")
+    private BigDecimal realPrice;
+
+    @ExcelProperty("财务金额(不含税)")
+    private BigDecimal realTotalAmount;
 
     @Excel(name = "效期")
     @ExcelProperty("效期")

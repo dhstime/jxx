@@ -47,7 +47,7 @@
     ORDER_STATUS, ASS_ORDER_NO, REMARK, DELIVERY_DIRECT, ADD_TIME, VALID_TIME, TRADER_NAME, 
     TRADER_ID, TRADER_LEVEL, CUSTOMER_TYPE, CUSTOMER_NATURE, ORG_NAME, INVOICE_TYPE, 
     REGION_NAME, SKU_NAME, SKU, BRAND_NAME, MODEL, UNIT_NAME, THREE_FL, TWO_FL, ONE_FL, 
-    OLD_THREE_FL, OLD_TWO_FL, OLD_ONE_FL, BARCODE, BARCODE_FACTORY, NUM, NEW_COST_PRICE, 
+    OLD_THREE_FL, OLD_TWO_FL, OLD_ONE_FL, BARCODE, BARCODE_FACTORY, NUM, NEW_COST_PRICE, REAL_PRICE,REAL_TOTAL_AMOUNT,
     TOTAL_AMOUNT, BATCH_NUMBER, DATE_FORMAT(LOG_ADD_TIME, '%Y-%m-%d') LOG_ADD_TIME
   </sql>
 
@@ -56,8 +56,17 @@
     ORDER_STATUS, ASS_ORDER_NO, REMARK, DELIVERY_DIRECT, ADD_TIME, VALID_TIME, TRADER_NAME,
     TRADER_ID, TRADER_LEVEL, CUSTOMER_TYPE, CUSTOMER_NATURE, ORG_NAME, INVOICE_TYPE,
     REGION_NAME, SKU_NAME, SKU, BRAND_NAME, MODEL, UNIT_NAME, THREE_FL, TWO_FL, ONE_FL,
-    OLD_THREE_FL, OLD_TWO_FL, OLD_ONE_FL, BARCODE, BARCODE_FACTORY, NUM, NEW_COST_PRICE,
+    OLD_THREE_FL, OLD_TWO_FL, OLD_ONE_FL, BARCODE, BARCODE_FACTORY, NUM, NEW_COST_PRICE,REAL_PRICE,REAL_TOTAL_AMOUNT,
     TOTAL_AMOUNT, BATCH_NUMBER, DATE_FORMAT(LOG_ADD_TIME, '%Y-%m-%d') LOG_ADD_TIME
+  </sql>
+  <sql id="price_Column_List">
+    IN_LOG_ID, LOG_TYPE, YEAR_MONTH_DAY, `YEAR_MONTH`, WAREHOUSE_LOG_ID, ORDER_NO, ORDER_TYPE,
+      ORDER_STATUS, ASS_ORDER_NO, REMARK, DELIVERY_DIRECT, ADD_TIME, VALID_TIME, TRADER_NAME,
+      TRADER_ID, TRADER_LEVEL, CUSTOMER_TYPE, CUSTOMER_NATURE, ORG_NAME, INVOICE_TYPE,
+      REGION_NAME, SKU_NAME, SKU, BRAND_NAME, MODEL, UNIT_NAME, THREE_FL, TWO_FL, ONE_FL,
+      OLD_THREE_FL, OLD_TWO_FL, OLD_ONE_FL, BARCODE, BARCODE_FACTORY, IF(ORDER_TYPE='采购退货出库' OR ORDER_TYPE='采购换货出库',-NUM, NUM) NUM,
+    NEW_COST_PRICE,REAL_PRICE,IF(ORDER_TYPE='采购退货出库' OR ORDER_TYPE='采购换货出库',-REAL_TOTAL_AMOUNT, REAL_TOTAL_AMOUNT) REAL_TOTAL_AMOUNT,
+      IF(ORDER_TYPE='采购退货出库' OR ORDER_TYPE='采购换货出库',-TOTAL_AMOUNT, TOTAL_AMOUNT) TOTAL_AMOUNT, BATCH_NUMBER, DATE_FORMAT(LOG_ADD_TIME, '%Y-%m-%d') LOG_ADD_TIME
   </sql>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -66,10 +75,6 @@
     from V_LOG_DATA
     where IN_LOG_ID = #{inLogId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from V_LOG_DATA
-    where IN_LOG_ID = #{inLogId,jdbcType=INTEGER}
-  </delete>
   <insert id="insert" parameterType="com.jxx.excel.LogDataDo">
     insert into V_LOG_DATA (IN_LOG_ID, LOG_TYPE, YEAR_MONTH_DAY,
       `YEAR_MONTH`, WAREHOUSE_LOG_ID, ORDER_NO,
@@ -351,7 +356,7 @@
         YEAR_MONTH_DAY = #{yearMonthDay,jdbcType=VARCHAR},
       </if>
       <if test="yearMonth != null">
-        YEAR_MONTH = #{yearMonth,jdbcType=VARCHAR},
+        `YEAR_MONTH` = #{yearMonth,jdbcType=VARCHAR},
       </if>
       <if test="warehouseLogId != null">
         WAREHOUSE_LOG_ID = #{warehouseLogId,jdbcType=INTEGER},
@@ -465,7 +470,7 @@
     update V_LOG_DATA
     set LOG_TYPE = #{logType,jdbcType=INTEGER},
       YEAR_MONTH_DAY = #{yearMonthDay,jdbcType=VARCHAR},
-      YEAR_MONTH = #{yearMonth,jdbcType=VARCHAR},
+      `YEAR_MONTH` = #{yearMonth,jdbcType=VARCHAR},
       WAREHOUSE_LOG_ID = #{warehouseLogId,jdbcType=INTEGER},
       ORDER_NO = #{orderNo,jdbcType=VARCHAR},
       ORDER_TYPE = #{orderType,jdbcType=VARCHAR},
@@ -503,10 +508,27 @@
       LOG_ADD_TIME = #{logAddTime,jdbcType=TIMESTAMP}
     where IN_LOG_ID = #{inLogId,jdbcType=INTEGER}
   </update>
+  <update id="updateByOrderNo" parameterType="com.jxx.excel.LogDataDo">
+    update V_LOG_DATA
+    set
+        YEAR_MONTH_DAY = #{yearMonthDay,jdbcType=VARCHAR},
+        YEAR_MONTH = #{yearMonth,jdbcType=VARCHAR},
+        ADD_TIME = #{addTime,jdbcType=TIMESTAMP},
+        VALID_TIME = #{validTime,jdbcType=TIMESTAMP},
+        LOG_ADD_TIME = #{logAddTime,jdbcType=TIMESTAMP}
+    where  ORDER_NO = #{orderNo,jdbcType=VARCHAR}
+  </update>
+  <update id="updateRealPriceById">
+    update V_LOG_DATA
+    set
+        REAL_PRICE = #{realPrice},
+        REAL_TOTAL_AMOUNT = #{realTotalAmount}
+    where IN_LOG_ID = #{inLogId,jdbcType=INTEGER}
+  </update>
 
   <select id="selectInLogData" resultType="com.jxx.excel.InStockDataDo">
     SELECT
-    <include refid="Base_Column_List" />
+    <include refid="price_Column_List" />
     FROM
       V_LOG_DATA A
     WHERE
@@ -535,6 +557,7 @@
         A.ORDER_NO = #{orderNo}
         AND A.SKU = #{sku}
         AND A.LOG_TYPE = #{logType}
+        AND A.IS_DELETE = 0
     </select>
     <select id="selectInSometing" resultType="com.jxx.excel.InStockDataDo">
       SELECT
@@ -560,33 +583,39 @@
 --       AND A.TRADER_NAME='南京EQ'
       AND A.ORDER_TYPE IN( '调整盘亏出库' )
   </select>
-  <select id="getOutWeightedPriceLogInfo" resultType="com.jxx.excel.LogDataDo">
+  <select id="getOutWeightedPriceLogInfo" resultType="com.jxx.excel.LogDataDo" parameterType="com.jxx.excel.LogDataDo">
     SELECT
       *
     FROM
       V_LOG_DATA A
     WHERE
-        A.ORDER_TYPE IN ( '报废出库', '盘盈入库', '调整盘亏出库', '调整盘盈入库', '销售出库', '销售换货出库' )
+        A.ORDER_TYPE IN ( '报废出库', '盘盈入库', '调整盘亏出库', '调整盘盈入库', '销售出库', '销售换货出库','SKU转化出库','SKU转化入库','外借出库','样品出库' )
       AND A.IS_DELETE = 0
+      <if test="yearMonth != null">
+        AND A.`YEAR_MONTH` = #{yearMonth}
+      </if>
+
   </select>
-  <select id="getSaleAfterInLogList" resultType="com.jxx.excel.LogDataDo">
+  <select id="getSaleAfterInLogList" resultType="com.jxx.excel.LogDataDo" parameterType="com.jxx.excel.LogDataDo">
     SELECT
       *
     FROM
       V_LOG_DATA A
     WHERE
-      A.ORDER_TYPE IN ( '销售换货入库','销售退货入库' )
+      A.ORDER_TYPE IN ( '外借入库','样品入库' )
       AND A.IS_DELETE = 0
-      AND A.DELIVERY_DIRECT='否'
+    <if test="yearMonth != null">
+      AND A.`YEAR_MONTH` = #{yearMonth}
+    </if>
   </select>
-  <select id="getSaleOutLOgList" resultType="com.jxx.excel.LogDataDo">
+  <select id="getSaleOutLogList" resultType="com.jxx.excel.LogDataDo">
     SELECT
       A.ORDER_NO,
       A.SKU,
       A.`YEAR_MONTH`,
       SUM( A.NUM ) NUM,
-      SUM( A.TOTAL_AMOUNT ) TOTAL_AMOUNT,
-      SUM( A.TOTAL_AMOUNT ) / SUM( A.NUM ) NEW_COST_PRICE
+      SUM( A.REAL_TOTAL_AMOUNT )/SUM( A.NUM ) REAL_PRICE,
+      SUM( A.REAL_TOTAL_AMOUNT ) REAL_TOTAL_AMOUNT
     FROM
       V_LOG_DATA A
     WHERE
@@ -594,18 +623,23 @@
       AND A.LOG_TYPE = 1
       AND A.SKU = #{sku}
       AND A.IS_DELETE = 0
+      AND A.`YEAR_MONTH` > '2018-12' AND A.`YEAR_MONTH` &lt; #{yearMonth}
     GROUP BY A.ORDER_NO,A.`YEAR_MONTH`,A.SKU
     ORDER BY A.`YEAR_MONTH` ASC
   </select>
   <select id="getInLogListBySku" resultType="com.jxx.excel.InStockDataDo">
     SELECT
-    <include refid="Base_Column_List" />
+      <include refid="price_Column_List"/>
     FROM
     V_LOG_DATA A
     WHERE
-    A.SKU = #{sku}
-    AND A.LOG_TYPE = 0
+    A.SKU IN
+    <foreach collection="list" item="sku" separator="," open="(" close=")">
+        #{sku}
+    </foreach>
+--     AND A.LOG_TYPE = 0
     AND A.IS_DELETE = 0
+    AND (A.LOG_TYPE = 0 OR ( A.LOG_TYPE =1 AND A.ORDER_TYPE IN ('采购退货出库','采购换货出库') ))
   </select>
   <select id="getOutLogListBySku" resultType="com.jxx.excel.OutStockDataDo">
     SELECT
@@ -613,9 +647,113 @@
     FROM
     V_LOG_DATA A
     WHERE
-    A.SKU = #{sku}
+    A.SKU IN
+    <foreach collection="list" item="sku" separator="," open="(" close=")">
+    #{sku}
+  </foreach>
     AND A.LOG_TYPE = 1
+    AND A.ORDER_TYPE NOT IN ('采购退货出库','采购换货出库')
     AND A.IS_DELETE = 0
+  </select>
+  <select id="getTotalInfo" resultType="com.jxx.excel.LogDataDo">
+    SELECT
+    A.SKU,
+    SUM( A.NUM ) NUM,
+    SUM( A.REAL_TOTAL_AMOUNT )/SUM( A.NUM ) REAL_PRICE,
+    SUM( A.REAL_TOTAL_AMOUNT ) REAL_TOTAL_AMOUNT
+--       SUM( IF(ORDER_TYPE='采购退货出库' OR ORDER_TYPE='采购换货出库',-NUM, NUM) ) NUM,
+--       SUM( IF(ORDER_TYPE='采购退货出库' OR ORDER_TYPE='采购换货出库',-REAL_TOTAL_AMOUNT, REAL_TOTAL_AMOUNT) ) REAL_TOTAL_AMOUNT
+    FROM
+      V_LOG_DATA A
+    WHERE
+      A.`YEAR_MONTH` = #{yearMonth}
+      AND A.LOG_TYPE = #{logType}
+<!--    <if test="logType == 0">-->
+<!--      AND (A.LOG_TYPE = 0 OR ( A.LOG_TYPE =1 AND A.ORDER_TYPE IN ('采购退货出库','采购换货出库') ))-->
+<!--    </if>-->
+<!--    <if test="logType == 1">-->
+<!--      AND A.LOG_TYPE = 1-->
+<!--      AND A.ORDER_TYPE NOT IN ('采购退货出库','采购换货出库')-->
+<!--    </if>-->
+     AND A.IS_DELETE = 0
+    GROUP BY A.SKU
+  </select>
+  <select id="getInfoByWarehouseId" resultType="com.jxx.excel.LogDataDo">
+    select
+    <include refid="Base_Column_List" />
+    from V_LOG_DATA
+    where WAREHOUSE_LOG_ID = #{warehouseId}
+  </select>
+  <select id="getSaleOutPriceLogList" resultType="com.jxx.excel.LogDataDo">
+    SELECT
+      A.SKU,
+      A.`YEAR_MONTH`,
+      SUM( A.NUM ) NUM,
+      SUM( A.REAL_TOTAL_AMOUNT )/SUM( A.NUM ) REAL_PRICE,
+      SUM( A.REAL_TOTAL_AMOUNT ) REAL_TOTAL_AMOUNT
+    FROM
+      V_LOG_DATA A
+    WHERE
+      A.ORDER_NO = #{orderNo}
+      AND A.LOG_TYPE = 1
+      AND A.SKU = #{sku}
+      AND A.IS_DELETE = 0
+      AND A.`YEAR_MONTH` > '2018-12' AND A.`YEAR_MONTH` &lt; #{yearMonth}
+    GROUP BY A.`YEAR_MONTH`,A.SKU
+    ORDER BY A.`YEAR_MONTH` DESC
+  </select>
+  <select id="getWeihthedInTotalInfo" resultType="com.jxx.excel.LogDataDo">
+    SELECT
+      A.SKU,
+      SUM( IF(ORDER_TYPE='采购退货出库' OR ORDER_TYPE='采购换货出库',-NUM, NUM) ) NUM,
+      SUM( IF(ORDER_TYPE='采购退货出库' OR ORDER_TYPE='采购换货出库',-REAL_TOTAL_AMOUNT, REAL_TOTAL_AMOUNT) ) REAL_TOTAL_AMOUNT
+    FROM
+      V_LOG_DATA A
+    WHERE
+      A.`YEAR_MONTH` = #{yearMonth}
+      AND A.LOG_TYPE = #{logType}
+      AND A.IS_DELETE = 0
+    <if test="logType == 0">
+      AND A.ORDER_TYPE IN ('采购换货出库','采购换货入库','采购入库','采购退货出库','销售换货入库','销售退货入库')
+    </if>
+    <if test="logType == 1">
+      AND A.ORDER_TYPE IN ( '报废出库', '调整盘亏出库', '销售出库', '销售换货出库','SKU转化出库','外借出库','样品出库')
+    </if>
+    GROUP BY A.SKU
+  </select>
+  <select id="getAdjLogInfo" resultType="com.jxx.excel.LogDataDo">
+    SELECT
+    *
+    FROM
+    V_LOG_DATA A
+    WHERE
+    A.ORDER_TYPE IN ( '批次调整入库','批次调整出库' )
+    AND A.IS_DELETE = 0
+    AND A.`YEAR_MONTH` = #{yearMonth}
+  </select>
+  <select id="getWeightPriceSource" resultType="com.jxx.excel.LogDataDo">
+    SELECT
+      A.SKU,
+      SUM( IF(ORDER_TYPE='采购退货出库' OR ORDER_TYPE='采购换货出库',-NUM, NUM) ) NUM,
+      SUM( IF(ORDER_TYPE='采购退货出库' OR ORDER_TYPE='采购换货出库',-REAL_TOTAL_AMOUNT, REAL_TOTAL_AMOUNT) ) REAL_TOTAL_AMOUNT
+    FROM
+      V_LOG_DATA A
+    WHERE
+      A.ORDER_TYPE IN ( '采购换货出库','采购换货入库','采购入库','采购退货出库' )
+      AND A.IS_DELETE = 0
+      AND A.`YEAR_MONTH` = #{yearMonth}
+    GROUP BY A.SKU
+  </select>
+  <select id="getAfterSaleInlogList" resultType="com.jxx.excel.LogDataDo">
+    SELECT
+      *
+    FROM
+      V_LOG_DATA A
+    WHERE
+        A.ORDER_TYPE IN ( '销售换货入库','销售退货入库' )
+      AND A.IS_DELETE = 0
+      AND A.`YEAR_MONTH` = #{yearMonth}
+      AND A.LOG_TYPE = 0
   </select>
 
 

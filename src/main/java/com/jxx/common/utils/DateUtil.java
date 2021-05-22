@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -766,6 +767,16 @@ public class DateUtil {
 		}
 		return startTime.getYear() + "-" + month;
 	}
+
+	public static String yearMonthStr(LocalDate startTime) {
+		int value = startTime.getMonth().getValue();
+		String month = value +"";
+		if (value < 10){
+			month = "0"+month;
+		}
+		return startTime.getYear() + "-" + month;
+	}
+
 }
 
 

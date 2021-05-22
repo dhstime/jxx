@@ -149,12 +149,18 @@ public class OutStockDataDo {
     private Integer num;
 
     @Excel(name = "单价",type = 10)
-    @ExcelProperty("单价")
+    @ExcelProperty("业务单价(含税)")
     private BigDecimal newCostPrice;
 
     @Excel(name = "出库金额",type = 10)
-    @ExcelProperty("出库金额")
+    @ExcelProperty("业务金额(含税)")
     private BigDecimal totalAmount;
+
+    @ExcelProperty("财务单价(不含税)")
+    private BigDecimal realPrice;
+
+    @ExcelProperty("财务金额(不含税)")
+    private BigDecimal realTotalAmount;
 
     @Excel(name = "批次")
     @ExcelProperty("批次")

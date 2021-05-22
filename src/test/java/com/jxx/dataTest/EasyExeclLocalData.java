@@ -84,12 +84,13 @@ public class EasyExeclLocalData extends JxxApplicationTests {
             System.out.println(startTime.toString());
 
             startTime = startTime.plusMonths(1);
-        } while (startTime.isBefore(LocalDateTime.of(2021,4,1,0,0,0)));
+        } while (startTime.isBefore(LocalDateTime.of(2019,2,1,0,0,0)));
     }
 
     private void exprotStock(LocalDateTime startTime) {
         List<StockDataDo> list = stockDataDtoMapper.selectStockData(DateUtil.yearMonthStr(startTime));
-        String stockfileName = "库存明细" + startTime.getYear() + "-" + startTime.getMonth().getValue();
+
+        String stockfileName = "库存明细" + DateUtil.yearMonthStr(startTime);
         String path = "/Users/dhs/Downloads/审计数据/库存明细/" + stockfileName + ".xlsx";
 
         exportStockExcel(list, stockfileName, path);
@@ -109,7 +110,7 @@ public class EasyExeclLocalData extends JxxApplicationTests {
     private void exprotOut(LocalDateTime startTime) {
         List<OutStockDataDo> list = logDataDtoMapper.selectOutLogData(DateUtil.yearMonthStr(startTime));
 
-        String sheetName = "出库" + startTime.getYear() + "-" + startTime.getMonth().getValue();
+        String sheetName = "出库" + DateUtil.yearMonthStr(startTime);
         String path = "/Users/dhs/Downloads/审计数据/出库明细/" + sheetName + ".xlsx";
 
         exportOutExcel(list, sheetName, path);
@@ -118,7 +119,7 @@ public class EasyExeclLocalData extends JxxApplicationTests {
     private void exprotIn(LocalDateTime startTime) {
         List<InStockDataDo> list = logDataDtoMapper.selectInLogData(DateUtil.yearMonthStr(startTime));
 
-        String sheetName = "入库" + startTime.getYear() + "-" + startTime.getMonth().getValue();
+        String sheetName = "入库" + DateUtil.yearMonthStr(startTime);
         String path = "/Users/dhs/Downloads/审计数据/入库明细/" + sheetName + ".xlsx";
 
         exportInExcel(list, sheetName, path);
@@ -178,20 +179,18 @@ public class EasyExeclLocalData extends JxxApplicationTests {
      **/
     @Test
     public void searchSku(){
-
-        List<String> skuList = Arrays.asList("V274799,V273501,V274272".split(","));
+        String skus = "V111126,V112006,V116824,V116830,V116832,V116833,V116837,V116838,V125582,V125586,V135437,V135443,V135448,V146683,V147223,V148746,V149732,V149751,V149753,V149756,V149757,V149769,V150076,V151173,V151214,V250897,V250899,V251224,V251297,V251831,V251835,V251838,V252277,V252864,V253410,V253790,V253951,V254199,V255193,V255670,V257753,V258214,V271788,V271918,V271983,V272058,V272590,V111444,V116291,V116842";
+        List<String> skuList = Arrays.asList(skus.split(","));
         String inSheetName = "入库记录";
         String outSheetName = "出库记录";
-        for (String sku : skuList) {
-            String inPath = "/Users/dhs/Downloads/审计数据/SKU/入库/" + sku+"入库记录" + ".xlsx";
-            List<InStockDataDo> inList = logDataDtoMapper.getInLogListBySku(sku);
-            exportInExcel(inList, inSheetName, inPath);
+        String inPath = "/Users/dhs/Downloads/审计数据/SKU/入库/" + "入库记录" + ".xlsx";
+        List<InStockDataDo> inList = logDataDtoMapper.getInLogListBySku(skuList);
+        exportInExcel(inList, inSheetName, inPath);
 
-            List<OutStockDataDo> outList = logDataDtoMapper.getOutLogListBySku(sku);
+        List<OutStockDataDo> outList = logDataDtoMapper.getOutLogListBySku(skuList);
 
-            String outPath = "/Users/dhs/Downloads/审计数据/SKU/出库/" + sku+"出库记录" + ".xlsx";
-            exportOutExcel(outList, outSheetName, outPath);
-        }
+        String outPath = "/Users/dhs/Downloads/审计数据/SKU/出库/" + "出库记录" + ".xlsx";
+        exportOutExcel(outList, outSheetName, outPath);
     }
 
 }
