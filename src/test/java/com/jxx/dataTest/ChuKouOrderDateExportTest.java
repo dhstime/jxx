@@ -25,11 +25,7 @@ import java.util.List;
  * @Description TODO
  * @createTime 2021年05月20日 09:29:00
  */
-public class DateExportTest extends JxxApplicationTests {
-
-    @Resource
-    private LogDataDtoMapper logDataDtoMapper;
-
+public class ChuKouOrderDateExportTest extends JxxApplicationTests {
 
     @Test
     public void dateTest(){
@@ -60,8 +56,8 @@ public class DateExportTest extends JxxApplicationTests {
 
 
             String sql = "update V_LOG_DATA set " +
-                    "YEAR_MONTH_DAY = \'" +monthchukouTimeStr +
-                    "\', `YEAR_MONTH` = \'" +daychukouTimeStr+
+                    "YEAR_MONTH_DAY = \'" + daychukouTimeStr+
+                    "\', `YEAR_MONTH` = \'" + monthchukouTimeStr+
                     "\', ADD_TIME = \'" +orderTimeStr+
                     "\', VALID_TIME = \'" + orderTimeStr +
                     "\', LOG_ADD_TIME =\'" +daychukouTimeStr+

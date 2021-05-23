@@ -658,23 +658,22 @@
   <select id="getTotalInfo" resultType="com.jxx.excel.LogDataDo">
     SELECT
     A.SKU,
-    SUM( A.NUM ) NUM,
-    SUM( A.REAL_TOTAL_AMOUNT )/SUM( A.NUM ) REAL_PRICE,
-    SUM( A.REAL_TOTAL_AMOUNT ) REAL_TOTAL_AMOUNT
---       SUM( IF(ORDER_TYPE='采购退货出库' OR ORDER_TYPE='采购换货出库',-NUM, NUM) ) NUM,
---       SUM( IF(ORDER_TYPE='采购退货出库' OR ORDER_TYPE='采购换货出库',-REAL_TOTAL_AMOUNT, REAL_TOTAL_AMOUNT) ) REAL_TOTAL_AMOUNT
+--     SUM( A.NUM ) NUM,
+--     SUM( A.REAL_TOTAL_AMOUNT )/SUM( A.NUM ) REAL_PRICE,
+--     SUM( A.REAL_TOTAL_AMOUNT ) REAL_TOTAL_AMOUNT
+      SUM( IF(ORDER_TYPE='采购退货出库' OR ORDER_TYPE='采购换货出库',-NUM, NUM) ) NUM,
+      SUM( IF(ORDER_TYPE='采购退货出库' OR ORDER_TYPE='采购换货出库',-REAL_TOTAL_AMOUNT, REAL_TOTAL_AMOUNT) ) REAL_TOTAL_AMOUNT
     FROM
       V_LOG_DATA A
     WHERE
       A.`YEAR_MONTH` = #{yearMonth}
-      AND A.LOG_TYPE = #{logType}
-<!--    <if test="logType == 0">-->
-<!--      AND (A.LOG_TYPE = 0 OR ( A.LOG_TYPE =1 AND A.ORDER_TYPE IN ('采购退货出库','采购换货出库') ))-->
-<!--    </if>-->
-<!--    <if test="logType == 1">-->
-<!--      AND A.LOG_TYPE = 1-->
-<!--      AND A.ORDER_TYPE NOT IN ('采购退货出库','采购换货出库')-->
-<!--    </if>-->
+    <if test="logType == 0">
+      AND (A.LOG_TYPE = 0 OR ( A.LOG_TYPE =1 AND A.ORDER_TYPE IN ('采购退货出库','采购换货出库') ))
+    </if>
+    <if test="logType == 1">
+      AND A.LOG_TYPE = 1
+      AND A.ORDER_TYPE NOT IN ('采购退货出库','采购换货出库')
+    </if>
      AND A.IS_DELETE = 0
     GROUP BY A.SKU
   </select>
@@ -711,7 +710,6 @@
       V_LOG_DATA A
     WHERE
       A.`YEAR_MONTH` = #{yearMonth}
-      AND A.LOG_TYPE = #{logType}
       AND A.IS_DELETE = 0
     <if test="logType == 0">
       AND A.ORDER_TYPE IN ('采购换货出库','采购换货入库','采购入库','采购退货出库','销售换货入库','销售退货入库')

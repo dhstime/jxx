@@ -84,7 +84,7 @@ public class EasyExeclLocalData extends JxxApplicationTests {
             System.out.println(startTime.toString());
 
             startTime = startTime.plusMonths(1);
-        } while (startTime.isBefore(LocalDateTime.of(2019,2,1,0,0,0)));
+        } while (startTime.isBefore(LocalDateTime.of(2020,4,1,0,0,0)));
     }
 
     private void exprotStock(LocalDateTime startTime) {

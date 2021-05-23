@@ -66,6 +66,7 @@ public class WeightedPriceTest2 extends JxxApplicationTests {
                 List<LogDataDo> outTotalInfoList  = logDataDtoMapper.getWeihthedInTotalInfo(search);
                 putPriceMap(outTotalInfoList,outMap);
 
+
                 stockMap.put(yearMonth,lastFinalEnding);
                 inputMap.put(yearMonth,inMap);
                 outputMap.put(yearMonth,outMap);
@@ -169,12 +170,12 @@ public class WeightedPriceTest2 extends JxxApplicationTests {
                     ExcelFileUtil.Result result = new ExcelFileUtil.Result();
                     result.setKey(item.getSku());
                     result.setCount(new BigDecimal(item.getNum()));
-                    if(equesOrderType(item.getOrderType())){
-
-                        updateSaleAfterInWeightPrice(search, update, result, item.getWarehouseLogId());
-                    }else{
+//                    if(equesOrderType(item.getOrderType())){
+//
+//                        updateSaleAfterInWeightPrice(search, update, result, item.getWarehouseLogId());
+//                    }else{
                         result.setSum(item.getRealTotalAmount());
-                    }
+//                    }
 
                     return result;
                 }).collect(Collectors.groupingBy(ExcelFileUtil.Result::getKey));
@@ -235,6 +236,12 @@ public class WeightedPriceTest2 extends JxxApplicationTests {
                 }).collect(Collectors.toMap(ExcelFileUtil.Result::getKey,item->item));
     }
 
+    /**
+     * @description: 赋值处理销售售后入库类型加权价
+     * @return:
+     * @author: Strange
+     * @date: 2021/5/22
+     **/
     private void updateSaleAfterInWeightPrice(LogDataDo search, LogDataDo update, ExcelFileUtil.Result result, Integer warehouseId) {
         LogDataDo afterOrder = logDataDtoMapper.getInfoByWarehouseId(warehouseId);
         search.setOrderNo(afterOrder.getAssOrderNo());
@@ -259,105 +266,12 @@ public class WeightedPriceTest2 extends JxxApplicationTests {
     }
 
 
-
     /**
-     * 将每月sku加权价保存到excel文件
-     * @param stock 库存 yearMonth,sku,Result
-     * @param output 出库
-     * @param input 入库
-     */
-    private void weightedAvgPrice2Excel(Map<String, ExcelFileUtil.Result> stock201812, Map<String,Map<String, ExcelFileUtil.Result>> stock,
-                                        Map<String, Map<String, ExcelFileUtil.Result>> input,
-                                        Map<String,Map<String, ExcelFileUtil.Result>> output, String excelPath){
-        Set<String> skuSet = stock.keySet().stream().flatMap(key -> stock.get(key).keySet().stream()).collect(Collectors.toSet());
-        skuSet.addAll(input.keySet().stream().flatMap(key -> input.get(key).keySet().stream()).collect(Collectors.toSet()));
-        skuSet.addAll(output.keySet().stream().flatMap(key -> output.get(key).keySet().stream()).collect(Collectors.toSet()));
-        skuSet.addAll(stock201812.keySet());
-
-        List<List<Object>> excelResult = skuSet.stream()
-                .map(sku -> {
-                    List<Object> row = new ArrayList<>();
-                    row.add(sku);
-                    if (stock201812.containsKey(sku)){
-                        ExcelFileUtil.Result item201812 = stock201812.get(sku);
-                        row.add(item201812.getCount());
-                        row.add(item201812.getSum().divide(item201812.getCount(),2,RoundingMode.HALF_UP));
-                        row.add(item201812.getSum());
-                    } else {
-                        row.add(0);
-                        row.add(0);
-                        row.add(0);
-                    }
-                    LocalDate start = LocalDate.of(2019,1,1);
-                    do {
-                        String yearMonth = DateUtil.yearMonthStr(start);
-                        if (input.containsKey(yearMonth) && input.get(yearMonth).containsKey(sku)){
-                            ExcelFileUtil.Result inputItem = input.get(yearMonth).get(sku);
-                            row.add(inputItem.getCount());
-                            row.add(inputItem.getPrice());
-                            row.add(inputItem.getSum());
-                        } else {
-                            row.add(0);
-                            row.add(0);
-                            row.add(0);
-                        }
-
-                        if (output.containsKey(yearMonth) && output.get(yearMonth).containsKey(sku)){
-                            ExcelFileUtil.Result outItem = output.get(yearMonth).get(sku);
-                            row.add(outItem.getCount());
-                            row.add(outItem.getPrice());
-                            row.add(outItem.getSum());
-                        }   else {
-                            row.add(0);
-                            row.add(0);
-                            row.add(0);
-                        }
-                        if (stock.containsKey(yearMonth) && stock.get(yearMonth).containsKey(sku)
-                                && stock.get(yearMonth).get(sku).getCount().compareTo(BigDecimal.ZERO) != 0
-                                && stock.get(yearMonth).get(sku).getSum().compareTo(BigDecimal.ZERO) != 0){
-
-                            ExcelFileUtil.Result stockItem = stock.get(yearMonth).get(sku);
-                            row.add(stockItem.getCount());
-                            row.add(stockItem.getSum().divide(stockItem.getCount(),2,RoundingMode.HALF_UP));
-                            row.add(stockItem.getSum());
-                        } else {
-                            row.add(0);
-                            row.add(0);
-                            row.add(0);
-                        }
-                        start = start.plusMonths(1);
-                    } while (start.isBefore(LocalDate.of(2021,4,1)));
-                    return row;
-                })
-                .collect(Collectors.toList());
-
-        ExcelFileUtil.generateExcel(excelPath + "/sku加权价.xlsx",header(),excelResult);
-    }
-
-
-    private  List<String> header(){
-        List<String> head = new ArrayList<String>();
-        head.add("sku");
-        head.add("2018-12库存数量");
-        head.add("2018-12库存单价");
-        head.add("2018-12库存金额");
-        LocalDate start = LocalDate.of(2019,1,1);
-        do {
-            String yearMonth = DateUtil.yearMonthStr(start);
-            head.add(yearMonth+"入库数量");
-            head.add(yearMonth+"入库单价");
-            head.add(yearMonth+"入库金额");
-            head.add(yearMonth+"出库数量");
-            head.add(yearMonth+"出库单价");
-            head.add(yearMonth+"出库金额");
-            head.add(yearMonth+"库存数量");
-            head.add(yearMonth+"库存单价");
-            head.add(yearMonth+"库存金额");
-            start = start.plusMonths(1);
-        } while (start.isBefore(LocalDate.of(2021,4,1)));
-        return head;
-    }
-
+     * @description: 更新加权价获取当月全量出入库记录
+     * @return:
+     * @author: Strange
+     * @date: 2021/5/22
+     **/
     private HashMap<String,Map<String, ExcelFileUtil.Result>> updateWeightedPrice(Map<String, Map<String, BigDecimal>> stockpriceMap) {
         LogDataDo update = new LogDataDo();
         LogDataDo search = new LogDataDo();
@@ -376,6 +290,12 @@ public class WeightedPriceTest2 extends JxxApplicationTests {
 
     }
 
+    /**
+     * @description: 更新加权价
+     * @return:
+     * @author: Strange
+     * @date: 2021/5/22
+     **/
     private void updateWeightPrice(Map<String, Map<String, BigDecimal>> stockpriceMap, LogDataDo update, LogDataDo search) {
         //直接赋值部分处理------------------------------
         List<LogDataDo> outWeightedPriceLogList = logDataDtoMapper.getOutWeightedPriceLogInfo(search);
@@ -396,13 +316,13 @@ public class WeightedPriceTest2 extends JxxApplicationTests {
         //直接赋值部分处理------------------------------
 
         //批次调整出库  批次调整入库
-//        List<LogDataDo> adjLogInfoList = logDataDtoMapper.getAdjLogInfo(search);
-//        for (LogDataDo logDataDo : adjLogInfoList) {
-//            update.setInLogId(logDataDo.getInLogId());
-//            update.setRealPrice(logDataDo.getNewCostPrice());
-//            update.setRealTotalAmount(logDataDo.getTotalAmount());
-//            updateLogData(update);
-//        }
+        List<LogDataDo> adjLogInfoList = logDataDtoMapper.getAdjLogInfo(search);
+        for (LogDataDo logDataDo : adjLogInfoList) {
+            update.setInLogId(logDataDo.getInLogId());
+            update.setRealPrice(logDataDo.getNewCostPrice());
+            update.setRealTotalAmount(logDataDo.getTotalAmount());
+            updateLogData(update);
+        }
         //批次调整出库  批次调整入库
 
         //-------------分摊算法-----------------------------
@@ -413,6 +333,11 @@ public class WeightedPriceTest2 extends JxxApplicationTests {
         updateCalculateShareOrder(update, search, saleAfterInLogList);
     }
 
+    /**
+     * @description: 分摊并赋值销售售后入库类型的加权价
+     * @return:
+     * @date: 2021/5/22
+     **/
     private void updateCalculateShareOrder(LogDataDo update, LogDataDo search, List<LogDataDo> saleAfterInLogList) {
         //所有有售后部分的销售单
         HashMap<String,List<LogDataDo>> saleOutMap = new HashMap<>();
@@ -478,9 +403,17 @@ public class WeightedPriceTest2 extends JxxApplicationTests {
     }
 
     private void updateLogData(LogDataDo update) {
+        update.setRealPrice(update.getRealPrice().abs());
+        update.setRealTotalAmount(update.getRealTotalAmount().abs());
         logDataDtoMapper.updateRealPriceById(update);
     }
 
+    /**
+     * @description: 获取全量出入库数据以计算库存量
+     * @return:
+     * @author: Strange
+     * @date: 2021/5/22
+     **/
     private HashMap<String, Map<String, ExcelFileUtil.Result>> getMonthStockPriceInfo(LogDataDo search) {
         HashMap<String,Map<String, ExcelFileUtil.Result>> result = new HashMap<>();
         search.setLogType(0);
@@ -502,7 +435,7 @@ public class WeightedPriceTest2 extends JxxApplicationTests {
 
     private void putPriceMap(List<LogDataDo> inlogDataDoList, Map<String, ExcelFileUtil.Result> inMap) {
         for (LogDataDo logDataDo : inlogDataDoList) {
-            if(logDataDo.getRealTotalAmount().compareTo(BigDecimal.ZERO) == 0 || logDataDo.getNum() == 0){
+            if(logDataDo.getRealTotalAmount() == null || logDataDo.getNum() == 0){
                 continue;
             }
             ExcelFileUtil.Result priceInfo = new ExcelFileUtil.Result();
@@ -524,5 +457,105 @@ public class WeightedPriceTest2 extends JxxApplicationTests {
         types.add("SKU转化入库");
         types.add("样品入库");
         return types.contains(type);
+    }
+
+    /**
+     * 将每月sku加权价保存到excel文件
+     * @param stock 库存 yearMonth,sku,Result
+     * @param output 出库
+     * @param input 入库
+     */
+    private void weightedAvgPrice2Excel(Map<String, ExcelFileUtil.Result> stock201812, Map<String,Map<String, ExcelFileUtil.Result>> stock,
+                                        Map<String, Map<String, ExcelFileUtil.Result>> input,
+                                        Map<String,Map<String, ExcelFileUtil.Result>> output, String excelPath){
+        Set<String> skuSet = stock.keySet().stream().flatMap(key -> stock.get(key).keySet().stream()).collect(Collectors.toSet());
+        skuSet.addAll(input.keySet().stream().flatMap(key -> input.get(key).keySet().stream()).collect(Collectors.toSet()));
+        skuSet.addAll(output.keySet().stream().flatMap(key -> output.get(key).keySet().stream()).collect(Collectors.toSet()));
+        skuSet.addAll(stock201812.keySet());
+
+        List<List<Object>> excelResult = skuSet.stream()
+                .map(sku -> {
+                    List<Object> row = new ArrayList<>();
+                    row.add(sku);
+                    if (stock201812.containsKey(sku)){
+                        ExcelFileUtil.Result item201812 = stock201812.get(sku);
+                        row.add(item201812.getCount());
+                        row.add(item201812.getSum().divide(item201812.getCount(),2,RoundingMode.HALF_UP));
+                        row.add(item201812.getSum());
+                    } else {
+                        row.add(0);
+                        row.add(0);
+                        row.add(0);
+                    }
+                    LocalDate start = LocalDate.of(2019,1,1);
+                    do {
+                        String yearMonth = DateUtil.yearMonthStr(start);
+                        if (input.containsKey(yearMonth) && input.get(yearMonth).containsKey(sku)){
+                            ExcelFileUtil.Result inputItem = input.get(yearMonth).get(sku);
+                            row.add(inputItem.getCount());
+                            row.add(inputItem.getPrice());
+                            row.add(inputItem.getSum());
+                        } else {
+                            row.add(0);
+                            row.add(0);
+                            row.add(0);
+                        }
+
+                        if (output.containsKey(yearMonth) && output.get(yearMonth).containsKey(sku)){
+                            ExcelFileUtil.Result outItem = output.get(yearMonth).get(sku);
+                            row.add(outItem.getCount());
+                            row.add(outItem.getPrice());
+                            row.add(outItem.getSum());
+                        }   else {
+                            row.add(0);
+                            row.add(0);
+                            row.add(0);
+                        }
+                        if (stock.containsKey(yearMonth) && stock.get(yearMonth).containsKey(sku)
+                                && stock.get(yearMonth).get(sku).getCount().compareTo(BigDecimal.ZERO) != 0){
+
+                            ExcelFileUtil.Result stockItem = stock.get(yearMonth).get(sku);
+                            row.add(stockItem.getCount());
+                            row.add(stockItem.getSum().divide(stockItem.getCount(),2,RoundingMode.HALF_UP));
+                            row.add(stockItem.getSum());
+                        } else {
+                            row.add(0);
+                            row.add(0);
+                            row.add(0);
+                        }
+                        start = start.plusMonths(1);
+                    } while (start.isBefore(LocalDate.of(2021,4,1)));
+                    return row;
+                })
+                .collect(Collectors.toList());
+
+        ExcelFileUtil.generateExcel(excelPath + "/sku加权价.xlsx",header(),excelResult);
+        System.out.println("完成");
+    }
+
+
+
+
+    private  List<String> header(){
+        List<String> head = new ArrayList<String>();
+        head.add("sku");
+        head.add("2018-12库存数量");
+        head.add("2018-12库存单价");
+        head.add("2018-12库存金额");
+        LocalDate start = LocalDate.of(2019,1,1);
+        do {
+            String yearMonth = DateUtil.yearMonthStr(start);
+            head.add(yearMonth+"入库数量");
+            head.add(yearMonth+"入库单价");
+            head.add(yearMonth+"入库金额");
+            head.add(yearMonth+"出库数量");
+            head.add(yearMonth+"出库单价");
+            head.add(yearMonth+"出库金额");
+            head.add(yearMonth+"库存数量");
+            head.add(yearMonth+"库存单价");
+            head.add(yearMonth+"库存金额");
+            start = start.plusMonths(1);
+        } while (start.isBefore(LocalDate.of(2021,4,1)));
+        return head;
     }
 }
