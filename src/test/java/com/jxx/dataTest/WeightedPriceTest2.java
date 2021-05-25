@@ -2,6 +2,7 @@ package com.jxx.dataTest;
 
 import com.jxx.JxxApplicationTests;
 import com.jxx.common.utils.DateUtil;
+import com.jxx.common.utils.StringUtil;
 import com.jxx.dataTest.avgprice.ExcelFileUtil;
 import com.jxx.dataTest.avgprice.FinalEndingCalculate;
 import com.jxx.excel.LogDataDo;
@@ -27,6 +28,8 @@ public class WeightedPriceTest2 extends JxxApplicationTests {
 
     @Resource
     private LogDataDtoMapper logDataDtoMapper;
+
+    private static String sku ="";
 
     @Test
     public  void weightedAvgPriceCalculate(){
@@ -95,8 +98,9 @@ public class WeightedPriceTest2 extends JxxApplicationTests {
                                                                         Map<String, ExcelFileUtil.Result> lastFinalEnding, Map<String,
             BigDecimal> weightedAvgPriceMap){
         Map<String, Map<String, BigDecimal>> weightedAvgPriceInMonthMap = new HashMap<>();
-        weightedAvgPriceMap.keySet().stream().forEach(
-                sku -> {
+        weightedAvgPriceMap.keySet().stream()
+                .filter(item -> checkSku(item,sku))
+                .forEach(sku -> {
                     Map<String, BigDecimal> yearMonthAvgPrice = new HashMap<>();
                     yearMonthAvgPrice.put(yearMonth,weightedAvgPriceMap.get(sku));
                     weightedAvgPriceInMonthMap.put(sku,yearMonthAvgPrice);
@@ -105,7 +109,7 @@ public class WeightedPriceTest2 extends JxxApplicationTests {
 
         //根据当月加权价获取当月出入库明细
         //TODO
-        Map<String,Map<String, ExcelFileUtil.Result>> inputAndOutPutMap = updateWeightedPrice(weightedAvgPriceInMonthMap);
+        Map<String,Map<String, ExcelFileUtil.Result>> inputAndOutPutMap = updateAndGetWeightedPrice(weightedAvgPriceInMonthMap);
 //        LogDataDo search = new LogDataDo();
 //        search.setYearMonth(yearMonth);
 //        HashMap<String, Map<String, ExcelFileUtil.Result>> inputAndOutPutMap = getMonthStockPriceInfo(search);
@@ -134,7 +138,7 @@ public class WeightedPriceTest2 extends JxxApplicationTests {
 
         Set<String> skuSet = new HashSet<>(lastFinalEnding.keySet());
         skuSet.addAll(input.keySet());
-        skuSet.stream()
+        skuSet.stream().filter(item -> checkSku(item,sku))
                 .forEach(key -> {
                     BigDecimal count = BigDecimal.ZERO;
                     BigDecimal sum = BigDecimal.ZERO;
@@ -154,6 +158,8 @@ public class WeightedPriceTest2 extends JxxApplicationTests {
         return weightedAvgPrice;
     }
 
+
+
     private Map<String, ExcelFileUtil.Result> inLogGroupBySku(String yearMonth) {
         LogDataDo search = new LogDataDo();
         LogDataDo update = new LogDataDo();
@@ -166,6 +172,7 @@ public class WeightedPriceTest2 extends JxxApplicationTests {
         inLogList.addAll(afterSaleInlogList);
 
         Map<String, List<ExcelFileUtil.Result>> skuMap = inLogList.stream()
+                .filter(item -> checkSku(item.getSku(),sku))
                 .map(item ->{
                     ExcelFileUtil.Result result = new ExcelFileUtil.Result();
                     result.setKey(item.getSku());
@@ -182,6 +189,7 @@ public class WeightedPriceTest2 extends JxxApplicationTests {
 
 
         return  skuMap.keySet().stream()
+                .filter(item -> checkSku(item,sku))
                 .map(key -> {
                     BigDecimal count = BigDecimal.ZERO;
                     BigDecimal sum = BigDecimal.ZERO;
@@ -203,6 +211,7 @@ public class WeightedPriceTest2 extends JxxApplicationTests {
         LogDataDo update = new LogDataDo();
         Map<String, List<ExcelFileUtil.Result>> skuMap = ExcelFileUtil.getDataFromExcelFile(path)
                 .stream()
+                .filter(item -> checkSku(item.get(keyIndex),sku))
                 .filter(item -> !item.get(2).equalsIgnoreCase("单据类型"))
                 .filter(item -> !excludeOrderTypesList(item.get(2)))
                 .map(item -> {
@@ -221,6 +230,7 @@ public class WeightedPriceTest2 extends JxxApplicationTests {
                 })
                 .collect(Collectors.groupingBy(ExcelFileUtil.Result::getKey));
         return skuMap.keySet().stream()
+                .filter(item -> checkSku(item,sku))
                 .map(key -> {
                     BigDecimal count = BigDecimal.ZERO;
                     BigDecimal sum = BigDecimal.ZERO;
@@ -272,7 +282,7 @@ public class WeightedPriceTest2 extends JxxApplicationTests {
      * @author: Strange
      * @date: 2021/5/22
      **/
-    private HashMap<String,Map<String, ExcelFileUtil.Result>> updateWeightedPrice(Map<String, Map<String, BigDecimal>> stockpriceMap) {
+    private HashMap<String,Map<String, ExcelFileUtil.Result>> updateAndGetWeightedPrice(Map<String, Map<String, BigDecimal>> stockpriceMap) {
         LogDataDo update = new LogDataDo();
         LogDataDo search = new LogDataDo();
 
@@ -474,6 +484,7 @@ public class WeightedPriceTest2 extends JxxApplicationTests {
         skuSet.addAll(stock201812.keySet());
 
         List<List<Object>> excelResult = skuSet.stream()
+                .filter(item -> checkSku(item,sku))
                 .map(sku -> {
                     List<Object> row = new ArrayList<>();
                     row.add(sku);
@@ -557,5 +568,14 @@ public class WeightedPriceTest2 extends JxxApplicationTests {
             start = start.plusMonths(1);
         } while (start.isBefore(LocalDate.of(2021,4,1)));
         return head;
+    }
+
+    private boolean checkSku(String key, String sku) {
+        if(StringUtil.isBlank(sku)){
+            return true;
+        }else if(key.equals(sku)){
+            return true;
+        }
+        return false;
     }
 }
