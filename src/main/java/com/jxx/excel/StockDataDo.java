@@ -12,7 +12,7 @@ import java.util.Date;
 @Data
 public class StockDataDo {
     @ExcelIgnore
-    private Integer inStockId;
+    private Integer stockDataId;
     @ExcelIgnore
     private String yearMonthDay;
     @ExcelIgnore

@@ -558,6 +558,7 @@
         AND A.SKU = #{sku}
         AND A.LOG_TYPE = #{logType}
         AND A.IS_DELETE = 0
+
     </select>
     <select id="selectInSometing" resultType="com.jxx.excel.InStockDataDo">
       SELECT

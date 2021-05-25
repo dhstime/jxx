@@ -170,12 +170,12 @@ public class WeightedPriceTest2 extends JxxApplicationTests {
                     ExcelFileUtil.Result result = new ExcelFileUtil.Result();
                     result.setKey(item.getSku());
                     result.setCount(new BigDecimal(item.getNum()));
-//                    if(equesOrderType(item.getOrderType())){
-//
-//                        updateSaleAfterInWeightPrice(search, update, result, item.getWarehouseLogId());
-//                    }else{
+                    if(equesOrderType(item.getOrderType())){
+
+                        updateSaleAfterInWeightPrice(search, update, result, item.getWarehouseLogId());
+                    }else{
                         result.setSum(item.getRealTotalAmount());
-//                    }
+                    }
 
                     return result;
                 }).collect(Collectors.groupingBy(ExcelFileUtil.Result::getKey));

@@ -19,4 +19,6 @@ public interface StockDataDtoMapper {
     int updateByPrimaryKey(StockDataDo record);
 
     List<StockDataDo> selectStockData(@Param("dateStr")String dateStr);
+
+    List<StockDataDo> getNotHaveWeightPrice();
 }
