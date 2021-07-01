@@ -1,0 +1,12 @@
+# 邮件服务器的SMTP地址
+host = smtp.mxhichina.com
+# 邮件服务器的SMTP的端口
+port = 465
+# 发件人（必须正确，否则发送失败）
+from = service@zhaoqixie.com
+# 用户名（注意：如果使用foxmail邮箱，此处user为qq号）
+user = service@zhaoqixie.com
+# 密码
+pass = 4gISfTh11M1
+#使用 STARTTLS安全连接，STARTTLS是对纯文本通信协议的扩展。
+starttlsEnable = true

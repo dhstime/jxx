@@ -117,6 +117,7 @@ spring:
     cache: false
   aop:
     auto: true
+
 #springBoot整合Mybatis
 mybatis:
   #  #定义别名包,当程序自动映射是自动拼接

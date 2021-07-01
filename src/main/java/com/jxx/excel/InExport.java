@@ -1,7 +1,10 @@
 package com.jxx.excel;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
+import com.alibaba.excel.annotation.ExcelIgnore;
 import lombok.Data;
+
+import java.math.BigDecimal;
 
 /**
  * @author Strange
@@ -68,14 +71,23 @@ public class InExport {
     @Excel(name = "厂商条码")
     private String 厂商条码;
     @Excel(name = "数量",type = 10)
-    private String 数量;
+    private BigDecimal 数量;
     @Excel(name = "单价",type = 10)
-    private String 单价;
+    private BigDecimal 单价;
     @Excel(name = "入库金额",type = 10)
-    private String 入库金额;
+    private BigDecimal 入库金额;
     @Excel(name = "批次")
     private String 批次;
     @Excel(name = "入库时间")
     private String 入库时间;
+    @ExcelIgnore
+    private Integer saleorderGoodsId;
+    @ExcelIgnore
+    private Integer buyorderGoodsId;
+    @ExcelIgnore
+    private String username;
+    @ExcelIgnore
+    private Integer afterSalesGoodsId;
+//
 
 }

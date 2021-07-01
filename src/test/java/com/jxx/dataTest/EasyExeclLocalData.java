@@ -1,7 +1,9 @@
 package com.jxx.dataTest;
 
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.support.ExcelTypeEnum;
+import com.alibaba.excel.write.metadata.WriteSheet;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.jxx.JxxApplicationTests;
 import com.jxx.common.utils.DateUtil;
@@ -179,7 +181,7 @@ public class EasyExeclLocalData extends JxxApplicationTests {
      **/
     @Test
     public void searchSku(){
-        String skus = "V502921,V502256,V271930,V254404,V500584,V503030,V504101,V116824,V276077,V251452,V150461,V503629,V506054,V505433,V506082,V500194,V116832,V503996,V504815,V503707,V504186,V257784,V503157,V504100,V503600,V257586,V503578,V505349,V505432,V505972,V254199,V254516,V278234,V500272,V505719,V150395,V503518,V276424,V150571,V506203,V506961,V500884,V255478,V148557,V503494,V503891,V253769,V276565,V504094,V148823";
+        String skus = "V254558,V148766,V278327,V253744,V148724,V252331,V149640,V273321,V501506,V255666,V273316,V272058,V111126,V276660,V257758,V277221,V277370,V271757,V277352,V277019,V251807,V254648,V278331,V277537,V148676,V276439,V277361,V117157,V254082,V116830,V254688,V118985,V254136,V500038,V503082,V140992,V253495,V276866,V276893,V254641,V116867,V253494,V253492,V254736,V254696,V116842,V252961,V277346,V277357,V276524";
         List<String> skuList = Arrays.asList(skus.split(","));
         String inSheetName = "入库记录";
         String outSheetName = "出库记录";
@@ -191,6 +193,31 @@ public class EasyExeclLocalData extends JxxApplicationTests {
 
         String outPath = "/Users/dhs/Downloads/审计数据/SKU/出库/" + "出库记录" + ".xlsx";
         exportOutExcel(outList, outSheetName, outPath);
+        ExcelWriter excelWriter = EasyExcel.write("/Users/dhs/Downloads/123.xlsx").build();
+        WriteSheet writeSheet = EasyExcel.writerSheet( 1,"入库记录" ).head(InStockDataDo.class).build();
+        excelWriter.write(inList, writeSheet);
+        WriteSheet writeSheet2 = EasyExcel.writerSheet( 2,"出库记录" ).head(OutStockDataDo.class).build();
+        excelWriter.write(outList, writeSheet2);
+
+//        ExcelWriter excelWriter = EasyExcel.write("/Users/dhs/Downloads/123.xlsx").build();
+//        for (int i = 0; i < 2; i++) {
+//            if(i == 0){
+//                // 每次都要创建writeSheet 这里注意必须指定sheetNo 而且sheetName必须不一样。这里注意DemoData.class 可以每次都变，我这里为了方便 所以用的同一个class 实际上可以一直变
+//                WriteSheet writeSheet = EasyExcel.writerSheet(i, "入库记录" ).head(InStockDataDo.class).build();
+//                // 分页去数据库查询数据 这里可以去数据库查询每一页的数据
+//                excelWriter.write(inList, writeSheet);
+//            }
+//            if(i == 1){
+//                // 每次都要创建writeSheet 这里注意必须指定sheetNo 而且sheetName必须不一样。这里注意DemoData.class 可以每次都变，我这里为了方便 所以用的同一个class 实际上可以一直变
+//                WriteSheet writeSheet = EasyExcel.writerSheet(i, "出库记录" ).head(OutStockDataDo.class).build();
+//                // 分页去数据库查询数据 这里可以去数据库查询每一页的数据
+//                excelWriter.write(outList, writeSheet);
+//            }
+//
+//        }
+//        if(excelWriter != null){
+//            excelWriter.finish();
+//        }
     }
 
 }

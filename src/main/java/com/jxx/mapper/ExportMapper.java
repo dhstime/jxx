@@ -26,4 +26,16 @@ public interface ExportMapper {
     List<WarehouseInExport> getWarehouseInLogByTime(@Param("startTime") Long startTime, @Param("endTime") Long endTime);
 
     List<WarehouseOutExport> getWarehouseOutLogByTime(@Param("startTime") Long startTime, @Param("endTime") Long endTime);
+
+    List<InExport> getSaleAfterIn(Long localDatetime2TimeStamp, Long localDatetime2TimeStamp1);
+
+    List<OutExport> getBuyorderAfterOut(Long localDatetime2TimeStamp, Long localDatetime2TimeStamp1);
+
+    List<SaleorderDiff> getSaleorderBefore();
+
+    List<Integer> getSaleorderBeforeId();
+
+    List<SaleorderInvoice> getBuyorderInvoice();
+
+    List<SaleorderInvoice> getSaleorderInvoice();
 }
